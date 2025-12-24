@@ -24,7 +24,7 @@ Over the past four years, I’ve led product delivery, UX strategy, and project 
 - Combine service design thinking with hands-on delivery to keep teams synchronized and moving.
 
 ## Connect
-I’m open to collaborations and select freelance work. Reach me at [sharpstudiollc@gmail.com](mailto:sharpstudiollc@gmail.com) or find me here:
+I’m open to collaborations and select freelance work. Reach me at [contact@saintcip.com](mailto:contact@saintcip.com) or find me here:
 
 <p align="center">
   <a href="https://www.instagram.com/saintcip" target="_blank"><img src="https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white" alt="Instagram badge"/></a>
