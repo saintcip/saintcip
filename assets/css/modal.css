@@ -1,0 +1,155 @@
+#popup-overlay,
+#calendly-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.75);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#popup-overlay.is-visible,
+#calendly-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.popup-box {
+    position: relative;
+    width: min(420px, 100%);
+    padding: 36px 32px 32px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 0;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+    text-align: left;
+}
+
+#popup-title,
+#calendly-popup-title {
+    margin: 0 0 12px;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.popup-message {
+    margin: 0 0 28px;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.popup-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.popup-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border-radius: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    color: #ffffff;
+    width: 100%;
+}
+
+.popup-button:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 3px;
+}
+
+.popup-button-primary {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+}
+
+.popup-button-primary:hover,
+.popup-button-primary:focus {
+    background-color: transparent;
+    color: #ffffff;
+}
+
+.popup-button-secondary {
+    background-color: transparent;
+}
+
+.popup-button-secondary:hover,
+.popup-button-secondary:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.popup-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.popup-close:hover,
+.popup-close:focus {
+    color: #ffffff;
+}
+
+@media (min-width: 520px) {
+    .popup-button {
+        max-width: none;
+    }
+}
+
+.popup-box-calendly {
+    width: min(1000px, 100%);
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.popup-box-calendly .popup-close {
+    top: 16px;
+    right: 16px;
+    color: #ffffff;
+    z-index: 2;
+}
+
+.calendly-widget-wrap {
+    position: relative;
+    margin-top: 0;
+}
+
+.calendly-widget-wrap .calendly-inline-widget {
+    width: 100%;
+    height: 80vh;
+    min-height: 520px;
+}
+
+@media (max-width: 600px) {
+    .calendly-widget-wrap .calendly-inline-widget {
+        height: 90vh;
+        min-height: 0;
+    }
+}

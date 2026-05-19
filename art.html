@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Picnic Heist 1/1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&family=Playfair+Display:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="is-loading">
+    <div class="loading-screen" aria-live="polite" aria-busy="true">
+      <p>Loading painting</p>
+    </div>
+    <p class="availability-banner" role="status" aria-live="polite" aria-hidden="true">
+      This piece have no owner yet
+      <a class="availability-link" href="https://saintcip.com" target="_blank" rel="noopener noreferrer">buy now</a>
+    </p>
+    <main class="museum-wall">
+      <section class="art-display" aria-labelledby="art-title">
+        <figure class="frame" aria-describedby="art-description">
+          <div class="frame-inner">
+            <div class="comparison" data-comparison>
+              <img
+                class="comparison-image comparison-image--before"
+                src="art2.jpg"
+                alt="Reimagined version of Picnic Heist"
+              />
+              <img
+                class="comparison-image comparison-image--after"
+                src="art.jpg"
+                alt="Original version of Picnic Heist"
+              />
+              <input
+                class="comparison-input"
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                aria-label="Drag to compare the two versions of the artwork"
+              />
+              <div class="comparison-handle" aria-hidden="true">
+                <span class="comparison-divider"></span>
+                <span class="comparison-knob"></span>
+              </div>
+            </div>
+          </div>
+          <img class="frame-overlay" src="frame.png" alt="" aria-hidden="true" />
+        </figure>
+        <article class="art-details" id="art-description">
+          <p class="art-artist">Saintcp + Helena</p>
+          <h1 class="art-name" id="art-title">Picnic Heist</h1>
+          <p class="art-medium">Oil on linen • 92cm × 92cm</p>
+          <button class="auction-button" type="button" aria-label="Unique piece, edition one of one">
+            1/1
+          </button>
+          <p class="art-story">
+            A collaboration between vintage opulence and modern cadence. Layered with nostalgia and reimagined through contemporary color and form, it bridges eras a classical foundation revived through a new artistic lens.
+          </p>
+        </article>
+      </section>
+    </main>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const body = document.body;
+        const loadingScreen = document.querySelector('.loading-screen');
+        const availabilityBanner = document.querySelector('.availability-banner');
+        const MIN_LOADING_TIME = 3000;
+        const BANNER_DELAY = 20000;
+
+        setTimeout(() => {
+          body.classList.remove('is-loading');
+          body.classList.add('is-loaded');
+          loadingScreen?.setAttribute('aria-busy', 'false');
+        }, MIN_LOADING_TIME);
+
+        setTimeout(() => {
+          body.classList.add('banner-visible');
+          availabilityBanner?.setAttribute('aria-hidden', 'false');
+        }, BANNER_DELAY);
+
+        const comparison = document.querySelector('[data-comparison]');
+        const story = document.querySelector('.art-story');
+
+        if (comparison) {
+          const input = comparison.querySelector('.comparison-input');
+          const clampValue = (value) => Math.min(100, Math.max(0, Number(value)));
+          const updatePosition = (value) => {
+            const clamped = clampValue(value);
+            comparison.style.setProperty('--position', clamped);
+            input.value = clamped;
+          };
+
+          const syncFromPointer = (clientX) => {
+            const rect = comparison.getBoundingClientRect();
+            const rawPosition = ((clientX - rect.left) / rect.width) * 100;
+            updatePosition(rawPosition);
+          };
+
+          updatePosition(input.value);
+          const handleChange = (event) => updatePosition(event.target.value);
+          input.addEventListener('input', handleChange);
+          input.addEventListener('change', handleChange);
+
+          let isDragging = false;
+
+          const endDrag = () => {
+            isDragging = false;
+          };
+
+          comparison.addEventListener('pointerdown', (event) => {
+            if (event.pointerType === 'mouse' && event.button !== 0) return;
+            isDragging = true;
+            comparison.setPointerCapture?.(event.pointerId);
+            syncFromPointer(event.clientX);
+          });
+
+          comparison.addEventListener('pointermove', (event) => {
+            if (!isDragging) return;
+            syncFromPointer(event.clientX);
+          });
+
+          ['pointerup', 'pointercancel', 'pointerleave'].forEach((eventName) => {
+            comparison.addEventListener(eventName, endDrag);
+          });
+        }
+
+        if (story) {
+          const storyText = story.textContent.trim();
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+          if (storyText && !prefersReducedMotion) {
+            const cursor = document.createElement('span');
+            cursor.className = 'typing-cursor';
+            cursor.textContent = 'l';
+            cursor.setAttribute('aria-hidden', 'true');
+
+            story.textContent = '';
+            story.appendChild(cursor);
+
+            const TYPING_INTERVAL = 45;
+            const TYPING_START_DELAY = 4000;
+
+            const typeCharacter = (index) => {
+              if (index >= storyText.length) {
+                cursor.classList.add('is-visible');
+                return;
+              }
+
+              story.insertBefore(document.createTextNode(storyText[index]), cursor);
+              setTimeout(() => typeCharacter(index + 1), TYPING_INTERVAL);
+            };
+
+            setTimeout(() => {
+              requestAnimationFrame(() => typeCharacter(0));
+            }, TYPING_START_DELAY);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
