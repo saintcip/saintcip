@@ -85,6 +85,38 @@
 			pointer-events: none;
 			display: block;
 		}
+
+		/* Footer social icons — clean, professional, responsive */
+		#tt-footer .footer-social-icons {
+			display: flex !important;
+			justify-content: center !important;
+			gap: clamp(32px, 4.3vw, 50px) !important;
+			margin-top: 18px !important;
+		}
+		#tt-footer .footer-social-icons .footer-social-link {
+			font-size: clamp(36px, 3.6vw, 47px) !important;
+			line-height: 1 !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+		}
+		#tt-footer .footer-social-icons .footer-social-link i,
+		#tt-footer .footer-social-icons .footer-social-link svg {
+			font-size: inherit !important;
+			width: 1em !important;
+			height: 1em !important;
+		}
+		#tt-footer .footer-social-icons + .tt-copyright,
+		#tt-footer .tt-copyright {
+			padding-top: 8px !important;
+		}
+
+		/* Mobile: push the about/main text down from the hero */
+		@media (max-width: 767px) {
+			.about-section {
+				padding-top: 60px !important;
+			}
+		}
 	</style>
 
 </head>
