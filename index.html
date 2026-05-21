@@ -74,25 +74,15 @@
 	<link rel="stylesheet" href="assets/css/theme.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/modal.css">
 
-	<!-- Looping wallpaper video background -->
+	<!-- Hero wallpaper video (sits behind the 3D item) -->
 	<style>
-		html { background-color: #000000; }
-		body { background-color: transparent !important; }
-		.bg-wallpaper {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100vw;
-			height: 100vh;
-			z-index: -2;
-			pointer-events: none;
-			overflow: hidden;
-			background-color: #000;
-		}
-		.bg-wallpaper video {
+		.hero-video-embed video {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
+			border: 0;
+			opacity: 0.9;
+			pointer-events: none;
 			display: block;
 		}
 	</style>
@@ -115,14 +105,6 @@
 			======================== -->
 
 		<!-- End magic cursor -->
-
-		<!-- Begin wallpaper video background -->
-		<div class="bg-wallpaper">
-			<video autoplay muted loop playsinline preload="auto" disablepictureinpicture>
-				<source src="assets/vids/wallpaper.mp4" type="video/mp4">
-			</video>
-		</div>
-		<!-- End wallpaper video background -->
 
 		<!-- Begin noise background -->
 		<div class="bg-noise"></div>
