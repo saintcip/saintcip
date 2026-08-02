@@ -122,6 +122,31 @@
 				padding-top: 60px !important;
 			}
 		}
+
+		/* Portfolio grid filter trigger (bottom right corner) — only visible
+		   while the portfolio section is on screen. Toggled via JS class
+		   "is-portfolio-visible" (see IntersectionObserver script below). */
+		.ttgr-cat-trigger-wrap.ttgr-cat-fixed {
+			transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+			transform: scale(0.9);
+		}
+		.ttgr-cat-trigger-wrap.ttgr-cat-fixed.is-portfolio-visible {
+			opacity: 1 !important;
+			visibility: visible !important;
+			transform: scale(1);
+		}
+
+		/* Portfolio grid images: smooth fade-up reveal. Hidden by default,
+		   revealed by adding "is-revealed" (see IntersectionObserver script). */
+		#portfolio-grid .ttgr-item-inner {
+			opacity: 0;
+			transform: translateY(40px);
+			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		#portfolio-grid .ttgr-item-inner.is-revealed {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	</style>
 
 </head>
@@ -207,7 +232,7 @@
 
 				<!-- End page header -->
 
-                                <div class="tt-section padding-bottom-xlg-150">
+                                <div class="tt-section padding-bottom-xlg-75">
                                         <div class="tt-section-inner tt-wrap max-width-900 about-section">
 
 						<div class="text-xxlg font-alter text-gray-2">
@@ -228,13 +253,321 @@
                                                                 creative teams to translate raw ideas into polished, scalable digital products.</p>
 						</div>
 
-                                                <img src="assets/img/signature.png" class="signature-image anim-fadeinup margin-top-30" alt="Signature">
+                                                <img src="assets/img/signature.png" class="signature-image anim-fadeinup margin-top-15" alt="Signature">
 
 					</div> <!-- /.tt-section-inner -->
 				</div>
 				<!-- *************************************
-					*********** Begin page content *********** 
+					*********** Begin page content ***********
 					************************************** -->
+
+				<!-- Begin portfolio grid (exact port of "portfolio style.html" / Portfolio Grid Modern) -->
+				<div class="tt-section padding-top-xlg-40">
+					<div class="tt-section-inner">
+
+						<!-- Begin portfolio grid (works combined with tt-Ggrid!) -->
+						<div id="portfolio-grid" class="pgi-cap-inside pgi-cap-hover">
+
+							<!-- Begin tt-Grid -->
+							<div class="tt-grid ttgr-layout-1-2 ttgr-gap-4">
+
+								<!-- Begin tt-Ggrid top content -->
+								<div class="tt-grid-top">
+
+									<!-- Begin tt-Ggrid categories/filter -->
+									<div class="tt-grid-categories">
+
+										<!-- Begin tt-Ggrid categories trigger -->
+										<div class="ttgr-cat-trigger-wrap ttgr-cat-fixed">
+											<a href="#portfolio-grid" class="ttgr-cat-trigger not-hide-cursor" data-offset="150">
+												<div class="ttgr-cat-text">
+													<span data-hover="Open">Filter</span>
+												</div>
+												<div class="ttgr-cat-icon">
+													<span class="magnetic-item"><i class="fas fa-layer-group"></i></span>
+												</div>
+											</a>
+										</div>
+										<!-- End tt-Ggrid categories trigger -->
+
+										<!-- Begin tt-Ggrid categories nav -->
+										<div class="ttgr-cat-nav">
+											<div class="ttgr-cat-list-holder cursor-close">
+												<div class="ttgr-cat-list-inner">
+													<div class="ttgr-cat-list-content">
+														<ul class="ttgr-cat-list">
+															<li class="ttgr-cat-close">Close <i class="fas fa-times"></i></li>
+															<li class="ttgr-cat-item"><a href="#" class="active">Show All</a></li>
+															<li class="ttgr-cat-item"><a href="#" data-filter=".branding">Branding</a></li>
+															<li class="ttgr-cat-item"><a href="#" data-filter=".people">People</a></li>
+															<li class="ttgr-cat-item"><a href="#" data-filter=".nature">Nature</a></li>
+															<li class="ttgr-cat-item"><a href="#" data-filter=".creative">Creative</a></li>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- End tt-Ggrid categories nav -->
+
+									</div>
+									<!-- End tt-Ggrid categories/filter-->
+
+								</div>
+								<!-- End tt-Grid top content -->
+
+
+								<!-- Begin tt-Grid items wrap -->
+								<div class="tt-grid-items-wrap isotope-items-wrap">
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item people">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-1.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-1.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Victorian Girls</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">People</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item creative">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-2.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-2.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Smithy</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">Creative</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item people">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-3.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-video-wrap ttgr-height">
+																<video class="pgi-video" loop muted preload="metadata" poster="assets/vids/ucbt.jpg">
+																	<source src="assets/vids/ucbt.mp4" type="video/mp4">
+																	<source src="assets/vids/ucbt.webm" type="video/webm">
+																</video>
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Washion Week</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">People</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item nature">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-4.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-3.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Mystery Forest</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">Nature</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item branding">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-5.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-4.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Red Package</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">Branding</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item people">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-6.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-5.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Studio Shoot</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">People</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item nature">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-7.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-6.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Breaking Wave</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">Nature</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item branding">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item pgi-image-is-light">
+												<a href="backup/single-project-8.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-7.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Wall Lamp</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">Branding</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+									<!-- Begin tt-Grid item -->
+									<div class="tt-grid-item isotope-item creative">
+										<div class="ttgr-item-inner">
+											<div class="portfolio-grid-item">
+												<a href="backup/single-project-9.html" class="pgi-image-wrap" data-cursor="View<br>Project">
+													<div class="pgi-image-holder cover-opacity-2">
+														<div class="pgi-image-inner anim-zoomin">
+															<figure class="pgi-image ttgr-height">
+																<img src="assets/img/portfolio/portfolio-8.jpg" alt="image">
+															</figure>
+														</div>
+													</div>
+												</a>
+												<div class="pgi-caption">
+													<div class="pgi-caption-inner">
+														<h2 class="pgi-title">Elegant Stoves</h2>
+														<div class="pgi-categories-wrap">
+															<div class="pgi-category">Creative</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- End tt-Grid item -->
+
+								</div>
+								<!-- End tt-Grid items wrap  -->
+
+							</div>
+							<!-- End tt-Grid -->
+
+						</div>
+						<!-- End portfolio grid -->
+
+					</div> <!-- /.tt-section-inner -->
+				</div>
+				<!-- End tt-section (portfolio grid) -->
 
 				<!-- End tt-section -->
 
@@ -340,6 +673,171 @@
 	<!-- lightGallery Plugins JS (http://sachinchoolur.github.io/lightGallery) -->
 	<script src="assets/vendor/jquery.mousewheel.min.js"></script>
 	<!-- A jQuery plugin that adds cross browser mouse wheel support (https://github.com/jquery/jquery-mousewheel) -->
+
+	<!-- Init portfolio grid: Isotope layout + category filter (ported from assets/js/theme.js) -->
+	<script>
+		jQuery(function ($) {
+
+			if (!$("#portfolio-grid").length) return;
+
+			// ============================================================================
+			// Portfolio grid images: smooth fade-up reveal, staggered per item.
+			// Runs first and is self-contained (try/catch + timeout safety net) so
+			// it can never leave images stuck invisible if anything else on the
+			// page errors out.
+			// ============================================================================
+			try {
+				var $revealItems = $("#portfolio-grid .ttgr-item-inner");
+				if ($revealItems.length) {
+
+					$revealItems.each(function (i) {
+						this.style.transitionDelay = Math.min(i * 90, 600) + "ms";
+					});
+
+					if ("IntersectionObserver" in window) {
+						var revealObserver = new IntersectionObserver(function (entries) {
+							entries.forEach(function (entry) {
+								if (entry.isIntersecting) {
+									entry.target.classList.add("is-revealed");
+									revealObserver.unobserve(entry.target);
+								}
+							});
+						}, { threshold: 0.1 });
+
+						$revealItems.each(function () {
+							revealObserver.observe(this);
+						});
+
+						// Safety net: guarantee images never stay stuck invisible.
+						setTimeout(function () {
+							$revealItems.addClass("is-revealed");
+						}, 4000);
+					} else {
+						$revealItems.addClass("is-revealed");
+					}
+				}
+			} catch (e) {
+				$("#portfolio-grid .ttgr-item-inner").addClass("is-revealed");
+			}
+
+			// ============================================================================
+			// Isotope
+			// ============================================================================
+			var $container = $("#portfolio-grid .isotope-items-wrap");
+
+			$container.imagesLoaded(function () {
+				$container.isotope({
+					itemSelector: ".isotope-item",
+					layoutMode: "packery",
+					transitionDuration: "0.7s",
+					percentPosition: true
+				});
+
+				setTimeout(function () {
+					$container.isotope('layout');
+					if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
+				}, 500);
+			});
+
+			// Filter
+			$(".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a").on("click", function () {
+				var selector = $(this).attr("data-filter");
+				$container.isotope({ filter: selector });
+
+				setTimeout(function () {
+					if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
+				}, 500);
+
+				return false;
+			});
+
+			// Filter item active state
+			var filterItemActive = $(".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a");
+			filterItemActive.on("click", function () {
+				var $this = $(this);
+				if (!$this.hasClass("active")) {
+					filterItemActive.removeClass("active");
+					$this.addClass("active");
+				}
+			});
+
+			// ============================================================================
+			// Portfolio grid categories filter trigger (bottom right corner):
+			// only visible while the portfolio section is actually on screen.
+			// Uses IntersectionObserver (simple, reliable, not dependent on
+			// GSAP/ScrollTrigger or Isotope layout timing).
+			// ============================================================================
+			if ($(".tt-grid-categories").length) {
+				var $ttgCatTriggerWrap = $(".ttgr-cat-trigger-wrap");
+
+				if ($ttgCatTriggerWrap.hasClass("ttgr-cat-fixed")) {
+					$ttgCatTriggerWrap.appendTo("#body-inner");
+
+					var portfolioGridEl = document.getElementById("portfolio-grid");
+
+					if (portfolioGridEl && "IntersectionObserver" in window) {
+						var portfolioObserver = new IntersectionObserver(function (entries) {
+							entries.forEach(function (entry) {
+								$ttgCatTriggerWrap.toggleClass("is-portfolio-visible", entry.isIntersecting);
+							});
+						}, { threshold: 0 });
+
+						portfolioObserver.observe(portfolioGridEl);
+					} else {
+						// Fallback for browsers without IntersectionObserver: always show.
+						$ttgCatTriggerWrap.addClass("is-portfolio-visible");
+					}
+				}
+			}
+
+			// ============================================================================
+			// Portfolio grid categories filter panel open/close
+			// ============================================================================
+			$(".ttgr-cat-nav").appendTo("#body-inner");
+
+			$(".ttgr-cat-trigger").on("click", function () {
+				$("body").addClass("ttgr-cat-nav-open");
+				if ($("body").hasClass("ttgr-cat-nav-open")) {
+
+					gsap.to(".portfolio-grid-item", { duration: 0.3, scale: 0.9 });
+					gsap.to(".pgi-caption, .ttgr-cat-trigger", { duration: 0.3, autoAlpha: 0 });
+
+					$(".ttgr-cat-nav").off("click");
+
+					var tl_ttgrIn = gsap.timeline({
+						onComplete: function () {
+							ttCatNavClose();
+						}
+					});
+					tl_ttgrIn.to(".ttgr-cat-nav", { duration: 0.3, autoAlpha: 1 });
+					tl_ttgrIn.from(".ttgr-cat-list > li", { duration: 0.3, y: 80, autoAlpha: 0, stagger: 0.05, ease: Power2.easeOut, clearProps: "all" });
+
+					$(".ttgr-cat-nav a")
+						.not('[target="_blank"]')
+						.not('[href^="#"]')
+						.not('[href^="mailto"]')
+						.not('[href^="tel"]')
+						.on('click', function () {
+							gsap.to(".ttgr-cat-list > li", { duration: 0.3, y: -80, autoAlpha: 0, stagger: 0.05, ease: Power2.easeIn });
+						});
+				}
+			});
+
+			function ttCatNavClose() {
+				$(".ttgr-cat-nav").on("click", function () {
+					$("body").removeClass("ttgr-cat-nav-open");
+
+					var tl_ttgrClose = gsap.timeline();
+					tl_ttgrClose.to(".ttgr-cat-list > li", { duration: 0.3, y: -80, autoAlpha: 0, stagger: 0.05, ease: Power2.easeIn });
+					tl_ttgrClose.to(".ttgr-cat-nav", { duration: 0.3, autoAlpha: 0, clearProps: "all" }, "+=0.2");
+					tl_ttgrClose.to(".portfolio-grid-item", { duration: 0.3, scale: 1, clearProps: "all" }, "-=0.4");
+					tl_ttgrClose.to(".pgi-caption, #page-header, .ttgr-cat-trigger", { duration: 0.3, autoAlpha: 1, clearProps: "all" }, "-=0.4");
+					tl_ttgrClose.to(".ttgr-cat-list > li", { clearProps: "all" });
+				});
+			}
+
+		});
+	</script>
 
         <div id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title" aria-hidden="true">
                 <div class="popup-box">
