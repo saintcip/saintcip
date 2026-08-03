@@ -23,7 +23,7 @@
   {
     "id": 3,
     "image": "assets/img/portfolio/3.png",
-    "name": "Fable",
+    "name": "Text Flow",
     "description": "Minimal splash-screen branding for a messaging app.",
     "tag": "App"
   },
@@ -37,21 +37,21 @@
   {
     "id": 5,
     "image": "assets/img/portfolio/5.png",
-    "name": "Muax",
+    "name": "Muaxx",
     "description": "Playful kiss-mark lettering for a lifestyle brand.",
     "tag": "Branding"
   },
   {
     "id": 6,
     "image": "assets/img/portfolio/6.png",
-    "name": "UEz",
+    "name": "Ez",
     "description": "Chrome monogram logo exploring dimension and reflection.",
     "tag": "Branding"
   },
   {
     "id": 7,
     "image": "assets/img/portfolio/7.png",
-    "name": "Mine Poly",
+    "name": "Mine-Poly",
     "description": "Blocky, voxel-styled logo for a mining and building game.",
     "tag": "Game"
   },
@@ -65,7 +65,7 @@
   {
     "id": 9,
     "image": "assets/img/portfolio/9.jpg",
-    "name": "Peach",
+    "name": "Palm Peaches",
     "description": "Rounded, friendly app icon built around a peach mark.",
     "tag": "App"
   },
@@ -79,7 +79,7 @@
   {
     "id": 11,
     "image": "assets/img/portfolio/11.png",
-    "name": "King & The Per",
+    "name": "King & The Pea",
     "description": "Hand-lettered circular badge with a bold, playful wordmark.",
     "tag": "Branding"
   },
@@ -93,7 +93,7 @@
   {
     "id": 13,
     "image": "assets/img/portfolio/13.png",
-    "name": "Good Vibes",
+    "name": "Fresco Bags",
     "description": "Custom mascot illustration and pouch design for a limited drop.",
     "tag": "Packaging"
   },
@@ -135,7 +135,7 @@
   {
     "id": 19,
     "image": "assets/img/portfolio/19.jpg",
-    "name": "B Mark",
+    "name": "Better Budget",
     "description": "Adaptive app icon built from a folded monogram mark.",
     "tag": "App"
   },
