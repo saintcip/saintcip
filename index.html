@@ -123,19 +123,6 @@
 			}
 		}
 
-		/* Portfolio grid filter trigger (bottom right corner) — only visible
-		   while the portfolio section is on screen. Toggled via JS class
-		   "is-portfolio-visible" (see IntersectionObserver script below). */
-		.ttgr-cat-trigger-wrap.ttgr-cat-fixed {
-			transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
-			transform: scale(0.9);
-		}
-		.ttgr-cat-trigger-wrap.ttgr-cat-fixed.is-portfolio-visible {
-			opacity: 1 !important;
-			visibility: visible !important;
-			transform: scale(1);
-		}
-
 		/* Portfolio grid images: smooth fade-up reveal. Hidden by default,
 		   revealed by adding "is-revealed" (see IntersectionObserver script). */
 		#portfolio-grid .ttgr-item-inner {
@@ -175,6 +162,64 @@
 				visibility: visible !important;
 				transform: none !important;
 			}
+		}
+
+		/* Portfolio section title — centered on the same column as the intro
+		   text above it, so it reads as a deliberate statement rather than
+		   a label pinned to the grid's left edge. */
+		.portfolio-section-heading {
+			margin: 0 auto 50px;
+			text-align: center;
+		}
+		.portfolio-section-kicker {
+			display: block;
+			margin-bottom: 12px;
+			font-size: calc(12px + 0.1vw);
+			font-weight: 600;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.5);
+		}
+		.portfolio-section-title {
+			margin: 0;
+			font-size: clamp(28px, 3.5vw, 46px);
+			font-weight: 600;
+			color: #FFF;
+			line-height: 1.3;
+			letter-spacing: -0.01em;
+		}
+		@media (max-width: 767px) {
+			.portfolio-section-heading {
+				margin-bottom: 32px;
+				padding: 0 4vw;
+			}
+		}
+
+		/* "View more projects" load-more link */
+		.portfolio-load-more-wrap {
+			display: flex;
+			justify-content: center;
+			margin-top: 60px;
+		}
+		.portfolio-load-more-wrap.is-hidden {
+			display: none;
+		}
+		.portfolio-load-more {
+			display: inline-block;
+			color: #FFF;
+			font-size: calc(15px + 0.15vw);
+			font-weight: 500;
+			letter-spacing: 0.02em;
+			opacity: 0.75;
+			text-decoration: underline;
+			text-underline-offset: 5px;
+			text-decoration-thickness: 1px;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+		}
+		.portfolio-load-more:hover,
+		.portfolio-load-more:focus-visible {
+			opacity: 1;
 		}
 	</style>
 
@@ -294,53 +339,18 @@
 				<div class="tt-section padding-top-xlg-40">
 					<div class="tt-section-inner">
 
+						<!-- Begin portfolio section title -->
+						<div class="portfolio-section-heading tt-wrap max-width-900 anim-fadeinup">
+							<span class="portfolio-section-kicker">Selected Work</span>
+							<h2 class="portfolio-section-title">My favorite Projects</h2>
+						</div>
+						<!-- End portfolio section title -->
+
 						<!-- Begin portfolio grid (works combined with tt-Ggrid!) -->
 						<div id="portfolio-grid" class="pgi-cap-inside pgi-cap-hover">
 
 							<!-- Begin tt-Grid -->
 							<div class="tt-grid ttgr-layout-2 ttgr-gap-4">
-
-								<!-- Begin tt-Ggrid top content -->
-								<div class="tt-grid-top">
-
-									<!-- Begin tt-Ggrid categories/filter -->
-									<div class="tt-grid-categories">
-
-										<!-- Begin tt-Ggrid categories trigger -->
-										<div class="ttgr-cat-trigger-wrap ttgr-cat-fixed">
-											<a href="#portfolio-grid" class="ttgr-cat-trigger not-hide-cursor" data-offset="150">
-												<div class="ttgr-cat-text">
-													<span data-hover="Open">Filter</span>
-												</div>
-												<div class="ttgr-cat-icon">
-													<span class="magnetic-item"><i class="fas fa-layer-group"></i></span>
-												</div>
-											</a>
-										</div>
-										<!-- End tt-Ggrid categories trigger -->
-
-										<!-- Begin tt-Ggrid categories nav -->
-										<div class="ttgr-cat-nav">
-											<div class="ttgr-cat-list-holder cursor-close">
-												<div class="ttgr-cat-list-inner">
-													<div class="ttgr-cat-list-content">
-														<ul class="ttgr-cat-list">
-															<li class="ttgr-cat-close">Close <i class="fas fa-times"></i></li>
-															<li class="ttgr-cat-item"><a href="#" class="active">Show All</a></li>
-															<!-- Category items below are generated dynamically from assets/data/portfolio.json (see script near end of page) -->
-														</ul>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!-- End tt-Ggrid categories nav -->
-
-									</div>
-									<!-- End tt-Ggrid categories/filter-->
-
-								</div>
-								<!-- End tt-Grid top content -->
-
 
 								<!-- Begin tt-Grid items wrap -->
 								<!-- Populated dynamically from assets/data/portfolio.json — see script near end of page -->
@@ -349,6 +359,12 @@
 
 							</div>
 							<!-- End tt-Grid -->
+
+							<!-- Begin "Load more" trigger -->
+							<div class="portfolio-load-more-wrap is-hidden" id="portfolio-load-more-wrap">
+								<a href="#" class="portfolio-load-more" id="portfolio-load-more">View more projects</a>
+							</div>
+							<!-- End "Load more" trigger -->
 
 						</div>
 						<!-- End portfolio grid -->
@@ -462,22 +478,24 @@
 	<script src="assets/vendor/jquery.mousewheel.min.js"></script>
 	<!-- A jQuery plugin that adds cross browser mouse wheel support (https://github.com/jquery/jquery-mousewheel) -->
 
-	<!-- Init portfolio grid: fetches assets/data/portfolio.json, renders 6 projects at a
-		time behind a "ver mais projetos.." link, builds the category filter from each
-		project's tag, and runs Isotope layout + category filter (ported from assets/js/theme.js) -->
+	<!-- Init portfolio grid: fetches assets/data/portfolio.json, shows the first 6 projects,
+		then reveals 4 more each time "View more projects" is clicked. No category filter. -->
 	<script>
 		jQuery(function ($) {
 
 			if (!$("#portfolio-grid").length) return;
 
+			var INITIAL_COUNT = 6;
+			var LOAD_MORE_COUNT = 4;
+
+			var portfolioData = [];
+			var renderedCount = 0;
+			var isotopeReady = false;
+
 			var $itemsWrap = $("#portfolio-items-wrap");
 			var $container = $("#portfolio-grid .isotope-items-wrap");
-
-			function slugify(str) {
-				return String(str || "uncategorized").toLowerCase().trim()
-					.replace(/[^a-z0-9]+/g, "-")
-					.replace(/(^-|-$)/g, "") || "uncategorized";
-			}
+			var $loadMoreWrap = $("#portfolio-load-more-wrap");
+			var $loadMoreBtn = $("#portfolio-load-more");
 
 			// ============================================================================
 			// Portfolio grid images: smooth fade-up reveal, staggered per item.
@@ -523,12 +541,11 @@
 			// Caption shows only the description (revealed on hover) — no project name.
 			// ============================================================================
 			function buildItemHtml(item) {
-				var tagSlug = slugify(item.tag);
 				var description = item.description ? String(item.description) : "";
 				var altText = item.name ? String(item.name) : "Portfolio project";
 
 				return (
-					'<div class="tt-grid-item isotope-item ' + tagSlug + '">' +
+					'<div class="tt-grid-item isotope-item">' +
 						'<div class="ttgr-item-inner">' +
 							'<div class="portfolio-grid-item">' +
 								'<div class="pgi-image-wrap">' +
@@ -554,152 +571,62 @@
 			}
 
 			// ============================================================================
-			// Render every project at once, init Isotope, and reveal them.
-			// (Filtering — not pagination — is how visitors narrow the grid down.)
+			// Render the next page of projects (6 initially, then 4 at a time), init/append
+			// to Isotope, reveal them, and show/hide the "View more projects" button.
 			// ============================================================================
-			function renderAll(portfolioData) {
-				if (!portfolioData.length) return;
+			function renderNextBatch() {
+				var pageSize = renderedCount === 0 ? INITIAL_COUNT : LOAD_MORE_COUNT;
+				var nextItems = portfolioData.slice(renderedCount, renderedCount + pageSize);
+				if (!nextItems.length) {
+					$loadMoreWrap.addClass("is-hidden");
+					return;
+				}
 
-				var $newItems = $($.map(portfolioData, buildItemHtml).join(""));
+				var $newItems = $($.map(nextItems, buildItemHtml).join(""));
 				$itemsWrap.append($newItems);
+				renderedCount += nextItems.length;
 
 				attachReveal($newItems.find(".ttgr-item-inner"));
 
 				$container.imagesLoaded(function () {
-					$container.isotope({
-						itemSelector: ".isotope-item",
-						layoutMode: "packery",
-						transitionDuration: "0.7s",
-						percentPosition: true
-					});
+					if (!isotopeReady) {
+						$container.isotope({
+							itemSelector: ".isotope-item",
+							layoutMode: "packery",
+							transitionDuration: "0.7s",
+							percentPosition: true
+						});
+						isotopeReady = true;
+					} else {
+						$container.isotope("appended", $newItems).isotope("layout");
+					}
 
 					setTimeout(function () {
 						$container.isotope("layout");
 						if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
 					}, 500);
 				});
+
+				$loadMoreWrap.toggleClass("is-hidden", renderedCount >= portfolioData.length);
 			}
 
+			$loadMoreBtn.on("click", function (e) {
+				e.preventDefault();
+				renderNextBatch();
+			});
+
 			// ============================================================================
-			// Fetch the portfolio data, build the category filter from unique tags,
-			// then render every project.
+			// Fetch the portfolio data, then render the first page.
 			// ============================================================================
 			fetch("assets/data/portfolio.json")
 				.then(function (res) { return res.json(); })
 				.then(function (data) {
-					var portfolioData = Array.isArray(data) ? data : [];
-
-					var $list = $(".ttgr-cat-list");
-					var seenTags = {};
-					portfolioData.forEach(function (item) {
-						var tag = item.tag;
-						if (!tag || seenTags[tag]) return;
-						seenTags[tag] = true;
-						var slug = slugify(tag);
-						$list.append('<li class="ttgr-cat-item"><a href="#" data-filter=".' + slug + '">' + tag + '</a></li>');
-					});
-
-					renderAll(portfolioData);
+					portfolioData = Array.isArray(data) ? data : [];
+					renderNextBatch();
 				})
 				.catch(function (err) {
 					console.error("Could not load assets/data/portfolio.json", err);
 				});
-
-			// Filter (delegated: category links are added dynamically once the JSON loads)
-			$(document).on("click", ".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a", function () {
-				var selector = $(this).attr("data-filter");
-				$container.isotope({ filter: selector });
-
-				setTimeout(function () {
-					if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
-				}, 500);
-
-				return false;
-			});
-
-			// Filter item active state
-			$(document).on("click", ".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a", function () {
-				var $this = $(this);
-				if (!$this.hasClass("active")) {
-					$(".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a").removeClass("active");
-					$this.addClass("active");
-				}
-			});
-
-			// ============================================================================
-			// Portfolio grid categories filter trigger (bottom right corner):
-			// only visible while the portfolio section is actually on screen.
-			// Uses IntersectionObserver (simple, reliable, not dependent on
-			// GSAP/ScrollTrigger or Isotope layout timing).
-			// ============================================================================
-			if ($(".tt-grid-categories").length) {
-				var $ttgCatTriggerWrap = $(".ttgr-cat-trigger-wrap");
-
-				if ($ttgCatTriggerWrap.hasClass("ttgr-cat-fixed")) {
-					$ttgCatTriggerWrap.appendTo("#body-inner");
-
-					var portfolioGridEl = document.getElementById("portfolio-grid");
-
-					if (portfolioGridEl && "IntersectionObserver" in window) {
-						var portfolioObserver = new IntersectionObserver(function (entries) {
-							entries.forEach(function (entry) {
-								$ttgCatTriggerWrap.toggleClass("is-portfolio-visible", entry.isIntersecting);
-							});
-						}, { threshold: 0 });
-
-						portfolioObserver.observe(portfolioGridEl);
-					} else {
-						// Fallback for browsers without IntersectionObserver: always show.
-						$ttgCatTriggerWrap.addClass("is-portfolio-visible");
-					}
-				}
-			}
-
-			// ============================================================================
-			// Portfolio grid categories filter panel open/close
-			// ============================================================================
-			$(".ttgr-cat-nav").appendTo("#body-inner");
-
-			$(".ttgr-cat-trigger").on("click", function () {
-				$("body").addClass("ttgr-cat-nav-open");
-				if ($("body").hasClass("ttgr-cat-nav-open")) {
-
-					gsap.to(".portfolio-grid-item", { duration: 0.3, scale: 0.9 });
-					gsap.to(".pgi-caption, .ttgr-cat-trigger", { duration: 0.3, autoAlpha: 0 });
-
-					$(".ttgr-cat-nav").off("click");
-
-					var tl_ttgrIn = gsap.timeline({
-						onComplete: function () {
-							ttCatNavClose();
-						}
-					});
-					tl_ttgrIn.to(".ttgr-cat-nav", { duration: 0.3, autoAlpha: 1 });
-					tl_ttgrIn.from(".ttgr-cat-list > li", { duration: 0.3, y: 80, autoAlpha: 0, stagger: 0.05, ease: Power2.easeOut, clearProps: "all" });
-
-					$(".ttgr-cat-nav a")
-						.not('[target="_blank"]')
-						.not('[href^="#"]')
-						.not('[href^="mailto"]')
-						.not('[href^="tel"]')
-						.on('click', function () {
-							gsap.to(".ttgr-cat-list > li", { duration: 0.3, y: -80, autoAlpha: 0, stagger: 0.05, ease: Power2.easeIn });
-						});
-				}
-			});
-
-			function ttCatNavClose() {
-				$(".ttgr-cat-nav").on("click", function () {
-					$("body").removeClass("ttgr-cat-nav-open");
-
-					var tl_ttgrClose = gsap.timeline();
-					tl_ttgrClose.to(".ttgr-cat-list > li", { duration: 0.3, y: -80, autoAlpha: 0, stagger: 0.05, ease: Power2.easeIn });
-					tl_ttgrClose.to(".ttgr-cat-nav", { duration: 0.3, autoAlpha: 0, clearProps: "all" }, "+=0.2");
-					tl_ttgrClose.to(".portfolio-grid-item", { duration: 0.3, scale: 1, clearProps: "all" }, "-=0.4");
-					tl_ttgrClose.to(".pgi-caption, #page-header, .ttgr-cat-trigger", { duration: 0.3, autoAlpha: 1, clearProps: "all" }, "-=0.4");
-					tl_ttgrClose.to(".ttgr-cat-list > li", { clearProps: "all" });
-				});
-			}
 
 		});
 	</script>

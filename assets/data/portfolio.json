@@ -1,5 +1,12 @@
 [
   {
+    "id": 0,
+    "image": "assets/img/portfolio/0.png",
+    "name": "Sharp Studio",
+    "description": "Dashboard UI and service promo design for the Sharp Studio platform.",
+    "tag": "Web"
+  },
+  {
     "id": 1,
     "image": "assets/img/portfolio/1.png",
     "name": "Cartel Candy",
@@ -9,15 +16,15 @@
   {
     "id": 2,
     "image": "assets/img/portfolio/2.png",
-    "name": "UEz",
-    "description": "Chrome monogram logo exploring dimension and reflection.",
-    "tag": "Branding"
+    "name": "Nakamoto Capital",
+    "description": "Product site design for a multi-chain DAO investment platform.",
+    "tag": "Web"
   },
   {
     "id": 3,
-    "image": "assets/img/portfolio/3.jpg",
-    "name": "B Mark",
-    "description": "Adaptive app icon built from a folded monogram mark.",
+    "image": "assets/img/portfolio/3.png",
+    "name": "Fable",
+    "description": "Minimal splash-screen branding for a messaging app.",
     "tag": "App"
   },
   {
@@ -36,9 +43,9 @@
   },
   {
     "id": 6,
-    "image": "assets/img/portfolio/6.jpg",
-    "name": "Paty Girl",
-    "description": "Editorial wordmark and visual identity for a fashion label.",
+    "image": "assets/img/portfolio/6.png",
+    "name": "UEz",
+    "description": "Chrome monogram logo exploring dimension and reflection.",
     "tag": "Branding"
   },
   {
@@ -51,9 +58,9 @@
   {
     "id": 8,
     "image": "assets/img/portfolio/8.jpg",
-    "name": "Modefit",
-    "description": "Hang tag and mark for a California fitness apparel line.",
-    "tag": "Packaging"
+    "name": "Paty Girl",
+    "description": "Editorial wordmark and visual identity for a fashion label.",
+    "tag": "Branding"
   },
   {
     "id": 9,
@@ -124,5 +131,19 @@
     "name": "Universe Tales",
     "description": "Whimsical hand-lettered logo for a storytelling universe brand.",
     "tag": "Illustration"
+  },
+  {
+    "id": 19,
+    "image": "assets/img/portfolio/19.jpg",
+    "name": "B Mark",
+    "description": "Adaptive app icon built from a folded monogram mark.",
+    "tag": "App"
+  },
+  {
+    "id": 20,
+    "image": "assets/img/portfolio/20.jpg",
+    "name": "Modefit",
+    "description": "Hang tag and mark for a California fitness apparel line.",
+    "tag": "Packaging"
   }
 ]
