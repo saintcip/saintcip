@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "image": "assets/img/portfolio/1.png",
+    "name": "Cartel Candy",
+    "description": "Retro sunset lettering and brand mark for a candy label.",
+    "tag": "Branding"
+  },
+  {
+    "id": 2,
+    "image": "assets/img/portfolio/2.png",
+    "name": "UEz",
+    "description": "Chrome monogram logo exploring dimension and reflection.",
+    "tag": "Branding"
+  },
+  {
+    "id": 3,
+    "image": "assets/img/portfolio/3.jpg",
+    "name": "B Mark",
+    "description": "Adaptive app icon built from a folded monogram mark.",
+    "tag": "App"
+  },
+  {
+    "id": 4,
+    "image": "assets/img/portfolio/4.png",
+    "name": "Organix Farms",
+    "description": "Earthy wordmark and leaf emblem for a cannabis cultivation brand.",
+    "tag": "Branding"
+  },
+  {
+    "id": 5,
+    "image": "assets/img/portfolio/5.png",
+    "name": "Muax",
+    "description": "Playful kiss-mark lettering for a lifestyle brand.",
+    "tag": "Branding"
+  },
+  {
+    "id": 6,
+    "image": "assets/img/portfolio/6.jpg",
+    "name": "Paty Girl",
+    "description": "Editorial wordmark and visual identity for a fashion label.",
+    "tag": "Branding"
+  },
+  {
+    "id": 7,
+    "image": "assets/img/portfolio/7.png",
+    "name": "Mine Poly",
+    "description": "Blocky, voxel-styled logo for a mining and building game.",
+    "tag": "Game"
+  },
+  {
+    "id": 8,
+    "image": "assets/img/portfolio/8.jpg",
+    "name": "Modefit",
+    "description": "Hang tag and mark for a California fitness apparel line.",
+    "tag": "Packaging"
+  },
+  {
+    "id": 9,
+    "image": "assets/img/portfolio/9.jpg",
+    "name": "Peach",
+    "description": "Rounded, friendly app icon built around a peach mark.",
+    "tag": "App"
+  },
+  {
+    "id": 10,
+    "image": "assets/img/portfolio/10.png",
+    "name": "Mansa",
+    "description": "Regal wordmark and crown icon for the Mansa brand.",
+    "tag": "Branding"
+  },
+  {
+    "id": 11,
+    "image": "assets/img/portfolio/11.png",
+    "name": "King & The Per",
+    "description": "Hand-lettered circular badge with a bold, playful wordmark.",
+    "tag": "Branding"
+  },
+  {
+    "id": 12,
+    "image": "assets/img/portfolio/12.jpg",
+    "name": "Kube",
+    "description": "Glowing geometric logo built around a floating 3D cube.",
+    "tag": "Branding"
+  },
+  {
+    "id": 13,
+    "image": "assets/img/portfolio/13.png",
+    "name": "Good Vibes",
+    "description": "Custom mascot illustration and pouch design for a limited drop.",
+    "tag": "Packaging"
+  },
+  {
+    "id": 14,
+    "image": "assets/img/portfolio/14.jpg",
+    "name": "Easy Budz",
+    "description": "Cannabis flower packaging system with resealable mylar pouches.",
+    "tag": "Packaging"
+  },
+  {
+    "id": 15,
+    "image": "assets/img/portfolio/15.jpg",
+    "name": "Crypto Weed",
+    "description": "Gold coin emblem merging cannabis leaf and crypto token motifs.",
+    "tag": "Branding"
+  },
+  {
+    "id": 16,
+    "image": "assets/img/portfolio/16.png",
+    "name": "Sticker Trade",
+    "description": "Playful 3D game logo for a sticker-trading mobile app.",
+    "tag": "Game"
+  },
+  {
+    "id": 17,
+    "image": "assets/img/portfolio/17.png",
+    "name": "UCBT",
+    "description": "Isometric illustration of a contactless card payment for a fintech brand.",
+    "tag": "Fintech"
+  },
+  {
+    "id": 18,
+    "image": "assets/img/portfolio/18.png",
+    "name": "Universe Tales",
+    "description": "Whimsical hand-lettered logo for a storytelling universe brand.",
+    "tag": "Illustration"
+  }
+]

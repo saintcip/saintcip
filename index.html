@@ -147,6 +147,57 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+
+		/* Portfolio grid caption: only the description shows, revealed on hover
+		   (same reveal timing/pattern the theme already uses for categories). */
+		#portfolio-grid .pgi-description {
+			color: #FFF;
+			font-size: calc(13px + 0.15vw);
+			line-height: 1.5;
+			max-width: 90%;
+		}
+		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap {
+			opacity: 0;
+			visibility: hidden;
+			transform: translate3d(0, 20px, 0);
+			transition: all 0.25s ease-out;
+			transition-delay: 0.1s;
+		}
+		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap {
+			opacity: 1;
+			visibility: visible;
+			transform: translate3d(0, 0, 0);
+		}
+		/* Touch devices: no hover, so keep the description visible */
+		@media (hover: none) {
+			#portfolio-grid .pgi-description-wrap {
+				opacity: 1 !important;
+				visibility: visible !important;
+				transform: none !important;
+			}
+		}
+
+		/* "ver mais projetos.." load-more link */
+		.portfolio-load-more-wrap {
+			text-align: center;
+			margin-top: 50px;
+		}
+		.portfolio-load-more-wrap.is-hidden {
+			display: none;
+		}
+		.portfolio-load-more {
+			display: inline-block;
+			color: #FFF;
+			font-size: calc(14px + 0.2vw);
+			opacity: 0.7;
+			text-decoration: underline;
+			text-underline-offset: 4px;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+		}
+		.portfolio-load-more:hover {
+			opacity: 1;
+		}
 	</style>
 
 </head>
@@ -298,10 +349,7 @@
 														<ul class="ttgr-cat-list">
 															<li class="ttgr-cat-close">Close <i class="fas fa-times"></i></li>
 															<li class="ttgr-cat-item"><a href="#" class="active">Show All</a></li>
-															<li class="ttgr-cat-item"><a href="#" data-filter=".branding">Branding</a></li>
-															<li class="ttgr-cat-item"><a href="#" data-filter=".people">People</a></li>
-															<li class="ttgr-cat-item"><a href="#" data-filter=".nature">Nature</a></li>
-															<li class="ttgr-cat-item"><a href="#" data-filter=".creative">Creative</a></li>
+															<!-- Category items below are generated dynamically from assets/data/portfolio.json (see script near end of page) -->
 														</ul>
 													</div>
 												</div>
@@ -317,250 +365,18 @@
 
 
 								<!-- Begin tt-Grid items wrap -->
-								<div class="tt-grid-items-wrap isotope-items-wrap">
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item people">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-1.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-1.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Victorian Girls</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">People</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item creative">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-2.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-2.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Smithy</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">Creative</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item people">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-3.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-video-wrap ttgr-height">
-																<video class="pgi-video" loop muted preload="metadata" poster="assets/vids/ucbt.jpg">
-																	<source src="assets/vids/ucbt.mp4" type="video/mp4">
-																	<source src="assets/vids/ucbt.webm" type="video/webm">
-																</video>
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Washion Week</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">People</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item nature">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-4.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-3.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Mystery Forest</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">Nature</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item branding">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-5.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-4.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Red Package</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">Branding</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item people">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-6.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-5.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Studio Shoot</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">People</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item nature">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-7.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-6.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Breaking Wave</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">Nature</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item branding">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item pgi-image-is-light">
-												<a href="backup/single-project-8.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-7.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Wall Lamp</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">Branding</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-									<!-- Begin tt-Grid item -->
-									<div class="tt-grid-item isotope-item creative">
-										<div class="ttgr-item-inner">
-											<div class="portfolio-grid-item">
-												<a href="backup/single-project-9.html" class="pgi-image-wrap" data-cursor="View<br>Project">
-													<div class="pgi-image-holder cover-opacity-2">
-														<div class="pgi-image-inner anim-zoomin">
-															<figure class="pgi-image ttgr-height">
-																<img src="assets/img/portfolio/portfolio-8.jpg" alt="image">
-															</figure>
-														</div>
-													</div>
-												</a>
-												<div class="pgi-caption">
-													<div class="pgi-caption-inner">
-														<h2 class="pgi-title">Elegant Stoves</h2>
-														<div class="pgi-categories-wrap">
-															<div class="pgi-category">Creative</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- End tt-Grid item -->
-
-								</div>
+								<!-- Populated dynamically from assets/data/portfolio.json — see script near end of page -->
+								<div class="tt-grid-items-wrap isotope-items-wrap" id="portfolio-items-wrap"></div>
 								<!-- End tt-Grid items wrap  -->
 
 							</div>
 							<!-- End tt-Grid -->
+
+							<!-- Begin "Load more" trigger -->
+							<div class="portfolio-load-more-wrap is-hidden" id="portfolio-load-more-wrap">
+								<a href="#" class="portfolio-load-more" id="portfolio-load-more">ver mais projetos..</a>
+							</div>
+							<!-- End "Load more" trigger -->
 
 						</div>
 						<!-- End portfolio grid -->
@@ -674,23 +490,40 @@
 	<script src="assets/vendor/jquery.mousewheel.min.js"></script>
 	<!-- A jQuery plugin that adds cross browser mouse wheel support (https://github.com/jquery/jquery-mousewheel) -->
 
-	<!-- Init portfolio grid: Isotope layout + category filter (ported from assets/js/theme.js) -->
+	<!-- Init portfolio grid: fetches assets/data/portfolio.json, renders 6 projects at a
+		time behind a "ver mais projetos.." link, builds the category filter from each
+		project's tag, and runs Isotope layout + category filter (ported from assets/js/theme.js) -->
 	<script>
 		jQuery(function ($) {
 
 			if (!$("#portfolio-grid").length) return;
 
+			var PAGE_SIZE = 6;
+			var portfolioData = [];
+			var renderedCount = 0;
+			var isotopeReady = false;
+
+			var $itemsWrap = $("#portfolio-items-wrap");
+			var $container = $("#portfolio-grid .isotope-items-wrap");
+			var $loadMoreWrap = $("#portfolio-load-more-wrap");
+			var $loadMoreBtn = $("#portfolio-load-more");
+
+			function slugify(str) {
+				return String(str || "uncategorized").toLowerCase().trim()
+					.replace(/[^a-z0-9]+/g, "-")
+					.replace(/(^-|-$)/g, "") || "uncategorized";
+			}
+
 			// ============================================================================
 			// Portfolio grid images: smooth fade-up reveal, staggered per item.
-			// Runs first and is self-contained (try/catch + timeout safety net) so
-			// it can never leave images stuck invisible if anything else on the
-			// page errors out.
+			// Wrapped in try/catch + timeout safety net so it can never leave images
+			// stuck invisible if anything else on the page errors out.
 			// ============================================================================
-			try {
-				var $revealItems = $("#portfolio-grid .ttgr-item-inner");
-				if ($revealItems.length) {
+			function attachReveal($items) {
+				try {
+					if (!$items.length) return;
 
-					$revealItems.each(function (i) {
+					$items.each(function (i) {
 						this.style.transitionDelay = Math.min(i * 90, 600) + "ms";
 					});
 
@@ -704,43 +537,128 @@
 							});
 						}, { threshold: 0.1 });
 
-						$revealItems.each(function () {
+						$items.each(function () {
 							revealObserver.observe(this);
 						});
 
 						// Safety net: guarantee images never stay stuck invisible.
 						setTimeout(function () {
-							$revealItems.addClass("is-revealed");
+							$items.addClass("is-revealed");
 						}, 4000);
 					} else {
-						$revealItems.addClass("is-revealed");
+						$items.addClass("is-revealed");
 					}
+				} catch (e) {
+					$items.addClass("is-revealed");
 				}
-			} catch (e) {
-				$("#portfolio-grid .ttgr-item-inner").addClass("is-revealed");
 			}
 
 			// ============================================================================
-			// Isotope
+			// Build one grid item's markup from a portfolio.json entry.
+			// Caption shows only the description (revealed on hover) — no project name.
 			// ============================================================================
-			var $container = $("#portfolio-grid .isotope-items-wrap");
+			function buildItemHtml(item) {
+				var tagSlug = slugify(item.tag);
+				var description = item.description ? String(item.description) : "";
+				var altText = item.name ? String(item.name) : "Portfolio project";
 
-			$container.imagesLoaded(function () {
-				$container.isotope({
-					itemSelector: ".isotope-item",
-					layoutMode: "packery",
-					transitionDuration: "0.7s",
-					percentPosition: true
+				return (
+					'<div class="tt-grid-item isotope-item ' + tagSlug + '">' +
+						'<div class="ttgr-item-inner">' +
+							'<div class="portfolio-grid-item">' +
+								'<div class="pgi-image-wrap">' +
+									'<div class="pgi-image-holder cover-opacity-2">' +
+										'<div class="pgi-image-inner anim-zoomin">' +
+											'<figure class="pgi-image ttgr-height">' +
+												'<img src="' + item.image + '" alt="' + altText + '" loading="lazy">' +
+											'</figure>' +
+										'</div>' +
+									'</div>' +
+								'</div>' +
+								'<div class="pgi-caption">' +
+									'<div class="pgi-caption-inner">' +
+										'<div class="pgi-description-wrap">' +
+											'<div class="pgi-description">' + description + '</div>' +
+										'</div>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+			}
+
+			// ============================================================================
+			// Render the next page (6) of projects, init/append to Isotope, reveal them,
+			// and show/hide the "ver mais projetos.." link as needed.
+			// ============================================================================
+			function renderNextBatch() {
+				var nextItems = portfolioData.slice(renderedCount, renderedCount + PAGE_SIZE);
+				if (!nextItems.length) {
+					$loadMoreWrap.addClass("is-hidden");
+					return;
+				}
+
+				var $newItems = $($.map(nextItems, buildItemHtml).join(""));
+				$itemsWrap.append($newItems);
+				renderedCount += nextItems.length;
+
+				attachReveal($newItems.find(".ttgr-item-inner"));
+
+				$container.imagesLoaded(function () {
+					if (!isotopeReady) {
+						$container.isotope({
+							itemSelector: ".isotope-item",
+							layoutMode: "packery",
+							transitionDuration: "0.7s",
+							percentPosition: true
+						});
+						isotopeReady = true;
+					} else {
+						$container.isotope("appended", $newItems).isotope("layout");
+					}
+
+					setTimeout(function () {
+						$container.isotope("layout");
+						if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
+					}, 500);
 				});
 
-				setTimeout(function () {
-					$container.isotope('layout');
-					if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
-				}, 500);
+				$loadMoreWrap.toggleClass("is-hidden", renderedCount >= portfolioData.length);
+			}
+
+			$loadMoreBtn.on("click", function (e) {
+				e.preventDefault();
+				renderNextBatch();
 			});
 
-			// Filter
-			$(".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a").on("click", function () {
+			// ============================================================================
+			// Fetch the portfolio data, build the category filter from unique tags,
+			// then render the first page.
+			// ============================================================================
+			fetch("assets/data/portfolio.json")
+				.then(function (res) { return res.json(); })
+				.then(function (data) {
+					portfolioData = Array.isArray(data) ? data : [];
+
+					var $list = $(".ttgr-cat-list");
+					var seenTags = {};
+					portfolioData.forEach(function (item) {
+						var tag = item.tag;
+						if (!tag || seenTags[tag]) return;
+						seenTags[tag] = true;
+						var slug = slugify(tag);
+						$list.append('<li class="ttgr-cat-item"><a href="#" data-filter=".' + slug + '">' + tag + '</a></li>');
+					});
+
+					renderNextBatch();
+				})
+				.catch(function (err) {
+					console.error("Could not load assets/data/portfolio.json", err);
+				});
+
+			// Filter (delegated: category links are added dynamically once the JSON loads)
+			$(document).on("click", ".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a", function () {
 				var selector = $(this).attr("data-filter");
 				$container.isotope({ filter: selector });
 
@@ -752,11 +670,10 @@
 			});
 
 			// Filter item active state
-			var filterItemActive = $(".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a");
-			filterItemActive.on("click", function () {
+			$(document).on("click", ".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a", function () {
 				var $this = $(this);
 				if (!$this.hasClass("active")) {
-					filterItemActive.removeClass("active");
+					$(".ttgr-cat-list > li > a, .ttgr-cat-classic-list > li > a").removeClass("active");
 					$this.addClass("active");
 				}
 			});
