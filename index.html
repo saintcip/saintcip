@@ -176,28 +176,6 @@
 				transform: none !important;
 			}
 		}
-
-		/* "ver mais projetos.." load-more link */
-		.portfolio-load-more-wrap {
-			text-align: center;
-			margin-top: 50px;
-		}
-		.portfolio-load-more-wrap.is-hidden {
-			display: none;
-		}
-		.portfolio-load-more {
-			display: inline-block;
-			color: #FFF;
-			font-size: calc(14px + 0.2vw);
-			opacity: 0.7;
-			text-decoration: underline;
-			text-underline-offset: 4px;
-			cursor: pointer;
-			transition: opacity 0.3s ease;
-		}
-		.portfolio-load-more:hover {
-			opacity: 1;
-		}
 	</style>
 
 </head>
@@ -320,7 +298,7 @@
 						<div id="portfolio-grid" class="pgi-cap-inside pgi-cap-hover">
 
 							<!-- Begin tt-Grid -->
-							<div class="tt-grid ttgr-layout-1-2 ttgr-gap-4">
+							<div class="tt-grid ttgr-layout-2 ttgr-gap-4">
 
 								<!-- Begin tt-Ggrid top content -->
 								<div class="tt-grid-top">
@@ -371,12 +349,6 @@
 
 							</div>
 							<!-- End tt-Grid -->
-
-							<!-- Begin "Load more" trigger -->
-							<div class="portfolio-load-more-wrap is-hidden" id="portfolio-load-more-wrap">
-								<a href="#" class="portfolio-load-more" id="portfolio-load-more">ver mais projetos..</a>
-							</div>
-							<!-- End "Load more" trigger -->
 
 						</div>
 						<!-- End portfolio grid -->
@@ -498,15 +470,8 @@
 
 			if (!$("#portfolio-grid").length) return;
 
-			var PAGE_SIZE = 6;
-			var portfolioData = [];
-			var renderedCount = 0;
-			var isotopeReady = false;
-
 			var $itemsWrap = $("#portfolio-items-wrap");
 			var $container = $("#portfolio-grid .isotope-items-wrap");
-			var $loadMoreWrap = $("#portfolio-load-more-wrap");
-			var $loadMoreBtn = $("#portfolio-load-more");
 
 			function slugify(str) {
 				return String(str || "uncategorized").toLowerCase().trim()
@@ -589,57 +554,40 @@
 			}
 
 			// ============================================================================
-			// Render the next page (6) of projects, init/append to Isotope, reveal them,
-			// and show/hide the "ver mais projetos.." link as needed.
+			// Render every project at once, init Isotope, and reveal them.
+			// (Filtering — not pagination — is how visitors narrow the grid down.)
 			// ============================================================================
-			function renderNextBatch() {
-				var nextItems = portfolioData.slice(renderedCount, renderedCount + PAGE_SIZE);
-				if (!nextItems.length) {
-					$loadMoreWrap.addClass("is-hidden");
-					return;
-				}
+			function renderAll(portfolioData) {
+				if (!portfolioData.length) return;
 
-				var $newItems = $($.map(nextItems, buildItemHtml).join(""));
+				var $newItems = $($.map(portfolioData, buildItemHtml).join(""));
 				$itemsWrap.append($newItems);
-				renderedCount += nextItems.length;
 
 				attachReveal($newItems.find(".ttgr-item-inner"));
 
 				$container.imagesLoaded(function () {
-					if (!isotopeReady) {
-						$container.isotope({
-							itemSelector: ".isotope-item",
-							layoutMode: "packery",
-							transitionDuration: "0.7s",
-							percentPosition: true
-						});
-						isotopeReady = true;
-					} else {
-						$container.isotope("appended", $newItems).isotope("layout");
-					}
+					$container.isotope({
+						itemSelector: ".isotope-item",
+						layoutMode: "packery",
+						transitionDuration: "0.7s",
+						percentPosition: true
+					});
 
 					setTimeout(function () {
 						$container.isotope("layout");
 						if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
 					}, 500);
 				});
-
-				$loadMoreWrap.toggleClass("is-hidden", renderedCount >= portfolioData.length);
 			}
-
-			$loadMoreBtn.on("click", function (e) {
-				e.preventDefault();
-				renderNextBatch();
-			});
 
 			// ============================================================================
 			// Fetch the portfolio data, build the category filter from unique tags,
-			// then render the first page.
+			// then render every project.
 			// ============================================================================
 			fetch("assets/data/portfolio.json")
 				.then(function (res) { return res.json(); })
 				.then(function (data) {
-					portfolioData = Array.isArray(data) ? data : [];
+					var portfolioData = Array.isArray(data) ? data : [];
 
 					var $list = $(".ttgr-cat-list");
 					var seenTags = {};
@@ -651,7 +599,7 @@
 						$list.append('<li class="ttgr-cat-item"><a href="#" data-filter=".' + slug + '">' + tag + '</a></li>');
 					});
 
-					renderNextBatch();
+					renderAll(portfolioData);
 				})
 				.catch(function (err) {
 					console.error("Could not load assets/data/portfolio.json", err);
