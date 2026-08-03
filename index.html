@@ -538,10 +538,12 @@
 
 			// ============================================================================
 			// Build one grid item's markup from a portfolio.json entry.
-			// Caption shows only the description (revealed on hover) — no project name.
+			// Caption shows "Name - Tag" (revealed on hover) — no description.
 			// ============================================================================
 			function buildItemHtml(item) {
-				var description = item.description ? String(item.description) : "";
+				var name = item.name ? String(item.name) : "";
+				var tag = item.tag ? String(item.tag) : "";
+				var caption = name && tag ? (name + " - " + tag) : (name || tag);
 				var altText = item.name ? String(item.name) : "Portfolio project";
 
 				return (
@@ -560,7 +562,7 @@
 								'<div class="pgi-caption">' +
 									'<div class="pgi-caption-inner">' +
 										'<div class="pgi-description-wrap">' +
-											'<div class="pgi-description">' + description + '</div>' +
+											'<div class="pgi-description">' + caption + '</div>' +
 										'</div>' +
 									'</div>' +
 								'</div>' +
