@@ -116,11 +116,123 @@
 			width: 100% !important;
 		}
 
+		/* About section: block stays centered on the page, but the text
+		   itself is left-aligned (not centered/justified) within it. */
+		.about-section {
+			text-align: left;
+		}
+
 		/* Mobile: push the about/main text down from the hero */
 		@media (max-width: 767px) {
 			.about-section {
 				padding-top: 60px !important;
 			}
+		}
+
+		/* Client logo carousel: label + a slow, seamless auto-scrolling row of
+		   big logos. ".about-section" is a flex column with align-items:center
+		   (theme.css), so without "align-self: stretch" this section shrink-
+		   wraps to the animated track's full un-clipped width and blows out
+		   the whole layout — that's the fix for the width:max-content track
+		   below not to break the page. Track holds the logo set twice, back
+		   to back, and animates from translateX(0) to translateX(-50%) so the
+		   loop point is invisible. Placeholder logos — swap the <img> src's
+		   in the HTML later. */
+		.clients-marquee-section {
+			align-self: stretch;
+			width: 100%;
+			max-width: 100%;
+			margin: 20px 0 24px;
+			padding-bottom: 24px;
+		}
+		.clients-marquee-label {
+			margin: 0 0 28px;
+			text-align: center;
+			font-size: calc(12px + 0.1vw);
+			font-weight: 600;
+			letter-spacing: 1.5px;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.5);
+		}
+		.clients-marquee {
+			overflow: hidden;
+			width: 100%;
+			max-width: 100%;
+		}
+		.clients-marquee-track {
+			display: flex;
+			align-items: center;
+			width: max-content;
+			gap: 20px;
+			animation: clients-marquee-scroll 90s linear infinite;
+			will-change: transform;
+			backface-visibility: hidden;
+		}
+		.clients-marquee:hover .clients-marquee-track {
+			animation-play-state: paused;
+		}
+		.clients-marquee-track img {
+			display: block;
+			height: 90px;
+			width: auto;
+			flex: none;
+			border-radius: 8px;
+			cursor: default;
+			pointer-events: auto;
+			filter: grayscale(100%) brightness(0.8);
+			opacity: 0.7;
+			transition: filter 0.3s ease, opacity 0.3s ease;
+		}
+		.clients-marquee-track img:hover {
+			filter: grayscale(0%) brightness(1.3);
+			opacity: 1;
+		}
+		@keyframes clients-marquee-scroll {
+			from { transform: translate3d(0, 0, 0); }
+			to { transform: translate3d(-50%, 0, 0); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.clients-marquee-track {
+				animation: none;
+			}
+		}
+		@media (max-width: 767px) {
+			.clients-marquee-section {
+				margin: 16px 0 20px;
+			}
+			.clients-marquee-track {
+				gap: 14px;
+				animation-duration: 65s;
+			}
+			.clients-marquee-track img {
+				height: 56px;
+				width: auto;
+			}
+		}
+
+		/* Tighten the gap between the last skill pillar and the "Selected
+		   Work" heading below it. */
+		#about-outer-section {
+			padding-bottom: 20px !important;
+		}
+		#skills-stagger-group .skills-stagger-item:last-child {
+			margin-bottom: 0 !important;
+		}
+		#portfolio-outer-section {
+			padding-top: 50px !important;
+		}
+
+		/* Product/Marketing/Growth pillars: fade up one by one as the group
+		   scrolls into view (each item's transition-delay is staggered by JS
+		   below), rather than all appearing at once. */
+		.skills-stagger-item {
+			opacity: 0;
+			transform: translateY(40px);
+			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		.skills-stagger-item.is-revealed {
+			opacity: 1;
+			transform: translateY(0);
 		}
 
 		/* Portfolio grid images: smooth fade-up reveal. Hidden by default,
@@ -135,58 +247,72 @@
 			transform: translateY(0);
 		}
 
-		/* Portfolio grid caption: only the description shows, revealed on hover
-		   (same reveal timing/pattern the theme already uses for categories). */
+		/* Portfolio grid caption: title is always visible on the image;
+		   only the description fades in on hover (same reveal timing/pattern
+		   the theme already uses for categories). */
+		#portfolio-grid .pgi-title {
+			color: #FFF;
+			font-size: calc(14px + 0.15vw);
+			font-weight: 600;
+			line-height: 1.4;
+			margin-bottom: 6px;
+		}
 		#portfolio-grid .pgi-description {
 			color: #FFF;
 			font-size: calc(13px + 0.15vw);
 			line-height: 1.5;
 			max-width: 90%;
 		}
+		/* At rest, the description has zero height (max-height:0, clipped) so it
+		   doesn't reserve space above the title and the title sits low on the
+		   image. On hover it grows back into flow — since the caption box is
+		   bottom-anchored, growing pushes the whole block (title + description)
+		   upward, so the description rises into view and stays inside the image
+		   instead of spilling past the bottom edge. */
+		#portfolio-grid .pgi-caption-inner {
+			position: relative;
+		}
 		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap {
+			max-height: 0;
+			margin-top: 0;
 			opacity: 0;
-			visibility: hidden;
-			transform: translate3d(0, 20px, 0);
-			transition: all 0.25s ease-out;
-			transition-delay: 0.1s;
+			overflow: hidden;
+			transform: translate3d(0, 10px, 0);
+			transition: max-height 0.35s ease-out, margin-top 0.35s ease-out, opacity 0.25s ease-out, transform 0.25s ease-out;
 		}
 		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap {
+			max-height: 240px;
+			margin-top: 6px;
 			opacity: 1;
-			visibility: visible;
 			transform: translate3d(0, 0, 0);
+			transition: max-height 0.35s ease-out, margin-top 0.35s ease-out, opacity 0.3s ease-out 0.05s, transform 0.3s ease-out 0.05s;
 		}
 		/* Touch devices: no hover, so keep the description visible */
 		@media (hover: none) {
 			#portfolio-grid .pgi-description-wrap {
+				max-height: none !important;
+				margin-top: 6px !important;
 				opacity: 1 !important;
 				visibility: visible !important;
 				transform: none !important;
 			}
 		}
 
-		/* Portfolio section title — centered on the same column as the intro
-		   text above it, so it reads as a deliberate statement rather than
-		   a label pinned to the grid's left edge. */
+		/* Portfolio section title — centered above the grid. */
 		.portfolio-section-heading {
-			margin: 0 auto 50px;
+			margin: 0 0 50px;
 			text-align: center;
 		}
-		.portfolio-section-kicker {
-			display: block;
-			margin-bottom: 12px;
+		.portfolio-section-title {
+			margin: 0 auto;
+			max-width: 620px;
+			font-family: 'Poppins', sans-serif;
 			font-size: calc(12px + 0.1vw);
 			font-weight: 600;
-			letter-spacing: 2px;
+			letter-spacing: 1.5px;
 			text-transform: uppercase;
 			color: rgba(255, 255, 255, 0.5);
-		}
-		.portfolio-section-title {
-			margin: 0;
-			font-size: clamp(28px, 3.5vw, 46px);
-			font-weight: 600;
-			color: #FFF;
-			line-height: 1.3;
-			letter-spacing: -0.01em;
+			line-height: 1.4;
 		}
 		@media (max-width: 767px) {
 			.portfolio-section-heading {
@@ -199,7 +325,7 @@
 		.portfolio-load-more-wrap {
 			display: flex;
 			justify-content: center;
-			margin-top: 60px;
+			margin-top: 20px;
 		}
 		.portfolio-load-more-wrap.is-hidden {
 			display: none;
@@ -306,28 +432,64 @@
 
 				<!-- End page header -->
 
-                                <div class="tt-section padding-bottom-xlg-75">
+                                <div class="tt-section padding-bottom-xlg-75" id="about-outer-section">
                                         <div class="tt-section-inner tt-wrap max-width-900 about-section">
 
 						<div class="text-xxlg font-alter text-gray-2">
-                                                        <p class="anim-fadeinup">Hi, I’m <strong class="text-white">Marcos
-                                                                        Cipriano</strong>, known online as @saintcip. I’m a Product Manager with UX and
-                                                                design leadership at <a href="https://sharpstudiollc.com/" target="_blank" rel="noopener">SHARP STUDIO</a>, based in
-                                                                Los Angeles. I focus on turning complex ideas into clear systems and shipped digital products.</p>
+                                                        <p class="anim-fadeinup"><strong class="text-white">Marcos Cipriano</strong><br>
+                                                                Senior Digital Product, Marketing Ops &amp; Creative Lead</p>
 
-                                                        <p class="anim-fadeinup">Over the past four years, I’ve led product delivery, UX strategy, and
-                                                                project execution across web platforms, SaaS tools, internal systems, and creative technology
-                                                                projects. My work sits at the intersection of product thinking, design, and technical execution
-                                                                aligning stakeholders, structuring workflows, and guiding teams from discovery through launch. I
-                                                                bring a strong visual design background, practical technical understanding, and a systems-first
-                                                                mindset.</p>
+                                                        <p class="anim-fadeinup">Based in Los Angeles, I bridge product design, growth operations, and marketing strategy to build high converting digital experiences.</p>
 
-                                                        <p class="anim-fadeinup">Originally from Brazil with Italian roots, I’ve lived and worked
-                                                                internationally before settling in Los Angeles. I collaborate with founders, startups, and
-                                                                creative teams to translate raw ideas into polished, scalable digital products.</p>
+                                                        <p class="anim-fadeinup">With 14+ years of cross disciplinary experience and a dedicated focus over the past 5 years leading end-to-end product delivery, automated marketing infrastructure, and creative brand systems I turn complex business goals into scalable web platforms, automated growth funnels, and high-impact multi-channel campaigns.</p>
 						</div>
 
-                                                <img src="assets/img/signature.png" class="signature-image anim-fadeinup margin-top-15" alt="Signature">
+						<!-- Client logo carousel — standalone div, isolated from the bio/
+							skills text blocks. NOTE: ".about-section" is a flex column
+							(align-items: center) in theme.css, so this needs
+							"align-self: stretch" or it shrink-wraps to the animated
+							track's full un-clipped width and blows out the layout. -->
+						<div class="clients-marquee-section">
+							<p class="clients-marquee-label">Brands I’ve Had the Opportunity to Work On:</p>
+							<div class="clients-marquee">
+								<div class="clients-marquee-track">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="Client logo">
+									<!-- Duplicate set — enables the seamless infinite loop (track scrolls exactly -50%) -->
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+									<img src="assets/img/clients/test.png" width="318" height="90" alt="" aria-hidden="true">
+								</div>
+							</div>
+						</div>
+
+						<div class="text-xxlg font-alter text-gray-2">
+                                                        <div class="skills-stagger-group" id="skills-stagger-group">
+                                                                <p class="skills-stagger-item"><strong class="text-white">Product &amp; UI/UX Design</strong><br>
+                                                                        Scalable web platforms, interactive prototyping, user research, and design systems.</p>
+
+                                                                <p class="skills-stagger-item"><strong class="text-white">Marketing Ops &amp; PM</strong><br>
+                                                                        Funnel automations, CRM workflows, martech stack architecture, and project delivery.</p>
+
+                                                                <p class="skills-stagger-item"><strong class="text-white">Growth &amp; Creative Strategy</strong><br>
+                                                                        Multi-channel campaigns, visual brand identity, and performance-driven media.</p>
+                                                        </div>
+						</div>
 
 					</div> <!-- /.tt-section-inner -->
 				</div>
@@ -336,13 +498,12 @@
 					************************************** -->
 
 				<!-- Begin portfolio grid (exact port of "portfolio style.html" / Portfolio Grid Modern) -->
-				<div class="tt-section padding-top-xlg-40">
+				<div class="tt-section padding-top-xlg-40" id="portfolio-outer-section">
 					<div class="tt-section-inner">
 
 						<!-- Begin portfolio section title -->
-						<div class="portfolio-section-heading tt-wrap max-width-900 anim-fadeinup">
-							<span class="portfolio-section-kicker">Selected Work</span>
-							<h2 class="portfolio-section-title">My favorite Projects</h2>
+						<div class="portfolio-section-heading anim-fadeinup">
+							<h2 class="portfolio-section-title">Few of my selected work:</h2>
 						</div>
 						<!-- End portfolio section title -->
 
@@ -538,12 +699,14 @@
 
 			// ============================================================================
 			// Build one grid item's markup from a portfolio.json entry.
-			// Caption shows "Name - Tag" (revealed on hover) — no description.
+			// Title ("Name - Tag") is always visible on the image; the description
+			// is revealed only on hover.
 			// ============================================================================
 			function buildItemHtml(item) {
 				var name = item.name ? String(item.name) : "";
 				var tag = item.tag ? String(item.tag) : "";
-				var caption = name && tag ? (name + " - " + tag) : (name || tag);
+				var title = name && tag ? (name + " - " + tag) : (name || tag);
+				var description = item.description ? String(item.description) : "";
 				var altText = item.name ? String(item.name) : "Portfolio project";
 
 				return (
@@ -561,9 +724,12 @@
 								'</div>' +
 								'<div class="pgi-caption">' +
 									'<div class="pgi-caption-inner">' +
-										'<div class="pgi-description-wrap">' +
-											'<div class="pgi-description">' + caption + '</div>' +
-										'</div>' +
+										'<div class="pgi-title">' + title + '</div>' +
+										(description ?
+											'<div class="pgi-description-wrap">' +
+												'<div class="pgi-description">' + description + '</div>' +
+											'</div>'
+										: '') +
 									'</div>' +
 								'</div>' +
 							'</div>' +
@@ -665,6 +831,43 @@
         <script src="assets/js/modal.js"></script>
         <script src="assets/js/animatedModal.js"></script>
 
+        <!-- Reveal the "Product / Marketing / Growth" pillars one by one as the
+                group scrolls into view (staggered fade-up). -->
+        <script>
+                (function () {
+                        var group = document.getElementById("skills-stagger-group");
+                        if (!group) return;
+                        var items = group.querySelectorAll(".skills-stagger-item");
+                        if (!items.length) return;
+
+                        items.forEach(function (el, i) {
+                                el.style.transitionDelay = (i * 220) + "ms";
+                        });
+
+                        function revealAll() {
+                                items.forEach(function (el) {
+                                        el.classList.add("is-revealed");
+                                });
+                        }
+
+                        if ("IntersectionObserver" in window) {
+                                var observer = new IntersectionObserver(function (entries) {
+                                        entries.forEach(function (entry) {
+                                                if (entry.isIntersecting) {
+                                                        revealAll();
+                                                        observer.unobserve(entry.target);
+                                                }
+                                        });
+                                }, { threshold: 0.2 });
+                                observer.observe(group);
+
+                                // Safety net: never leave the text stuck invisible.
+                                setTimeout(revealAll, 4000);
+                        } else {
+                                revealAll();
+                        }
+                })();
+        </script>
 
 
 </body>

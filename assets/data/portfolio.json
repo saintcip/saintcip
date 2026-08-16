@@ -4,146 +4,146 @@
     "image": "assets/img/portfolio/0.png",
     "name": "Sharp Studio",
     "description": "Dashboard UI and service promo design for the Sharp Studio platform.",
-    "tag": "Web"
+    "tag": "Web Design"
   },
   {
     "id": 1,
     "image": "assets/img/portfolio/1.png",
     "name": "Cartel Candy",
     "description": "Retro sunset lettering and brand mark for a candy label.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 2,
     "image": "assets/img/portfolio/2.png",
     "name": "Nakamoto Capital",
     "description": "Product site design for a multi-chain DAO investment platform.",
-    "tag": "Web"
+    "tag": "Web Design"
   },
   {
     "id": 3,
     "image": "assets/img/portfolio/3.png",
     "name": "Text Flow",
     "description": "Minimal splash-screen branding for a messaging app.",
-    "tag": "App"
+    "tag": "Product Design"
   },
   {
     "id": 4,
     "image": "assets/img/portfolio/4.png",
     "name": "Organix Farms",
     "description": "Earthy wordmark and leaf emblem for a cannabis cultivation brand.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 5,
     "image": "assets/img/portfolio/5.png",
     "name": "Muaxx",
     "description": "Playful kiss-mark lettering for a lifestyle brand.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 6,
     "image": "assets/img/portfolio/6.png",
     "name": "Ez",
     "description": "Chrome monogram logo exploring dimension and reflection.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 7,
     "image": "assets/img/portfolio/7.png",
     "name": "Mine-Poly",
     "description": "Blocky, voxel-styled logo for a mining and building game.",
-    "tag": "Game"
+    "tag": "Interactive Design"
   },
   {
     "id": 8,
     "image": "assets/img/portfolio/8.jpg",
     "name": "Paty Girl",
     "description": "Editorial wordmark and visual identity for a fashion label.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 9,
     "image": "assets/img/portfolio/9.jpg",
     "name": "Palm Peaches",
     "description": "Rounded, friendly app icon built around a peach mark.",
-    "tag": "App"
+    "tag": "Product Design"
   },
   {
     "id": 10,
     "image": "assets/img/portfolio/10.png",
     "name": "Mansa",
     "description": "Regal wordmark and crown icon for the Mansa brand.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 11,
     "image": "assets/img/portfolio/11.png",
     "name": "King & The Pea",
     "description": "Hand-lettered circular badge with a bold, playful wordmark.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 12,
     "image": "assets/img/portfolio/12.jpg",
     "name": "Kube",
     "description": "Glowing geometric logo built around a floating 3D cube.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 13,
     "image": "assets/img/portfolio/13.png",
     "name": "Fresco Bags",
     "description": "Custom mascot illustration and pouch design for a limited drop.",
-    "tag": "Packaging"
+    "tag": "Packaging Design"
   },
   {
     "id": 14,
     "image": "assets/img/portfolio/14.jpg",
     "name": "Easy Budz",
     "description": "Cannabis flower packaging system with resealable mylar pouches.",
-    "tag": "Packaging"
+    "tag": "Packaging Design"
   },
   {
     "id": 15,
     "image": "assets/img/portfolio/15.jpg",
     "name": "Crypto Weed",
     "description": "Gold coin emblem merging cannabis leaf and crypto token motifs.",
-    "tag": "Branding"
+    "tag": "Brand Identity"
   },
   {
     "id": 16,
     "image": "assets/img/portfolio/16.png",
     "name": "Sticker Trade",
     "description": "Playful 3D game logo for a sticker-trading mobile app.",
-    "tag": "Game"
+    "tag": "Interactive Design"
   },
   {
     "id": 17,
     "image": "assets/img/portfolio/17.png",
     "name": "UCBT",
     "description": "Isometric illustration of a contactless card payment for a fintech brand.",
-    "tag": "Fintech"
+    "tag": "Fintech Design"
   },
   {
     "id": 18,
     "image": "assets/img/portfolio/18.png",
     "name": "Universe Tales",
     "description": "Whimsical hand-lettered logo for a storytelling universe brand.",
-    "tag": "Illustration"
+    "tag": "Brand Illustration"
   },
   {
     "id": 19,
     "image": "assets/img/portfolio/19.jpg",
     "name": "Better Budget",
     "description": "Adaptive app icon built from a folded monogram mark.",
-    "tag": "App"
+    "tag": "Product Design"
   },
   {
     "id": 20,
     "image": "assets/img/portfolio/20.jpg",
     "name": "Modefit",
     "description": "Hang tag and mark for a California fitness apparel line.",
-    "tag": "Packaging"
+    "tag": "Packaging Design"
   }
 ]
