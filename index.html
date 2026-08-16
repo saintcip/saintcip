@@ -403,6 +403,36 @@
 				margin-top: 60px;
 			}
 		}
+
+		/* "Are you sure you want to leave" confirmation popup, shown before
+		   sending someone to a project's LinkedIn case study. Reuses the same
+		   .popup-box / .popup-message / .popup-button styling as the other
+		   popups (see assets/css/modal.css) — just needs the overlay backdrop
+		   rule extended to this new overlay's ID. */
+		#leaving-popup {
+			position: fixed;
+			inset: 0;
+			z-index: 9999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			background: rgba(0, 0, 0, 0.75);
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+			transition: opacity 0.3s ease, visibility 0.3s ease;
+		}
+		#leaving-popup.is-visible {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+
+		/* Portfolio items with a case-study link read as clickable. */
+		.portfolio-grid-item[data-link] {
+			cursor: pointer;
+		}
 	</style>
 
 </head>
@@ -585,7 +615,7 @@
 
 							<!-- Begin "Thanks for stopping by" -->
 							<div class="portfolio-thanks-wrap anim-fadeinup">
-								<h3 class="portfolio-thanks-title">Thanks for stopping by</h3>
+								<h3 class="portfolio-thanks-title">Thank You</h3>
 								<p class="portfolio-thanks-subtitle">Explore more of my work across my socials:</p>
 							</div>
 							<!-- End "Thanks for stopping by" -->
@@ -709,8 +739,8 @@
 
 			if (!$("#portfolio-grid").length) return;
 
-			var INITIAL_COUNT = 6;
-			var LOAD_MORE_COUNT = 4;
+			var INITIAL_COUNT = 3;
+			var LOAD_MORE_COUNT = 3;
 
 			var portfolioData = [];
 			var renderedCount = 0;
@@ -771,11 +801,15 @@
 				var title = name && tag ? (name + " - " + tag) : (name || tag);
 				var description = item.description ? String(item.description) : "";
 				var altText = item.name ? String(item.name) : "Portfolio project";
+				var link = item.link ? String(item.link) : "";
+				var clickableAttrs = link ?
+					' data-link="' + link.replace(/"/g, "&quot;") + '" role="button" tabindex="0" aria-label="View the ' + (name || "project") + ' case study (opens LinkedIn)"'
+					: "";
 
 				return (
 					'<div class="tt-grid-item isotope-item">' +
 						'<div class="ttgr-item-inner">' +
-							'<div class="portfolio-grid-item">' +
+							'<div class="portfolio-grid-item"' + clickableAttrs + '>' +
 								'<div class="pgi-image-wrap">' +
 									'<div class="pgi-image-holder cover-opacity-2">' +
 										'<div class="pgi-image-inner anim-zoomin">' +
@@ -862,6 +896,19 @@
 		});
 	</script>
 
+        <div id="leaving-popup" role="dialog" aria-modal="true" aria-label="Leaving this site" aria-hidden="true">
+                <div class="popup-box">
+                        <button class="popup-close" type="button" aria-label="Close popup" data-leaving-close>
+                                <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p class="popup-message">You’re about to leave this site to view the full case study on LinkedIn.</p>
+                        <div class="popup-actions">
+                                <button id="leaving-popup-confirm" class="popup-button popup-button-primary" type="button">Yes, take me there</button>
+                                <button class="popup-button popup-button-secondary" type="button" data-leaving-close>No, stay here</button>
+                        </div>
+                </div>
+        </div>
+
         <div id="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title" aria-hidden="true">
                 <div class="popup-box">
                         <button class="popup-close" type="button" aria-label="Close popup" data-popup-close>
@@ -893,6 +940,70 @@
         <!-- PopUp -->
         <script src="assets/js/modal.js"></script>
         <script src="assets/js/animatedModal.js"></script>
+
+        <!-- Portfolio item click → "you're about to leave" confirmation →
+                LinkedIn case study. Self-contained (doesn't touch modal.js) so it
+                can't affect the existing "Let's connect" / Calendly popups. -->
+        <script>
+                (function () {
+                        var grid = document.getElementById("portfolio-grid");
+                        var overlay = document.getElementById("leaving-popup");
+                        var confirmBtn = document.getElementById("leaving-popup-confirm");
+                        if (!grid || !overlay || !confirmBtn) return;
+
+                        var pendingLink = null;
+
+                        function openOverlay(link) {
+                                pendingLink = link;
+                                overlay.classList.add("is-visible");
+                                overlay.setAttribute("aria-hidden", "false");
+                        }
+
+                        function closeOverlay() {
+                                overlay.classList.remove("is-visible");
+                                overlay.setAttribute("aria-hidden", "true");
+                                pendingLink = null;
+                        }
+
+                        // Open the confirmation when a project card (or its keyboard
+                        // focus equivalent) is activated.
+                        grid.addEventListener("click", function (event) {
+                                var card = event.target.closest(".portfolio-grid-item[data-link]");
+                                if (!card) return;
+                                event.preventDefault();
+                                openOverlay(card.getAttribute("data-link"));
+                        });
+
+                        grid.addEventListener("keydown", function (event) {
+                                if (event.key !== "Enter" && event.key !== " ") return;
+                                var card = event.target.closest(".portfolio-grid-item[data-link]");
+                                if (!card) return;
+                                event.preventDefault();
+                                openOverlay(card.getAttribute("data-link"));
+                        });
+
+                        // "Yes, take me there" — open the case study in a new tab.
+                        confirmBtn.addEventListener("click", function () {
+                                if (pendingLink) {
+                                        window.open(pendingLink, "_blank", "noopener");
+                                }
+                                closeOverlay();
+                        });
+
+                        // "No, stay here" / close button / backdrop click / Escape.
+                        overlay.querySelectorAll("[data-leaving-close]").forEach(function (el) {
+                                el.addEventListener("click", closeOverlay);
+                        });
+                        overlay.addEventListener("click", function (event) {
+                                if (event.target === overlay) closeOverlay();
+                        });
+                        document.addEventListener("keydown", function (event) {
+                                if (event.key === "Escape" && overlay.classList.contains("is-visible")) {
+                                        closeOverlay();
+                                }
+                        });
+                })();
+        </script>
 
         <!-- Reveal the "Product / Marketing / Growth" pillars one by one as the
                 group scrolls into view (staggered fade-up). -->
