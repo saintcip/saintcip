@@ -32,6 +32,10 @@ loader.load(
   function (gltf) {
     //If the file is loaded, add it to the scene
     object = gltf.scene;
+    if (objToRender === "eye") {
+      //Bump the eye up a bit so it reads bigger on screen
+      object.scale.set(1.35, 1.35, 1.35);
+    }
     scene.add(object);
   },
   function (xhr) {

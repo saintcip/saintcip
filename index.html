@@ -408,13 +408,20 @@
 			}
 		}
 
-		/* "Marcos Cipriano" name in the bio intro — matches the size of
-		   "Thanks for stopping by" in the footer. */
-		.name-heading {
-			display: inline-block;
-			font-size: clamp(40px, 6vw, 72px);
-			font-weight: 600;
-			line-height: 1.3;
+		/* "Marcos Cipriano" signature image in the bio intro — replaces the
+		   plain text name. Scales with viewport like the old text heading
+		   did, and sits with a small negative margin so its bottom strokes
+		   overlap slightly onto the subtitle line below it. */
+		.name-signature {
+			display: block;
+			width: clamp(300px, 38vw, 520px);
+			height: auto;
+			margin: 24px auto -55px;
+		}
+		@media (max-width: 767px) {
+			.name-signature {
+				margin-bottom: -35px;
+			}
 		}
 
 		/* "Thanks for stopping by" — closes out the portfolio grid and points
@@ -567,7 +574,7 @@
                                         <div class="tt-section-inner tt-wrap max-width-900 about-section">
 
 						<div class="text-xxlg font-alter text-gray-2 bio-fade-group" id="bio-fade-group">
-                                                        <p class="bio-fade-item"><strong class="text-white name-heading">Marcos Cipriano</strong><br>
+                                                        <p class="bio-fade-item"><img class="name-signature" src="assets/img/signature.png" alt="Marcos Cipriano"><br>
                                                                 <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior Digital Product, Marketing Ops &amp; Creative Lead">Senior Digital Product, Marketing Ops &amp; Creative Lead</span></p>
 
                                                         <p class="bio-fade-item">Based in Los Angeles, I integrate full-stack engineering, UI/UX product design, and growth strategy to build high-converting digital experiences.</p>
@@ -654,8 +661,8 @@
 
 							<!-- Begin "Thanks for stopping by" -->
 							<div class="portfolio-thanks-wrap anim-fadeinup">
-								<h3 class="portfolio-thanks-title">Thank You</h3>
-								<p class="portfolio-thanks-subtitle">Got a question, proposal, or project idea? Drop me a line at contact@saintcip.com</p>
+								<h3 class="portfolio-thanks-title">Thank You!</h3>
+								<p class="portfolio-thanks-subtitle">Got a question, proposal, or project idea? Drop me a line at<br>contact@saintcip.com</p>
 							</div>
 							<!-- End "Thanks for stopping by" -->
 
