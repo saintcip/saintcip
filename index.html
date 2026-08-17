@@ -371,6 +371,14 @@
 				transform: none !important;
 			}
 		}
+		/* Phone: hide the portfolio description entirely — only the title
+		   shows on the image. Wins over the "hover: none" rule above via
+		   source order (same specificity, both !important). */
+		@media (max-width: 767px) {
+			#portfolio-grid .pgi-description-wrap {
+				display: none !important;
+			}
+		}
 
 		/* Portfolio section title — centered above the grid. */
 		.portfolio-section-heading {
@@ -457,12 +465,14 @@
 			}
 		}
 
-		/* "Are you sure you want to leave" confirmation popup, shown before
-		   sending someone to a project's LinkedIn case study. Reuses the same
-		   .popup-box / .popup-message / .popup-button styling as the other
-		   popups (see assets/css/modal.css) — just needs the overlay backdrop
-		   rule extended to this new overlay's ID. */
-		#leaving-popup {
+		/* "Are you sure you want to leave" confirmation popup (shown before
+		   sending someone to a project's Behance case study), and the
+		   "under construction" notice for projects without one yet. Both
+		   reuse the same .popup-box / .popup-message / .popup-button
+		   styling as the other popups (see assets/css/modal.css) — just
+		   need the overlay backdrop rule extended to these IDs. */
+		#leaving-popup,
+		#construction-popup {
 			position: fixed;
 			inset: 0;
 			z-index: 9999;
@@ -476,14 +486,18 @@
 			pointer-events: none;
 			transition: opacity 0.3s ease, visibility 0.3s ease;
 		}
-		#leaving-popup.is-visible {
+		#leaving-popup.is-visible,
+		#construction-popup.is-visible {
 			opacity: 1;
 			visibility: visible;
 			pointer-events: auto;
 		}
 
-		/* Portfolio items with a case-study link read as clickable. */
-		.portfolio-grid-item[data-link] {
+		/* Portfolio items read as clickable — either a real case-study link
+		   or an "under construction" notice for projects that don't have
+		   one yet. */
+		.portfolio-grid-item[data-link],
+		.portfolio-grid-item[data-under-construction] {
 			cursor: pointer;
 		}
 	</style>
@@ -669,7 +683,7 @@
 							<!-- Begin "Thanks for stopping by" -->
 							<div class="portfolio-thanks-wrap anim-fadeinup">
 								<h3 class="portfolio-thanks-title">Thank You</h3>
-								<p class="portfolio-thanks-subtitle">Explore more of my work across my socials:</p>
+								<p class="portfolio-thanks-subtitle">Got a question, proposal, or project idea? Drop me a line at contact@saintcip.com</p>
 							</div>
 							<!-- End "Thanks for stopping by" -->
 
@@ -856,8 +870,8 @@
 				var altText = item.name ? String(item.name) : "Portfolio project";
 				var link = item.link ? String(item.link) : "";
 				var clickableAttrs = link ?
-					' data-link="' + link.replace(/"/g, "&quot;") + '" role="button" tabindex="0" aria-label="View the ' + (name || "project") + ' case study (opens LinkedIn)"'
-					: "";
+					' data-link="' + link.replace(/"/g, "&quot;") + '" role="button" tabindex="0" aria-label="View the ' + (name || "project") + ' case study (opens Behance)"'
+					: ' data-under-construction="true" role="button" tabindex="0" aria-label="' + (name || "This project") + ' case study is under construction"';
 
 				return (
 					'<div class="tt-grid-item isotope-item">' +
@@ -954,10 +968,22 @@
                         <button class="popup-close" type="button" aria-label="Close popup" data-leaving-close>
                                 <span aria-hidden="true">&times;</span>
                         </button>
-                        <p class="popup-message">You’re about to leave this site to view the full case study on LinkedIn.</p>
+                        <p class="popup-message">You’re about to leave this site to view the full case study on Behance.</p>
                         <div class="popup-actions">
                                 <button id="leaving-popup-confirm" class="popup-button popup-button-primary" type="button">Yes, take me there</button>
                                 <button class="popup-button popup-button-secondary" type="button" data-leaving-close>No, stay here</button>
+                        </div>
+                </div>
+        </div>
+
+        <div id="construction-popup" role="dialog" aria-modal="true" aria-label="Case study unavailable" aria-hidden="true">
+                <div class="popup-box">
+                        <button class="popup-close" type="button" aria-label="Close popup" data-construction-close>
+                                <span aria-hidden="true">&times;</span>
+                        </button>
+                        <p class="popup-message">This project case study is under construction.</p>
+                        <div class="popup-actions">
+                                <button class="popup-button popup-button-primary" type="button" data-construction-close>Got it</button>
                         </div>
                 </div>
         </div>
@@ -994,15 +1020,18 @@
         <script src="assets/js/modal.js"></script>
         <script src="assets/js/animatedModal.js"></script>
 
-        <!-- Portfolio item click → "you're about to leave" confirmation →
-                LinkedIn case study. Self-contained (doesn't touch modal.js) so it
-                can't affect the existing "Let's connect" / Calendly popups. -->
+        <!-- Portfolio item click → either "you're about to leave" confirmation
+                → Behance case study, or (if the project has no case study yet)
+                a simple "under construction" notice. Self-contained (doesn't
+                touch modal.js) so it can't affect the existing "Let's connect" /
+                Calendly popups. -->
         <script>
                 (function () {
                         var grid = document.getElementById("portfolio-grid");
                         var overlay = document.getElementById("leaving-popup");
                         var confirmBtn = document.getElementById("leaving-popup-confirm");
-                        if (!grid || !overlay || !confirmBtn) return;
+                        var constructionOverlay = document.getElementById("construction-popup");
+                        if (!grid || !overlay || !confirmBtn || !constructionOverlay) return;
 
                         var pendingLink = null;
 
@@ -1018,21 +1047,35 @@
                                 pendingLink = null;
                         }
 
-                        // Open the confirmation when a project card (or its keyboard
-                        // focus equivalent) is activated.
-                        grid.addEventListener("click", function (event) {
-                                var card = event.target.closest(".portfolio-grid-item[data-link]");
+                        function openConstructionOverlay() {
+                                constructionOverlay.classList.add("is-visible");
+                                constructionOverlay.setAttribute("aria-hidden", "false");
+                        }
+
+                        function closeConstructionOverlay() {
+                                constructionOverlay.classList.remove("is-visible");
+                                constructionOverlay.setAttribute("aria-hidden", "true");
+                        }
+
+                        // Open the confirmation (or the "under construction" notice)
+                        // when a project card (or its keyboard focus equivalent) is
+                        // activated.
+                        function handleActivate(event) {
+                                var card = event.target.closest(".portfolio-grid-item[data-link], .portfolio-grid-item[data-under-construction]");
                                 if (!card) return;
                                 event.preventDefault();
-                                openOverlay(card.getAttribute("data-link"));
-                        });
+                                if (card.hasAttribute("data-link")) {
+                                        openOverlay(card.getAttribute("data-link"));
+                                } else {
+                                        openConstructionOverlay();
+                                }
+                        }
+
+                        grid.addEventListener("click", handleActivate);
 
                         grid.addEventListener("keydown", function (event) {
                                 if (event.key !== "Enter" && event.key !== " ") return;
-                                var card = event.target.closest(".portfolio-grid-item[data-link]");
-                                if (!card) return;
-                                event.preventDefault();
-                                openOverlay(card.getAttribute("data-link"));
+                                handleActivate(event);
                         });
 
                         // "Yes, take me there" — open the case study in a new tab.
@@ -1050,10 +1093,19 @@
                         overlay.addEventListener("click", function (event) {
                                 if (event.target === overlay) closeOverlay();
                         });
+
+                        // Same close behavior for the "under construction" notice.
+                        constructionOverlay.querySelectorAll("[data-construction-close]").forEach(function (el) {
+                                el.addEventListener("click", closeConstructionOverlay);
+                        });
+                        constructionOverlay.addEventListener("click", function (event) {
+                                if (event.target === constructionOverlay) closeConstructionOverlay();
+                        });
+
                         document.addEventListener("keydown", function (event) {
-                                if (event.key === "Escape" && overlay.classList.contains("is-visible")) {
-                                        closeOverlay();
-                                }
+                                if (event.key !== "Escape") return;
+                                if (overlay.classList.contains("is-visible")) closeOverlay();
+                                if (constructionOverlay.classList.contains("is-visible")) closeConstructionOverlay();
                         });
                 })();
         </script>
