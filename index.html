@@ -252,6 +252,50 @@
 			padding-bottom: 20px !important;
 		}
 
+		/* Bio intro paragraphs (Marcos Cipriano + the two lines under it):
+		   fade up one by one only once the section is actually scrolled into
+		   view (IntersectionObserver below), same reveal pattern as the
+		   skill pillars — replaces the old GSAP "anim-fadeinup", which could
+		   fire immediately on load if the section was already within the
+		   initial viewport instead of waiting for a real scroll. */
+		.bio-fade-item {
+			opacity: 0;
+			transform: translateY(40px);
+			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		.bio-fade-item.is-revealed {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		/* Keeps the subtitle a normal inline element (not block) at every
+		   viewport width. */
+		.typewriter-text {
+			display: inline;
+		}
+
+		/* On phone, force the subtitle onto a single line — shrink the font
+		   (scales with viewport width, floor/ceiling via clamp) instead of
+		   letting it wrap to a second line. */
+		@media (max-width: 767px) {
+			#typewriter-subtitle {
+				display: inline-block;
+				white-space: nowrap;
+				font-size: clamp(9px, 3vw, 15px);
+			}
+		}
+
+		/* Typewriter cursor while a bio description paragraph is being typed out. */
+		.typewriter-text.is-typing::after {
+			content: "|";
+			display: inline-block;
+			margin-left: 4px;
+			animation: name-heading-blink 0.8s steps(1) infinite;
+		}
+		@keyframes name-heading-blink {
+			50% { opacity: 0; }
+		}
+
 		/* Product/Marketing/Growth pillars: fade up one by one as the group
 		   scrolls into view (each item's transition-delay is staggered by JS
 		   below), rather than all appearing at once. */
@@ -376,6 +420,15 @@
 		.portfolio-load-more:hover,
 		.portfolio-load-more:focus-visible {
 			opacity: 1;
+		}
+
+		/* "Marcos Cipriano" name in the bio intro — matches the size of
+		   "Thanks for stopping by" in the footer. */
+		.name-heading {
+			display: inline-block;
+			font-size: clamp(40px, 6vw, 72px);
+			font-weight: 600;
+			line-height: 1.3;
 		}
 
 		/* "Thanks for stopping by" — closes out the portfolio grid and points
@@ -521,13 +574,13 @@
                                 <div class="tt-section padding-bottom-xlg-75" id="about-outer-section">
                                         <div class="tt-section-inner tt-wrap max-width-900 about-section">
 
-						<div class="text-xxlg font-alter text-gray-2">
-                                                        <p class="anim-fadeinup"><strong class="text-white">Marcos Cipriano</strong><br>
-                                                                Senior Digital Product, Marketing Ops &amp; Creative Lead</p>
+						<div class="text-xxlg font-alter text-gray-2 bio-fade-group" id="bio-fade-group">
+                                                        <p class="bio-fade-item"><strong class="text-white name-heading">Marcos Cipriano</strong><br>
+                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior Digital Product, Marketing Ops &amp; Creative Lead">Senior Digital Product, Marketing Ops &amp; Creative Lead</span></p>
 
-                                                        <p class="anim-fadeinup">Based in Los Angeles, I bridge product design, growth operations, and marketing strategy to build high converting digital experiences.</p>
+                                                        <p class="bio-fade-item">Based in Los Angeles, I bridge product design, growth operations, and marketing strategy to build high converting digital experiences.</p>
 
-                                                        <p class="anim-fadeinup">With 14+ years of cross disciplinary experience and a dedicated focus over the past 5 years leading end-to-end product delivery, automated marketing infrastructure, and creative brand systems I turn complex business goals into scalable web platforms, automated growth funnels, and high-impact multi-channel campaigns.</p>
+                                                        <p class="bio-fade-item">With 14+ years of cross disciplinary experience and a dedicated focus over the past 5 years leading end-to-end product delivery, automated marketing infrastructure, and creative brand systems I turn complex business goals into scalable web platforms, automated growth funnels, and high-impact multi-channel campaigns.</p>
 						</div>
 
 						<!-- Client logo carousel — standalone div, isolated from the bio/
@@ -739,7 +792,7 @@
 
 			if (!$("#portfolio-grid").length) return;
 
-			var INITIAL_COUNT = 3;
+			var INITIAL_COUNT = window.innerWidth >= 768 ? 4 : 3;
 			var LOAD_MORE_COUNT = 3;
 
 			var portfolioData = [];
@@ -1037,6 +1090,78 @@
 
                                 // Safety net: never leave the text stuck invisible.
                                 setTimeout(revealAll, 4000);
+                        } else {
+                                revealAll();
+                        }
+                })();
+        </script>
+
+        <!-- Bio intro (Marcos Cipriano + the two lines under it): fade up one by
+                one only once scrolled into view, same reveal pattern as the skill
+                pillars above. "Marcos Cipriano" and the two description paragraphs
+                are fixed text (no effect). Only the subtitle ("Senior Digital
+                Product, Marketing Ops & Creative Lead") types out letter by letter. -->
+        <script>
+                (function () {
+                        var group = document.getElementById("bio-fade-group");
+                        if (!group) return;
+                        var items = group.querySelectorAll(".bio-fade-item");
+                        if (!items.length) return;
+
+                        // 250 WPM, using the standard 5-characters-per-word convention.
+                        var WPM = 250;
+                        var MS_PER_CHAR = 60000 / (WPM * 5);
+
+                        var subtitleEl = document.getElementById("typewriter-subtitle");
+                        var typed = false;
+
+                        function typeSubtitle() {
+                                if (typed || !subtitleEl) return;
+                                typed = true;
+                                var fullText = subtitleEl.getAttribute("data-text") || subtitleEl.textContent;
+                                subtitleEl.textContent = "";
+                                subtitleEl.classList.add("is-typing");
+                                var i = 0;
+                                var interval = setInterval(function () {
+                                        i++;
+                                        subtitleEl.textContent = fullText.slice(0, i);
+                                        if (i >= fullText.length) {
+                                                clearInterval(interval);
+                                                subtitleEl.classList.remove("is-typing");
+                                        }
+                                }, MS_PER_CHAR);
+                        }
+
+                        items.forEach(function (el, i) {
+                                el.style.transitionDelay = (i * 220) + "ms";
+                        });
+
+                        function revealAll() {
+                                items.forEach(function (el) {
+                                        el.classList.add("is-revealed");
+                                });
+                                typeSubtitle();
+                        }
+
+                        if ("IntersectionObserver" in window) {
+                                var observer = new IntersectionObserver(function (entries) {
+                                        entries.forEach(function (entry) {
+                                                if (entry.isIntersecting) {
+                                                        revealAll();
+                                                        observer.unobserve(entry.target);
+                                                }
+                                        });
+                                }, { threshold: 0.2 });
+                                observer.observe(group);
+
+                                // Safety net: never leave the text stuck invisible/untyped.
+                                setTimeout(function () {
+                                        revealAll();
+                                        if (!typed && subtitleEl) {
+                                                typed = true;
+                                                subtitleEl.textContent = subtitleEl.getAttribute("data-text") || subtitleEl.textContent;
+                                        }
+                                }, 4000);
                         } else {
                                 revealAll();
                         }

@@ -25,9 +25,9 @@
   },
   {
     "id": 3,
-    "image": "assets/img/portfolio/1.png",
-    "name": "Cartel Candy",
-    "description": "Retro sunset lettering and brand mark for a candy label.",
+    "image": "assets/img/portfolio/10.png",
+    "name": "Mansa",
+    "description": "Regal wordmark and crown icon for the Mansa brand.",
     "tag": "Brand Identity",
     "link": "https://www.linkedin.com/in/marcoscip"
   },
@@ -81,9 +81,9 @@
   },
   {
     "id": 10,
-    "image": "assets/img/portfolio/10.png",
-    "name": "Mansa",
-    "description": "Regal wordmark and crown icon for the Mansa brand.",
+    "image": "assets/img/portfolio/1.png",
+    "name": "Cartel Candy",
+    "description": "Retro sunset lettering and brand mark for a candy label.",
     "tag": "Brand Identity",
     "link": "https://www.linkedin.com/in/marcoscip"
   },
