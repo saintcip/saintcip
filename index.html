@@ -200,19 +200,24 @@
 		.clients-marquee:hover .clients-marquee-track {
 			animation-play-state: paused;
 		}
+		/* Logos are wrapped in <a> tags (click through to the client's site),
+		   so the anchor is now the flex item and carries the cursor. */
+		.clients-marquee-track a {
+			display: block;
+			flex: none;
+			cursor: pointer;
+		}
 		.clients-marquee-track img {
 			display: block;
 			height: 200px;
 			width: 200px;
 			object-fit: contain;
-			flex: none;
-			cursor: default;
-			pointer-events: auto;
+			pointer-events: none;
 			filter: grayscale(100%) brightness(0.8);
 			opacity: 0.7;
 			transition: filter 0.3s ease, opacity 0.3s ease;
 		}
-		.clients-marquee-track img:hover {
+		.clients-marquee-track a:hover img {
 			filter: grayscale(0%) brightness(1.3);
 			opacity: 1;
 		}
@@ -403,33 +408,6 @@
 			}
 		}
 
-		/* "View more projects" load-more link */
-		.portfolio-load-more-wrap {
-			display: flex;
-			justify-content: center;
-			margin-top: 20px;
-		}
-		.portfolio-load-more-wrap.is-hidden {
-			display: none;
-		}
-		.portfolio-load-more {
-			display: inline-block;
-			color: #FFF;
-			font-size: calc(15px + 0.15vw);
-			font-weight: 500;
-			letter-spacing: 0.02em;
-			opacity: 0.75;
-			text-decoration: underline;
-			text-underline-offset: 5px;
-			text-decoration-thickness: 1px;
-			cursor: pointer;
-			transition: opacity 0.3s ease;
-		}
-		.portfolio-load-more:hover,
-		.portfolio-load-more:focus-visible {
-			opacity: 1;
-		}
-
 		/* "Marcos Cipriano" name in the bio intro — matches the size of
 		   "Thanks for stopping by" in the footer. */
 		.name-heading {
@@ -592,9 +570,9 @@
                                                         <p class="bio-fade-item"><strong class="text-white name-heading">Marcos Cipriano</strong><br>
                                                                 <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior Digital Product, Marketing Ops &amp; Creative Lead">Senior Digital Product, Marketing Ops &amp; Creative Lead</span></p>
 
-                                                        <p class="bio-fade-item">Based in Los Angeles, I bridge product design, growth operations, and marketing strategy to build high converting digital experiences.</p>
+                                                        <p class="bio-fade-item">Based in Los Angeles, I integrate full-stack engineering, UI/UX product design, and growth strategy to build high-converting digital experiences.</p>
 
-                                                        <p class="bio-fade-item">With 14+ years of cross disciplinary experience and a dedicated focus over the past 5 years leading end-to-end product delivery, automated marketing infrastructure, and creative brand systems I turn complex business goals into scalable web platforms, automated growth funnels, and high-impact multi-channel campaigns.</p>
+                                                        <p class="bio-fade-item">With 14+ years of cross-disciplinary background leading end-to-end product delivery and marketing ops I turn complex technical goals into scalable web platforms and high-impact campaigns.</p>
 						</div>
 
 						<!-- Client logo carousel — standalone div, isolated from the bio/
@@ -606,27 +584,27 @@
 							<p class="clients-marquee-label">Brands I’ve Had the Opportunity to Work On:</p>
 							<div class="clients-marquee">
 								<div class="clients-marquee-track">
-									<img src="assets/img/clients/client-1.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-2.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-3.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-4.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-5.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-1.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-2.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-3.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-4.png" width="200" height="200" alt="Client logo">
-									<img src="assets/img/clients/client-5.png" width="200" height="200" alt="Client logo">
+									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" aria-label="Visit Polishop"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="Polishop logo"></a>
+									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" aria-label="Visit Bradesco"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="Bradesco logo"></a>
+									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" aria-label="Visit Suzano"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="Suzano logo"></a>
+									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" aria-label="Visit Petrobras"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="Petrobras logo"></a>
+									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" aria-label="About FTX"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="FTX logo"></a>
+									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" aria-label="Visit Polishop"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="Polishop logo"></a>
+									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" aria-label="Visit Bradesco"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="Bradesco logo"></a>
+									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" aria-label="Visit Suzano"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="Suzano logo"></a>
+									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" aria-label="Visit Petrobras"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="Petrobras logo"></a>
+									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" aria-label="About FTX"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="FTX logo"></a>
 									<!-- Duplicate set — enables the seamless infinite loop (track scrolls exactly -50%) -->
-									<img src="assets/img/clients/client-1.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-2.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-3.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-4.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-5.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-1.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-2.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-3.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-4.png" width="200" height="200" alt="" aria-hidden="true">
-									<img src="assets/img/clients/client-5.png" width="200" height="200" alt="" aria-hidden="true">
+									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="" aria-hidden="true"></a>
+									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="" aria-hidden="true"></a>
 								</div>
 							</div>
 						</div>
@@ -673,12 +651,6 @@
 
 							</div>
 							<!-- End tt-Grid -->
-
-							<!-- Begin "Load more" trigger -->
-							<div class="portfolio-load-more-wrap is-hidden" id="portfolio-load-more-wrap">
-								<a href="#" class="portfolio-load-more" id="portfolio-load-more">View more projects</a>
-							</div>
-							<!-- End "Load more" trigger -->
 
 							<!-- Begin "Thanks for stopping by" -->
 							<div class="portfolio-thanks-wrap anim-fadeinup">
@@ -799,24 +771,21 @@
 	<script src="assets/vendor/jquery.mousewheel.min.js"></script>
 	<!-- A jQuery plugin that adds cross browser mouse wheel support (https://github.com/jquery/jquery-mousewheel) -->
 
-	<!-- Init portfolio grid: fetches assets/data/portfolio.json, shows the first 6 projects,
-		then reveals 4 more each time "View more projects" is clicked. No category filter. -->
+	<!-- Init portfolio grid: fetches assets/data/portfolio.json, shows only the first
+		4 projects on desktop / 3 on mobile. No pagination, no category filter. -->
 	<script>
 		jQuery(function ($) {
 
 			if (!$("#portfolio-grid").length) return;
 
+			// Fixed count, no "load more" — 4 projects on desktop, 3 on mobile.
 			var INITIAL_COUNT = window.innerWidth >= 768 ? 4 : 3;
-			var LOAD_MORE_COUNT = 3;
 
 			var portfolioData = [];
-			var renderedCount = 0;
 			var isotopeReady = false;
 
 			var $itemsWrap = $("#portfolio-items-wrap");
 			var $container = $("#portfolio-grid .isotope-items-wrap");
-			var $loadMoreWrap = $("#portfolio-load-more-wrap");
-			var $loadMoreBtn = $("#portfolio-load-more");
 
 			// ============================================================================
 			// Portfolio grid images: smooth fade-up reveal, staggered per item.
@@ -903,58 +872,41 @@
 			}
 
 			// ============================================================================
-			// Render the next page of projects (6 initially, then 4 at a time), init/append
-			// to Isotope, reveal them, and show/hide the "View more projects" button.
+			// Render the first INITIAL_COUNT projects only — no pagination/"load more".
 			// ============================================================================
-			function renderNextBatch() {
-				var pageSize = renderedCount === 0 ? INITIAL_COUNT : LOAD_MORE_COUNT;
-				var nextItems = portfolioData.slice(renderedCount, renderedCount + pageSize);
-				if (!nextItems.length) {
-					$loadMoreWrap.addClass("is-hidden");
-					return;
-				}
+			function renderInitialBatch() {
+				var firstItems = portfolioData.slice(0, INITIAL_COUNT);
+				if (!firstItems.length) return;
 
-				var $newItems = $($.map(nextItems, buildItemHtml).join(""));
+				var $newItems = $($.map(firstItems, buildItemHtml).join(""));
 				$itemsWrap.append($newItems);
-				renderedCount += nextItems.length;
 
 				attachReveal($newItems.find(".ttgr-item-inner"));
 
 				$container.imagesLoaded(function () {
-					if (!isotopeReady) {
-						$container.isotope({
-							itemSelector: ".isotope-item",
-							layoutMode: "packery",
-							transitionDuration: "0.7s",
-							percentPosition: true
-						});
-						isotopeReady = true;
-					} else {
-						$container.isotope("appended", $newItems).isotope("layout");
-					}
+					$container.isotope({
+						itemSelector: ".isotope-item",
+						layoutMode: "packery",
+						transitionDuration: "0.7s",
+						percentPosition: true
+					});
+					isotopeReady = true;
 
 					setTimeout(function () {
 						$container.isotope("layout");
 						if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
 					}, 500);
 				});
-
-				$loadMoreWrap.toggleClass("is-hidden", renderedCount >= portfolioData.length);
 			}
 
-			$loadMoreBtn.on("click", function (e) {
-				e.preventDefault();
-				renderNextBatch();
-			});
-
 			// ============================================================================
-			// Fetch the portfolio data, then render the first page.
+			// Fetch the portfolio data, then render the first (and only) batch.
 			// ============================================================================
 			fetch("assets/data/portfolio.json")
 				.then(function (res) { return res.json(); })
 				.then(function (data) {
 					portfolioData = Array.isArray(data) ? data : [];
-					renderNextBatch();
+					renderInitialBatch();
 				})
 				.catch(function (err) {
 					console.error("Could not load assets/data/portfolio.json", err);
