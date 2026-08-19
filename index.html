@@ -315,28 +315,35 @@
 		}
 
 		/* Portfolio grid images: smooth fade-up reveal. Hidden by default,
-		   revealed by adding "is-revealed" (see IntersectionObserver script). */
-		#portfolio-grid .ttgr-item-inner {
+		   revealed by adding "is-revealed" (see IntersectionObserver script).
+		   Shared with #creative-projects-grid (the "Creative direction
+		   projects" section below). */
+		#portfolio-grid .ttgr-item-inner,
+		#creative-projects-grid .ttgr-item-inner {
 			opacity: 0;
 			transform: translateY(40px);
 			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 		}
-		#portfolio-grid .ttgr-item-inner.is-revealed {
+		#portfolio-grid .ttgr-item-inner.is-revealed,
+		#creative-projects-grid .ttgr-item-inner.is-revealed {
 			opacity: 1;
 			transform: translateY(0);
 		}
 
 		/* Portfolio grid caption: title is always visible on the image;
 		   only the description fades in on hover (same reveal timing/pattern
-		   the theme already uses for categories). */
-		#portfolio-grid .pgi-title {
+		   the theme already uses for categories). Shared with
+		   #creative-projects-grid. */
+		#portfolio-grid .pgi-title,
+		#creative-projects-grid .pgi-title {
 			color: #FFF;
 			font-size: calc(14px + 0.15vw);
 			font-weight: 600;
 			line-height: 1.4;
 			margin-bottom: 6px;
 		}
-		#portfolio-grid .pgi-description {
+		#portfolio-grid .pgi-description,
+		#creative-projects-grid .pgi-description {
 			color: #FFF;
 			font-size: calc(13px + 0.15vw);
 			line-height: 1.5;
@@ -348,10 +355,12 @@
 		   bottom-anchored, growing pushes the whole block (title + description)
 		   upward, so the description rises into view and stays inside the image
 		   instead of spilling past the bottom edge. */
-		#portfolio-grid .pgi-caption-inner {
+		#portfolio-grid .pgi-caption-inner,
+		#creative-projects-grid .pgi-caption-inner {
 			position: relative;
 		}
-		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap {
+		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap,
+		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap {
 			max-height: 0;
 			margin-top: 0;
 			opacity: 0;
@@ -359,7 +368,8 @@
 			transform: translate3d(0, 10px, 0);
 			transition: max-height 0.35s ease-out, margin-top 0.35s ease-out, opacity 0.25s ease-out, transform 0.25s ease-out;
 		}
-		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap {
+		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap,
+		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap {
 			max-height: 240px;
 			margin-top: 6px;
 			opacity: 1;
@@ -368,7 +378,8 @@
 		}
 		/* Touch devices: no hover, so keep the description visible */
 		@media (hover: none) {
-			#portfolio-grid .pgi-description-wrap {
+			#portfolio-grid .pgi-description-wrap,
+			#creative-projects-grid .pgi-description-wrap {
 				max-height: none !important;
 				margin-top: 6px !important;
 				opacity: 1 !important;
@@ -380,9 +391,85 @@
 		   shows on the image. Wins over the "hover: none" rule above via
 		   source order (same specificity, both !important). */
 		@media (max-width: 767px) {
-			#portfolio-grid .pgi-description-wrap {
+			#portfolio-grid .pgi-description-wrap,
+			#creative-projects-grid .pgi-description-wrap {
 				display: none !important;
 			}
+		}
+
+		/* Creative direction projects: purely visual cards, never clickable
+		   (no data-link/data-under-construction attrs, no click handler is
+		   attached to this grid at all), so force the default cursor even
+		   though they share .portfolio-grid-item styling with the case
+		   studies above. */
+		#creative-projects-grid .portfolio-grid-item {
+			cursor: default;
+		}
+
+		/* Theme's "caption overlaid on top of the image" rule (assets/css/theme.css)
+		   is hardcoded to #portfolio-grid, so #creative-projects-grid never picked
+		   it up and its captions fell into normal flow below the image instead of
+		   overlaying it. Re-declare the same rule here, scoped to
+		   #creative-projects-grid, so it matches "Few of my case studies". */
+		#creative-projects-grid.pgi-cap-inside .pgi-caption {
+			position: absolute;
+			left: 0;
+			bottom: 8%;
+			padding: 0 8%;
+			z-index: 2;
+		}
+		/* Same title micro-animation on hover the case studies grid gets from
+		   theme.css (title rises slightly into place). */
+		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .pgi-title {
+			transform: translate3d(0, 15px, 0);
+			transition: all 0.25s ease-out;
+			transition-delay: 0.1s;
+		}
+		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-title {
+			transform: translate3d(0, 0, 0);
+		}
+
+		/* "See more creative projects" link below the creative direction
+		   grid. Loads 4 more projects per click, then hides itself once the
+		   full set has been revealed. */
+		.creative-projects-more-wrap {
+			margin-top: 20px;
+			text-align: center;
+		}
+		.creative-projects-more-link {
+			display: inline-block;
+			background: none;
+			border: none;
+			padding: 0 0 4px;
+			font-family: 'Poppins', sans-serif;
+			font-size: calc(12px + 0.1vw);
+			font-weight: 600;
+			letter-spacing: 1.5px;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.6);
+			cursor: pointer;
+			position: relative;
+			transition: color 0.3s ease;
+		}
+		.creative-projects-more-link::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 1px;
+			background: currentColor;
+			opacity: 0.5;
+			transition: opacity 0.3s ease;
+		}
+		.creative-projects-more-link:hover {
+			color: #FFF;
+		}
+		.creative-projects-more-link:hover::after {
+			opacity: 1;
+		}
+		.creative-projects-more-link.is-hidden {
+			display: none;
 		}
 
 		/* Portfolio section title — centered above the grid. */
@@ -577,9 +664,9 @@
                                                         <p class="bio-fade-item"><img class="name-signature" src="assets/img/signature.png" alt="Marcos Cipriano"><br>
                                                                 <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior Digital Product, Marketing Ops &amp; Creative Lead">Senior Digital Product, Marketing Ops &amp; Creative Lead</span></p>
 
-                                                        <p class="bio-fade-item">Based in Los Angeles, I integrate full-stack engineering, UI/UX product design, and growth strategy to build high-converting digital experiences.</p>
+                                                        <p class="bio-fade-item">Based in Los Angeles and originally from Brazil, I’m a T-shaped designer and Senior Product Manager with full stack knowledge and hands on experience. I love to lead product delivery while staying deeply involved in the day-to-day design and engineering work.</p>
 
-                                                        <p class="bio-fade-item">With 14+ years of cross-disciplinary background leading end-to-end product delivery and marketing ops I turn complex technical goals into scalable web platforms and high-impact campaigns.</p>
+                                                        <p class="bio-fade-item">With 14+ years of cross-disciplinary experience, including the last 5 years leading end to end product delivery, I thrive at the intersection of creative vision and technical execution. Whether I’m building brand identities, crafting web design systems, writing code, or leading cross functional teams, I bring a hands-on, product-focused approach to turning complex ideas into scalable digital experiences.</p>
 						</div>
 
 						<!-- Client logo carousel — standalone div, isolated from the bio/
@@ -641,7 +728,7 @@
 
 						<!-- Begin portfolio section title -->
 						<div class="portfolio-section-heading anim-fadeinup">
-							<h2 class="portfolio-section-title">Few of my selected work:</h2>
+							<h2 class="portfolio-section-title">Few of my case studies</h2>
 						</div>
 						<!-- End portfolio section title -->
 
@@ -659,19 +746,63 @@
 							</div>
 							<!-- End tt-Grid -->
 
-							<!-- Begin "Thanks for stopping by" -->
-							<div class="portfolio-thanks-wrap anim-fadeinup">
-								<h3 class="portfolio-thanks-title">Thank You!</h3>
-								<p class="portfolio-thanks-subtitle">Got a question, proposal, or project idea? Drop me a line at<br>contact@saintcip.com</p>
-							</div>
-							<!-- End "Thanks for stopping by" -->
-
 						</div>
 						<!-- End portfolio grid -->
 
 					</div> <!-- /.tt-section-inner -->
 				</div>
 				<!-- End tt-section (portfolio grid) -->
+
+				<!-- Begin creative direction projects (sits below "Few of my case
+					studies"). Cards here are purely visual — no case-study link,
+					no "under construction" popup, no click/keyboard activation at
+					all (the click-handler script further below only ever looks
+					inside #portfolio-grid). Shows 4 projects on desktop / 3 on
+					mobile to start; "See more creative projects" reveals 4 more
+					per click until the set (assets/data/portfolio.json, minus the
+					4 already shown above) is exhausted. -->
+				<div class="tt-section padding-top-xlg-40 padding-bottom-xlg-75" id="creative-projects-outer-section">
+					<div class="tt-section-inner">
+
+						<!-- Begin creative projects section title -->
+						<div class="portfolio-section-heading anim-fadeinup">
+							<h2 class="portfolio-section-title">Creative direction projects</h2>
+						</div>
+						<!-- End creative projects section title -->
+
+						<!-- Begin creative projects grid -->
+						<div id="creative-projects-grid" class="pgi-cap-inside pgi-cap-hover">
+
+							<!-- Begin tt-Grid -->
+							<div class="tt-grid ttgr-layout-2 ttgr-gap-4">
+
+								<!-- Begin tt-Grid items wrap -->
+								<!-- Populated dynamically from assets/data/portfolio.json — see script near end of page -->
+								<div class="tt-grid-items-wrap isotope-items-wrap" id="creative-projects-items-wrap"></div>
+								<!-- End tt-Grid items wrap  -->
+
+							</div>
+							<!-- End tt-Grid -->
+
+						</div>
+						<!-- End creative projects grid -->
+
+						<!-- Begin "See more creative projects" -->
+						<div class="creative-projects-more-wrap">
+							<button type="button" id="creative-projects-more-btn" class="creative-projects-more-link">See more creative projects</button>
+						</div>
+						<!-- End "See more creative projects" -->
+
+						<!-- Begin "Thanks for stopping by" -->
+						<div class="portfolio-thanks-wrap anim-fadeinup">
+							<h3 class="portfolio-thanks-title">Thank You!</h3>
+							<p class="portfolio-thanks-subtitle">Got a question, proposal, or project idea? Drop me a line at<br>contact@saintcip.com</p>
+						</div>
+						<!-- End "Thanks for stopping by" -->
+
+					</div> <!-- /.tt-section-inner -->
+				</div>
+				<!-- End creative direction projects -->
 
 				<!-- End tt-section -->
 
@@ -917,6 +1048,173 @@
 				})
 				.catch(function (err) {
 					console.error("Could not load assets/data/portfolio.json", err);
+				});
+
+		});
+	</script>
+
+	<!-- Init "Creative direction projects" grid: reuses assets/data/portfolio.json,
+		skipping the first 4 entries already shown in "Few of my case studies"
+		above. Shows 4 projects on desktop / 3 on mobile to start; "See more
+		creative projects" reveals 4 more per click until the list runs out.
+		Cards are display-only — no data-link/data-under-construction attrs are
+		ever set, and no click/keyboard handler is attached to this grid, so
+		they can never open a case study or the "under construction" popup. -->
+	<script>
+		jQuery(function ($) {
+
+			if (!$("#creative-projects-grid").length) return;
+
+			// Skip the projects already shown in "Few of my case studies"
+			// (that grid always pulls from the front of the same array).
+			var SKIP_COUNT = 4;
+			var INITIAL_COUNT = window.innerWidth >= 768 ? 4 : 3;
+			var LOAD_MORE_COUNT = 4;
+
+			var creativeData = [];
+			var shownCount = 0;
+			var isotopeReady = false;
+
+			var $itemsWrap = $("#creative-projects-items-wrap");
+			var $container = $("#creative-projects-grid .isotope-items-wrap");
+			var $moreBtn = $("#creative-projects-more-btn");
+
+			// Same staggered fade-up reveal as the case studies grid.
+			function attachReveal($items) {
+				try {
+					if (!$items.length) return;
+
+					$items.each(function (i) {
+						this.style.transitionDelay = Math.min(i * 90, 600) + "ms";
+					});
+
+					if ("IntersectionObserver" in window) {
+						var revealObserver = new IntersectionObserver(function (entries) {
+							entries.forEach(function (entry) {
+								if (entry.isIntersecting) {
+									entry.target.classList.add("is-revealed");
+									revealObserver.unobserve(entry.target);
+								}
+							});
+						}, { threshold: 0.1 });
+
+						$items.each(function () {
+							revealObserver.observe(this);
+						});
+
+						setTimeout(function () {
+							$items.addClass("is-revealed");
+						}, 4000);
+					} else {
+						$items.addClass("is-revealed");
+					}
+				} catch (e) {
+					$items.addClass("is-revealed");
+				}
+			}
+
+			// Same caption markup as the case studies grid, minus every click
+			// affordance: no data-link / data-under-construction, no
+			// role="button", no tabindex — these cards are not interactive.
+			function buildItemHtml(item) {
+				var name = item.name ? String(item.name) : "";
+				var tag = item.tag ? String(item.tag) : "";
+				var title = name && tag ? (name + " - " + tag) : (name || tag);
+				var description = item.description ? String(item.description) : "";
+				var altText = item.name ? String(item.name) : "Creative project";
+
+				return (
+					'<div class="tt-grid-item isotope-item">' +
+						'<div class="ttgr-item-inner">' +
+							'<div class="portfolio-grid-item">' +
+								'<div class="pgi-image-wrap">' +
+									'<div class="pgi-image-holder cover-opacity-2">' +
+										'<div class="pgi-image-inner anim-zoomin">' +
+											'<figure class="pgi-image ttgr-height">' +
+												'<img src="' + item.image + '" alt="' + altText + '" loading="lazy">' +
+											'</figure>' +
+										'</div>' +
+									'</div>' +
+								'</div>' +
+								'<div class="pgi-caption">' +
+									'<div class="pgi-caption-inner">' +
+										'<div class="pgi-title">' + title + '</div>' +
+										(description ?
+											'<div class="pgi-description-wrap">' +
+												'<div class="pgi-description">' + description + '</div>' +
+											'</div>'
+										: '') +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+						'</div>' +
+					'</div>'
+				);
+			}
+
+			function updateMoreButton() {
+				if (shownCount >= creativeData.length) {
+					$moreBtn.addClass("is-hidden");
+				} else {
+					$moreBtn.removeClass("is-hidden");
+				}
+			}
+
+			// ============================================================================
+			// Append the next "count" projects (called once on load with
+			// INITIAL_COUNT, then again on each "See more" click with
+			// LOAD_MORE_COUNT).
+			// ============================================================================
+			function renderBatch(count) {
+				var nextItems = creativeData.slice(shownCount, shownCount + count);
+				if (!nextItems.length) return;
+
+				var $newItems = $($.map(nextItems, buildItemHtml).join(""));
+				$itemsWrap.append($newItems);
+				shownCount += nextItems.length;
+
+				attachReveal($newItems.find(".ttgr-item-inner"));
+
+				if (!isotopeReady) {
+					$container.imagesLoaded(function () {
+						$container.isotope({
+							itemSelector: ".isotope-item",
+							layoutMode: "packery",
+							transitionDuration: "0.7s",
+							percentPosition: true
+						});
+						isotopeReady = true;
+
+						setTimeout(function () {
+							$container.isotope("layout");
+							if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
+						}, 500);
+					});
+				} else {
+					$newItems.imagesLoaded(function () {
+						$container.isotope("appended", $newItems);
+						$container.isotope("layout");
+						if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
+					});
+				}
+
+				updateMoreButton();
+			}
+
+			$moreBtn.on("click", function () {
+				renderBatch(LOAD_MORE_COUNT);
+			});
+
+			fetch("assets/data/portfolio.json")
+				.then(function (res) { return res.json(); })
+				.then(function (data) {
+					var all = Array.isArray(data) ? data : [];
+					creativeData = all.slice(SKIP_COUNT);
+					renderBatch(INITIAL_COUNT);
+				})
+				.catch(function (err) {
+					console.error("Could not load assets/data/portfolio.json", err);
+					$moreBtn.addClass("is-hidden");
 				});
 
 		});
