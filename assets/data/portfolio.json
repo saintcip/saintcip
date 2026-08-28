@@ -3,31 +3,31 @@
     "id": 0,
     "image": "assets/img/portfolio/0.png",
     "name": "Sharp Studio",
-    "description": "Dashboard UI and service promo design for the Sharp Studio platform.",
-    "tag": "Web Design",
+    "description": "Designed the UX architecture and dashboard UI for my studio's own client platform — end to end, from information architecture to visual system.",
+    "tag": "UI/UX Design",
     "link": "https://www.behance.net/gallery/240782103/UiUx-Dashboard-Sharp"
   },
   {
     "id": 1,
     "image": "assets/img/portfolio/2.png",
     "name": "Nakamoto Capital",
-    "description": "Product site design for a multi-chain DAO investment platform.",
-    "tag": "Web Design",
+    "description": "UX and product design for a multi-chain DAO investment platform — translating complex crypto mechanics into a clear, trustworthy user journey.",
+    "tag": "UI/UX Design",
     "link": "https://www.behance.net/gallery/243978655/UiUx-Web3-Nakamoto-Capital"
   },
   {
     "id": 2,
     "image": "assets/img/portfolio/3.png",
     "name": "Text Flow",
-    "description": "Minimal splash-screen branding for a messaging app.",
-    "tag": "Product Design",
+    "description": "Self-initiated concept for an AI messaging app — UX flows and product design system taken from concept through a working MVP.",
+    "tag": "Concept / UI-UX",
     "link": "https://www.behance.net/gallery/245032587/Text-Flow-AI-App"
   },
   {
     "id": 3,
     "image": "assets/img/portfolio/10.png",
     "name": "Mansa",
-    "description": "Regal wordmark and crown icon for the Mansa brand.",
+    "description": "Brand identity system for Mansa — a regal wordmark and crown mark built to scale across packaging and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -35,7 +35,7 @@
     "id": 4,
     "image": "assets/img/portfolio/4.png",
     "name": "Organix Farms",
-    "description": "Earthy wordmark and leaf emblem for a cannabis cultivation brand.",
+    "description": "Brand identity system for a cannabis cultivation brand — an earthy wordmark and leaf emblem designed to hold up across packaging, digital, and retail.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -43,7 +43,7 @@
     "id": 5,
     "image": "assets/img/portfolio/5.png",
     "name": "Muaxx",
-    "description": "Playful kiss-mark lettering for a lifestyle brand.",
+    "description": "Brand identity system for a lifestyle brand — playful kiss-mark lettering designed to hold up across packaging and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -51,7 +51,7 @@
     "id": 6,
     "image": "assets/img/portfolio/6.png",
     "name": "Ez",
-    "description": "Chrome monogram logo exploring dimension and reflection.",
+    "description": "Brand identity system built around a chrome monogram mark — exploring dimension and reflection, designed to scale across digital and print touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -67,7 +67,7 @@
     "id": 8,
     "image": "assets/img/portfolio/8.jpg",
     "name": "Paty Girl",
-    "description": "Editorial wordmark and visual identity for a fashion label.",
+    "description": "Brand identity system for a fashion label — an editorial wordmark and visual identity built to scale across lookbooks, packaging, and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -83,7 +83,7 @@
     "id": 10,
     "image": "assets/img/portfolio/1.png",
     "name": "Cartel Candy",
-    "description": "Retro sunset lettering and brand mark for a candy label.",
+    "description": "Brand identity system for a candy label — retro sunset lettering and brand mark designed to hold up across packaging and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -91,7 +91,7 @@
     "id": 11,
     "image": "assets/img/portfolio/11.png",
     "name": "King & The Pea",
-    "description": "Hand-lettered circular badge with a bold, playful wordmark.",
+    "description": "Brand identity system built around a hand-lettered circular badge and bold, playful wordmark — designed to scale across packaging and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -99,7 +99,7 @@
     "id": 12,
     "image": "assets/img/portfolio/12.jpg",
     "name": "Kube",
-    "description": "Glowing geometric logo built around a floating 3D cube.",
+    "description": "Brand identity system built around a glowing geometric mark — a floating 3D cube designed to scale across digital and print touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },
@@ -123,7 +123,7 @@
     "id": 15,
     "image": "assets/img/portfolio/15.jpg",
     "name": "Crypto Weed",
-    "description": "Gold coin emblem merging cannabis leaf and crypto token motifs.",
+    "description": "Brand identity system for a cannabis-meets-crypto brand — a gold coin emblem merging leaf and token motifs, built to scale across digital and packaging touchpoints.",
     "tag": "Brand Identity",
     "link": ""
   },

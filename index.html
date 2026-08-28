@@ -76,6 +76,7 @@
 
 	<!-- Hero wallpaper video (sits behind the 3D item) -->
 	<style>
+
 		.hero-video-embed video {
 			width: 100%;
 			height: 100%;
@@ -153,6 +154,108 @@
 			letter-spacing: 1.5px;
 			text-transform: uppercase;
 			color: rgba(255, 255, 255, 0.5);
+		}
+		/* "Some of My Skills" — standalone section label below the brands
+		   marquee and the "14+ years..." intro paragraph (.skills-intro-
+		   paragraph, moved here from the top bio block), reuses
+		   .clients-marquee-label's look with a little extra top spacing. */
+		.skills-section-label {
+			margin-top: 10px;
+		}
+		/* "14+ years..." paragraph, relocated here (was originally part of
+		   the top bio-fade-group) so it introduces "Some of My Skills"
+		   directly instead of sitting up in the general intro blurb. Reuses
+		   the same text-xxlg/font-alter/text-gray-2 look as the rest of the
+		   bio text; .bio-fade-item still drives its fade-in (the reveal
+		   script below selects .bio-fade-item document-wide, not just
+		   inside #bio-fade-group). */
+		.skills-intro-paragraph {
+			margin-top: 8px;
+		}
+		/* Photoshop / Illustrator / Blender tiles that drop in with gravity and
+		   can be grabbed and thrown around (Matter.js physics — same mechanism
+		   as the "Services We Offer" section on sharpstudiollc.com). Container
+		   stays pointer-events:none so empty space never blocks page scroll;
+		   each tile opts back in with pointer-events:auto so it's still
+		   grabbable. */
+		.skills-throwable-scene {
+			align-self: stretch;
+			position: relative;
+			width: 100%;
+			height: 260px;
+			margin-top: 20px;
+			overflow: hidden;
+			pointer-events: none;
+		}
+		.skills-throwable-el {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 72px;
+			height: 72px;
+			opacity: 0;
+			pointer-events: auto;
+			cursor: grab;
+			-webkit-user-select: none;
+			user-select: none;
+			touch-action: none;
+		}
+		.skills-throwable-el:active {
+			cursor: grabbing;
+		}
+		.skills-throwable-el-rot {
+			display: block;
+			width: 100%;
+			height: 100%;
+			transform: translate(-50%, -50%);
+		}
+		.skills-throwable-el img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			border-radius: 0;
+			box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+		}
+		/* Name tooltip: covers the icon (not floating above/below it) so it
+		   can never get clipped by ".skills-throwable-scene"'s overflow:
+		   hidden, since icons can land anywhere in the scene including right
+		   at the top/bottom edge. ".skills-throwable-el-rot" already gets a
+		   non-"none" transform each physics tick, which makes it a
+		   positioning context for this "inset:0" overlay for free. */
+		.skills-throwable-el-label {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 6px;
+			background: rgba(0, 0, 0, 0.85);
+			color: #FFF;
+			font-family: 'Poppins', sans-serif;
+			font-size: 11px;
+			font-weight: 600;
+			line-height: 1.25;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity 0.2s ease;
+		}
+		.skills-throwable-el:hover .skills-throwable-el-label {
+			opacity: 1;
+		}
+		@media (max-width: 767px) {
+			.skills-throwable-scene {
+				height: 320px;
+			}
+			.skills-throwable-el {
+				width: 56px;
+				height: 56px;
+			}
+			.skills-throwable-el-label {
+				font-size: 9px;
+				padding: 3px;
+			}
 		}
 		.clients-marquee {
 			position: relative;
@@ -244,13 +347,9 @@
 			}
 		}
 
-		/* Tighten the gap between the last skill pillar and the "Selected
-		   Work" heading below it. */
+		/* Tighten the gap before the "Selected Work" heading below. */
 		#about-outer-section {
 			padding-bottom: 20px !important;
-		}
-		#skills-stagger-group .skills-stagger-item:last-child {
-			margin-bottom: 0 !important;
 		}
 		#portfolio-outer-section {
 			padding-top: 50px !important;
@@ -290,186 +389,39 @@
 			}
 		}
 
-		/* Typewriter cursor while a bio description paragraph is being typed out. */
-		.typewriter-text.is-typing::after {
-			content: "|";
-			display: inline-block;
-			margin-left: 4px;
-			animation: name-heading-blink 0.8s steps(1) infinite;
-		}
-		@keyframes name-heading-blink {
-			50% { opacity: 0; }
-		}
-
-		/* Product/Marketing/Growth pillars: fade up one by one as the group
-		   scrolls into view (each item's transition-delay is staggered by JS
-		   below), rather than all appearing at once. */
-		.skills-stagger-item {
+		/* "Scroll down" hint: hidden until the user has spent 4+ seconds on
+		   the hero (see script near the end of the page). Base ".made-with-
+		   love" opacity is .5 when visible, so fade between 0 and that,
+		   not 0/1. */
+		.made-with-love.scroll-hint {
 			opacity: 0;
-			transform: translateY(40px);
-			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+			transition: opacity 0.8s ease;
 		}
-		.skills-stagger-item.is-revealed {
-			opacity: 1;
-			transform: translateY(0);
+		.made-with-love.scroll-hint.is-visible {
+			opacity: .5;
 		}
 
 		/* Portfolio grid images: smooth fade-up reveal. Hidden by default,
-		   revealed by adding "is-revealed" (see IntersectionObserver script).
-		   Shared with #creative-projects-grid (the "Creative direction
-		   projects" section below). */
-		#portfolio-grid .ttgr-item-inner,
-		#creative-projects-grid .ttgr-item-inner {
+		   revealed by adding "is-revealed" (see IntersectionObserver script). */
+		#portfolio-grid .ttgr-item-inner {
 			opacity: 0;
 			transform: translateY(40px);
 			transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 		}
-		#portfolio-grid .ttgr-item-inner.is-revealed,
-		#creative-projects-grid .ttgr-item-inner.is-revealed {
+		#portfolio-grid .ttgr-item-inner.is-revealed {
 			opacity: 1;
 			transform: translateY(0);
 		}
 
-		/* Portfolio grid caption: title is always visible on the image;
-		   only the description fades in on hover (same reveal timing/pattern
-		   the theme already uses for categories). Shared with
-		   #creative-projects-grid. */
-		#portfolio-grid .pgi-title,
-		#creative-projects-grid .pgi-title {
-			color: #FFF;
-			font-size: calc(14px + 0.15vw);
-			font-weight: 600;
-			line-height: 1.4;
-			margin-bottom: 6px;
-		}
-		#portfolio-grid .pgi-description,
-		#creative-projects-grid .pgi-description {
-			color: #FFF;
-			font-size: calc(13px + 0.15vw);
-			line-height: 1.5;
-			max-width: 90%;
-		}
-		/* At rest, the description has zero height (max-height:0, clipped) so it
-		   doesn't reserve space above the title and the title sits low on the
-		   image. On hover it grows back into flow — since the caption box is
-		   bottom-anchored, growing pushes the whole block (title + description)
-		   upward, so the description rises into view and stays inside the image
-		   instead of spilling past the bottom edge. */
-		#portfolio-grid .pgi-caption-inner,
-		#creative-projects-grid .pgi-caption-inner {
-			position: relative;
-		}
-		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap,
-		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .pgi-description-wrap {
-			max-height: 0;
-			margin-top: 0;
-			opacity: 0;
-			overflow: hidden;
-			transform: translate3d(0, 10px, 0);
-			transition: max-height 0.35s ease-out, margin-top 0.35s ease-out, opacity 0.25s ease-out, transform 0.25s ease-out;
-		}
-		body:not(.is-mobile) #portfolio-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap,
-		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-description-wrap {
-			max-height: 240px;
-			margin-top: 6px;
-			opacity: 1;
-			transform: translate3d(0, 0, 0);
-			transition: max-height 0.35s ease-out, margin-top 0.35s ease-out, opacity 0.3s ease-out 0.05s, transform 0.3s ease-out 0.05s;
-		}
-		/* Touch devices: no hover, so keep the description visible */
-		@media (hover: none) {
-			#portfolio-grid .pgi-description-wrap,
-			#creative-projects-grid .pgi-description-wrap {
-				max-height: none !important;
-				margin-top: 6px !important;
-				opacity: 1 !important;
-				visibility: visible !important;
-				transform: none !important;
-			}
-		}
-		/* Phone: hide the portfolio description entirely — only the title
-		   shows on the image. Wins over the "hover: none" rule above via
-		   source order (same specificity, both !important). */
-		@media (max-width: 767px) {
-			#portfolio-grid .pgi-description-wrap,
-			#creative-projects-grid .pgi-description-wrap {
-				display: none !important;
-			}
-		}
-
-		/* Creative direction projects: purely visual cards, never clickable
-		   (no data-link/data-under-construction attrs, no click handler is
-		   attached to this grid at all), so force the default cursor even
-		   though they share .portfolio-grid-item styling with the case
-		   studies above. */
-		#creative-projects-grid .portfolio-grid-item {
-			cursor: default;
-		}
-
-		/* Theme's "caption overlaid on top of the image" rule (assets/css/theme.css)
-		   is hardcoded to #portfolio-grid, so #creative-projects-grid never picked
-		   it up and its captions fell into normal flow below the image instead of
-		   overlaying it. Re-declare the same rule here, scoped to
-		   #creative-projects-grid, so it matches "Few of my case studies". */
-		#creative-projects-grid.pgi-cap-inside .pgi-caption {
-			position: absolute;
-			left: 0;
-			bottom: 8%;
-			padding: 0 8%;
-			z-index: 2;
-		}
-		/* Same title micro-animation on hover the case studies grid gets from
-		   theme.css (title rises slightly into place). */
-		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .pgi-title {
-			transform: translate3d(0, 15px, 0);
-			transition: all 0.25s ease-out;
-			transition-delay: 0.1s;
-		}
-		body:not(.is-mobile) #creative-projects-grid.pgi-cap-inside.pgi-cap-hover .portfolio-grid-item:hover .pgi-title {
-			transform: translate3d(0, 0, 0);
-		}
-
-		/* "See more creative projects" link below the creative direction
-		   grid. Loads 4 more projects per click, then hides itself once the
-		   full set has been revealed. */
-		.creative-projects-more-wrap {
-			margin-top: 20px;
-			text-align: center;
-		}
-		.creative-projects-more-link {
-			display: inline-block;
-			background: none;
-			border: none;
-			padding: 0 0 4px;
-			font-family: 'Poppins', sans-serif;
-			font-size: calc(12px + 0.1vw);
-			font-weight: 600;
-			letter-spacing: 1.5px;
-			text-transform: uppercase;
-			color: rgba(255, 255, 255, 0.6);
-			cursor: pointer;
-			position: relative;
-			transition: color 0.3s ease;
-		}
-		.creative-projects-more-link::after {
-			content: "";
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			height: 1px;
-			background: currentColor;
-			opacity: 0.5;
-			transition: opacity 0.3s ease;
-		}
-		.creative-projects-more-link:hover {
-			color: #FFF;
-		}
-		.creative-projects-more-link:hover::after {
-			opacity: 1;
-		}
-		.creative-projects-more-link.is-hidden {
-			display: none;
+		/* Portfolio grid caption: plain, no overlay/hover effects at all —
+		   title sits in normal flow directly under the image (theme default
+		   for #portfolio-grid without "pgi-cap-inside"/"pgi-cap-hover"), and
+		   the project's tag renders small + grey right under the title via
+		   the theme's own .pgi-categories-wrap/.pgi-category pattern. Only
+		   overriding the title size down from the theme's very large
+		   default so it reads as a caption, not a heading. */
+		#portfolio-grid .pgi-title {
+			font-size: calc(15px + 0.2vw);
 		}
 
 		/* Portfolio section title — centered above the grid. */
@@ -580,7 +532,6 @@
 
 <body id="body" class="dark tt-transition tt-boxed tt-smooth-scroll tt-magic-cursor">
 
-
 	<main id="body-inner">
 
 		<!-- Begin page transition (do not remove!!!) 
@@ -641,9 +592,14 @@
 
 					<!-- End scroll down circle -->
 
-					<!-- Begin made with love 
+					<!-- Begin made with love (repurposed as the "Scroll down" hint).
+						No longer uses the theme's "ph-appear" entrance animation
+						(which would show it within ~3s of page load, alongside the
+						rest of the hero transition) — instead stays hidden until the
+						user has spent 4+ seconds on the hero, via .scroll-hint /
+						.is-visible + the script further down the page.
 						========================== -->
-					<div class="made-with-love ph-appear">
+					<div class="made-with-love scroll-hint">
 						<div class="mwl-inner">
 							<div class="mwl-text">Scroll down</div>
 
@@ -662,11 +618,9 @@
 
 						<div class="text-xxlg font-alter text-gray-2 bio-fade-group" id="bio-fade-group">
                                                         <p class="bio-fade-item"><img class="name-signature" src="assets/img/signature.png" alt="Marcos Cipriano"><br>
-                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior Digital Product, Marketing Ops &amp; Creative Lead">Senior Digital Product, Marketing Ops &amp; Creative Lead</span></p>
+                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior UI/UX Designer &amp; Creative Lead">Senior UI/UX Designer &amp; Creative Lead</span></p>
 
-                                                        <p class="bio-fade-item">Based in Los Angeles and originally from Brazil, I’m a T-shaped designer and Senior Product Manager with full stack knowledge and hands on experience. I love to lead product delivery while staying deeply involved in the day-to-day design and engineering work.</p>
-
-                                                        <p class="bio-fade-item">With 14+ years of cross-disciplinary experience, including the last 5 years leading end to end product delivery, I thrive at the intersection of creative vision and technical execution. Whether I’m building brand identities, crafting web design systems, writing code, or leading cross functional teams, I bring a hands-on, product-focused approach to turning complex ideas into scalable digital experiences.</p>
+                                                        <p class="bio-fade-item">I’m a T-shaped UI/UX Designer and Creative Lead, deep in product design craft, broad enough to run the systems, strategy, and delivery around it. Based in Los Angeles, originally from Brazil, I run my own agency, Sharp, where I stay hands-on in the pixels while leading the work end to end.</p>
 						</div>
 
 						<!-- Client logo carousel — standalone div, isolated from the bio/
@@ -675,7 +629,7 @@
 							"align-self: stretch" or it shrink-wraps to the animated
 							track's full un-clipped width and blows out the layout. -->
 						<div class="clients-marquee-section">
-							<p class="clients-marquee-label">Brands I’ve Had the Opportunity to Work On:</p>
+							<p class="clients-marquee-label">Brands I’ve Had the Opportunity to Work With:</p>
 							<div class="clients-marquee">
 								<div class="clients-marquee-track">
 									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" aria-label="Visit Polishop"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="Polishop logo"></a>
@@ -703,17 +657,29 @@
 							</div>
 						</div>
 
-						<div class="text-xxlg font-alter text-gray-2">
-                                                        <div class="skills-stagger-group" id="skills-stagger-group">
-                                                                <p class="skills-stagger-item"><strong class="text-white">Product &amp; UI/UX Design</strong><br>
-                                                                        Scalable web platforms, interactive prototyping, user research, and design systems.</p>
+						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">14+ years of cross-disciplinary experience, the last 5 leading end-to-end product delivery, sit behind every project: brand identity, UI/UX systems, and the front-end fluency to prototype ideas and work shoulder-to-shoulder with engineering rather than hand off and hope. I bring a hands-on, systems-minded approach to turning complex problems into polished, scalable digital experiences.</p>
 
-                                                                <p class="skills-stagger-item"><strong class="text-white">Marketing Ops &amp; PM</strong><br>
-                                                                        Funnel automations, CRM workflows, martech stack architecture, and project delivery.</p>
+						<p class="clients-marquee-label skills-section-label">Some of My Skills</p>
 
-                                                                <p class="skills-stagger-item"><strong class="text-white">Growth &amp; Creative Strategy</strong><br>
-                                                                        Multi-channel campaigns, visual brand identity, and performance-driven media.</p>
-                                                        </div>
+						<div class="skills-throwable-scene" data-skills-throwable-scene>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/photoshop.svg" alt="Adobe Photoshop" draggable="false"><span class="skills-throwable-el-label">Adobe Photoshop</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/illustrator.svg" alt="Adobe Illustrator" draggable="false"><span class="skills-throwable-el-label">Adobe Illustrator</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/blender.svg" alt="Blender" draggable="false"><span class="skills-throwable-el-label">Blender</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/javascript.svg" alt="JavaScript" draggable="false"><span class="skills-throwable-el-label">JavaScript</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/typescript.svg" alt="TypeScript" draggable="false"><span class="skills-throwable-el-label">TypeScript</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/figma.svg" alt="Figma" draggable="false"><span class="skills-throwable-el-label">Figma</span></span>
+							</div>
 						</div>
 
 					</div> <!-- /.tt-section-inner -->
@@ -728,12 +694,12 @@
 
 						<!-- Begin portfolio section title -->
 						<div class="portfolio-section-heading anim-fadeinup">
-							<h2 class="portfolio-section-title">Few of my case studies</h2>
+							<h2 class="portfolio-section-title">Latest Projects</h2>
 						</div>
 						<!-- End portfolio section title -->
 
 						<!-- Begin portfolio grid (works combined with tt-Ggrid!) -->
-						<div id="portfolio-grid" class="pgi-cap-inside pgi-cap-hover">
+						<div id="portfolio-grid">
 
 							<!-- Begin tt-Grid -->
 							<div class="tt-grid ttgr-layout-2 ttgr-gap-4">
@@ -753,45 +719,11 @@
 				</div>
 				<!-- End tt-section (portfolio grid) -->
 
-				<!-- Begin creative direction projects (sits below "Few of my case
-					studies"). Cards here are purely visual — no case-study link,
-					no "under construction" popup, no click/keyboard activation at
-					all (the click-handler script further below only ever looks
-					inside #portfolio-grid). Shows 4 projects on desktop / 3 on
-					mobile to start; "See more creative projects" reveals 4 more
-					per click until the set (assets/data/portfolio.json, minus the
-					4 already shown above) is exhausted. -->
+				<!-- "Creative direction projects" grid/section was removed per
+					user request; this section now just holds the closing
+					"Thank You!" block below "Few of my case studies". -->
 				<div class="tt-section padding-top-xlg-40 padding-bottom-xlg-75" id="creative-projects-outer-section">
 					<div class="tt-section-inner">
-
-						<!-- Begin creative projects section title -->
-						<div class="portfolio-section-heading anim-fadeinup">
-							<h2 class="portfolio-section-title">Creative direction projects</h2>
-						</div>
-						<!-- End creative projects section title -->
-
-						<!-- Begin creative projects grid -->
-						<div id="creative-projects-grid" class="pgi-cap-inside pgi-cap-hover">
-
-							<!-- Begin tt-Grid -->
-							<div class="tt-grid ttgr-layout-2 ttgr-gap-4">
-
-								<!-- Begin tt-Grid items wrap -->
-								<!-- Populated dynamically from assets/data/portfolio.json — see script near end of page -->
-								<div class="tt-grid-items-wrap isotope-items-wrap" id="creative-projects-items-wrap"></div>
-								<!-- End tt-Grid items wrap  -->
-
-							</div>
-							<!-- End tt-Grid -->
-
-						</div>
-						<!-- End creative projects grid -->
-
-						<!-- Begin "See more creative projects" -->
-						<div class="creative-projects-more-wrap">
-							<button type="button" id="creative-projects-more-btn" class="creative-projects-more-link">See more creative projects</button>
-						</div>
-						<!-- End "See more creative projects" -->
 
 						<!-- Begin "Thanks for stopping by" -->
 						<div class="portfolio-thanks-wrap anim-fadeinup">
@@ -802,7 +734,7 @@
 
 					</div> <!-- /.tt-section-inner -->
 				</div>
-				<!-- End creative direction projects -->
+				<!-- End "Thanks for stopping by" outer section -->
 
 				<!-- End tt-section -->
 
@@ -853,7 +785,7 @@
                                                         </div>
 
 							<div class="tt-copyright">
-								© 2018, All Rights Reserved — <a href="https://saintcip.com/" target="_blank" rel="noopener"
+								© 2026, All Rights Reserved — <a href="https://saintcip.com/" target="_blank" rel="noopener"
 									class="tt-link">saintcip.com</a>
 							</div>
 
@@ -908,6 +840,8 @@
 	<!-- lightGallery Plugins JS (http://sachinchoolur.github.io/lightGallery) -->
 	<script src="assets/vendor/jquery.mousewheel.min.js"></script>
 	<!-- A jQuery plugin that adds cross browser mouse wheel support (https://github.com/jquery/jquery-mousewheel) -->
+	<script src="assets/vendor/matter/matter.min.js"></script>
+	<!-- Matter.js JS (https://brm.io/matter-js/) — physics for the throwable skill icons -->
 
 	<!-- Init portfolio grid: fetches assets/data/portfolio.json, shows only the first
 		4 projects on desktop / 3 on mobile. No pagination, no category filter. -->
@@ -966,15 +900,16 @@
 
 			// ============================================================================
 			// Build one grid item's markup from a portfolio.json entry.
-			// Title ("Name - Tag") is always visible on the image; the description
-			// is revealed only on hover.
+			// No overlay/hover effects at all: image on top, then (in normal
+			// flow, below it) the project name as the title and its tag as a
+			// small grey line underneath — the theme's own .pgi-caption /
+			// .pgi-categories-wrap pattern, used without "pgi-cap-inside" so
+			// it renders under the image instead of on top of it.
 			// ============================================================================
 			function buildItemHtml(item) {
 				var name = item.name ? String(item.name) : "";
 				var tag = item.tag ? String(item.tag) : "";
-				var title = name && tag ? (name + " - " + tag) : (name || tag);
-				var description = item.description ? String(item.description) : "";
-				var altText = item.name ? String(item.name) : "Portfolio project";
+				var altText = name || "Portfolio project";
 				var link = item.link ? String(item.link) : "";
 				var clickableAttrs = link ?
 					' data-link="' + link.replace(/"/g, "&quot;") + '" role="button" tabindex="0" aria-label="View the ' + (name || "project") + ' case study (opens Behance)"'
@@ -995,11 +930,9 @@
 								'</div>' +
 								'<div class="pgi-caption">' +
 									'<div class="pgi-caption-inner">' +
-										'<div class="pgi-title">' + title + '</div>' +
-										(description ?
-											'<div class="pgi-description-wrap">' +
-												'<div class="pgi-description">' + description + '</div>' +
-											'</div>'
+										'<div class="pgi-title">' + name + '</div>' +
+										(tag ?
+											'<div class="pgi-categories-wrap"><span class="pgi-category">' + tag + '</span></div>'
 										: '') +
 									'</div>' +
 								'</div>' +
@@ -1048,173 +981,6 @@
 				})
 				.catch(function (err) {
 					console.error("Could not load assets/data/portfolio.json", err);
-				});
-
-		});
-	</script>
-
-	<!-- Init "Creative direction projects" grid: reuses assets/data/portfolio.json,
-		skipping the first 4 entries already shown in "Few of my case studies"
-		above. Shows 4 projects on desktop / 3 on mobile to start; "See more
-		creative projects" reveals 4 more per click until the list runs out.
-		Cards are display-only — no data-link/data-under-construction attrs are
-		ever set, and no click/keyboard handler is attached to this grid, so
-		they can never open a case study or the "under construction" popup. -->
-	<script>
-		jQuery(function ($) {
-
-			if (!$("#creative-projects-grid").length) return;
-
-			// Skip the projects already shown in "Few of my case studies"
-			// (that grid always pulls from the front of the same array).
-			var SKIP_COUNT = 4;
-			var INITIAL_COUNT = window.innerWidth >= 768 ? 4 : 3;
-			var LOAD_MORE_COUNT = 4;
-
-			var creativeData = [];
-			var shownCount = 0;
-			var isotopeReady = false;
-
-			var $itemsWrap = $("#creative-projects-items-wrap");
-			var $container = $("#creative-projects-grid .isotope-items-wrap");
-			var $moreBtn = $("#creative-projects-more-btn");
-
-			// Same staggered fade-up reveal as the case studies grid.
-			function attachReveal($items) {
-				try {
-					if (!$items.length) return;
-
-					$items.each(function (i) {
-						this.style.transitionDelay = Math.min(i * 90, 600) + "ms";
-					});
-
-					if ("IntersectionObserver" in window) {
-						var revealObserver = new IntersectionObserver(function (entries) {
-							entries.forEach(function (entry) {
-								if (entry.isIntersecting) {
-									entry.target.classList.add("is-revealed");
-									revealObserver.unobserve(entry.target);
-								}
-							});
-						}, { threshold: 0.1 });
-
-						$items.each(function () {
-							revealObserver.observe(this);
-						});
-
-						setTimeout(function () {
-							$items.addClass("is-revealed");
-						}, 4000);
-					} else {
-						$items.addClass("is-revealed");
-					}
-				} catch (e) {
-					$items.addClass("is-revealed");
-				}
-			}
-
-			// Same caption markup as the case studies grid, minus every click
-			// affordance: no data-link / data-under-construction, no
-			// role="button", no tabindex — these cards are not interactive.
-			function buildItemHtml(item) {
-				var name = item.name ? String(item.name) : "";
-				var tag = item.tag ? String(item.tag) : "";
-				var title = name && tag ? (name + " - " + tag) : (name || tag);
-				var description = item.description ? String(item.description) : "";
-				var altText = item.name ? String(item.name) : "Creative project";
-
-				return (
-					'<div class="tt-grid-item isotope-item">' +
-						'<div class="ttgr-item-inner">' +
-							'<div class="portfolio-grid-item">' +
-								'<div class="pgi-image-wrap">' +
-									'<div class="pgi-image-holder cover-opacity-2">' +
-										'<div class="pgi-image-inner anim-zoomin">' +
-											'<figure class="pgi-image ttgr-height">' +
-												'<img src="' + item.image + '" alt="' + altText + '" loading="lazy">' +
-											'</figure>' +
-										'</div>' +
-									'</div>' +
-								'</div>' +
-								'<div class="pgi-caption">' +
-									'<div class="pgi-caption-inner">' +
-										'<div class="pgi-title">' + title + '</div>' +
-										(description ?
-											'<div class="pgi-description-wrap">' +
-												'<div class="pgi-description">' + description + '</div>' +
-											'</div>'
-										: '') +
-									'</div>' +
-								'</div>' +
-							'</div>' +
-						'</div>' +
-					'</div>'
-				);
-			}
-
-			function updateMoreButton() {
-				if (shownCount >= creativeData.length) {
-					$moreBtn.addClass("is-hidden");
-				} else {
-					$moreBtn.removeClass("is-hidden");
-				}
-			}
-
-			// ============================================================================
-			// Append the next "count" projects (called once on load with
-			// INITIAL_COUNT, then again on each "See more" click with
-			// LOAD_MORE_COUNT).
-			// ============================================================================
-			function renderBatch(count) {
-				var nextItems = creativeData.slice(shownCount, shownCount + count);
-				if (!nextItems.length) return;
-
-				var $newItems = $($.map(nextItems, buildItemHtml).join(""));
-				$itemsWrap.append($newItems);
-				shownCount += nextItems.length;
-
-				attachReveal($newItems.find(".ttgr-item-inner"));
-
-				if (!isotopeReady) {
-					$container.imagesLoaded(function () {
-						$container.isotope({
-							itemSelector: ".isotope-item",
-							layoutMode: "packery",
-							transitionDuration: "0.7s",
-							percentPosition: true
-						});
-						isotopeReady = true;
-
-						setTimeout(function () {
-							$container.isotope("layout");
-							if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
-						}, 500);
-					});
-				} else {
-					$newItems.imagesLoaded(function () {
-						$container.isotope("appended", $newItems);
-						$container.isotope("layout");
-						if (window.ScrollTrigger) { ScrollTrigger.refresh(true); }
-					});
-				}
-
-				updateMoreButton();
-			}
-
-			$moreBtn.on("click", function () {
-				renderBatch(LOAD_MORE_COUNT);
-			});
-
-			fetch("assets/data/portfolio.json")
-				.then(function (res) { return res.json(); })
-				.then(function (data) {
-					var all = Array.isArray(data) ? data : [];
-					creativeData = all.slice(SKIP_COUNT);
-					renderBatch(INITIAL_COUNT);
-				})
-				.catch(function (err) {
-					console.error("Could not load assets/data/portfolio.json", err);
-					$moreBtn.addClass("is-hidden");
 				});
 
 		});
@@ -1367,13 +1133,19 @@
                 })();
         </script>
 
-        <!-- Reveal the "Product / Marketing / Growth" pillars one by one as the
-                group scrolls into view (staggered fade-up). -->
+        <!-- Bio intro (Marcos Cipriano + the line under it, including the
+                subtitle) plus the "14+ years..." paragraph relocated above
+                "Some of My Skills": all fade up together once the top bio
+                block is scrolled into view, same reveal pattern as the rest
+                of the page. Selects .bio-fade-item document-wide (not just
+                inside #bio-fade-group) since that paragraph now lives
+                further down the page but should still fade in the same way.
+                Fixed text, no typing animation. -->
         <script>
                 (function () {
-                        var group = document.getElementById("skills-stagger-group");
+                        var group = document.getElementById("bio-fade-group");
                         if (!group) return;
-                        var items = group.querySelectorAll(".skills-stagger-item");
+                        var items = document.querySelectorAll(".bio-fade-item");
                         if (!items.length) return;
 
                         items.forEach(function (el, i) {
@@ -1405,76 +1177,160 @@
                 })();
         </script>
 
-        <!-- Bio intro (Marcos Cipriano + the two lines under it): fade up one by
-                one only once scrolled into view, same reveal pattern as the skill
-                pillars above. "Marcos Cipriano" and the two description paragraphs
-                are fixed text (no effect). Only the subtitle ("Senior Digital
-                Product, Marketing Ops & Creative Lead") types out letter by letter. -->
+        <!-- "Scroll down" hint: only appears once the user has spent 4+
+                seconds on the hero (#page-header), not immediately on load.
+                If the user has already scrolled past the hero by the time
+                the 4s mark hits, it's skipped entirely; if it's showing and
+                the user then scrolls past the hero, it fades back out so it
+                never lingers over the rest of the page. -->
         <script>
                 (function () {
-                        var group = document.getElementById("bio-fade-group");
-                        if (!group) return;
-                        var items = group.querySelectorAll(".bio-fade-item");
-                        if (!items.length) return;
+                        var hero = document.getElementById("page-header");
+                        var hint = document.querySelector(".made-with-love.scroll-hint");
+                        if (!hero || !hint) return;
 
-                        // 250 WPM, using the standard 5-characters-per-word convention.
-                        var WPM = 250;
-                        var MS_PER_CHAR = 60000 / (WPM * 5);
-
-                        var subtitleEl = document.getElementById("typewriter-subtitle");
-                        var typed = false;
-
-                        function typeSubtitle() {
-                                if (typed || !subtitleEl) return;
-                                typed = true;
-                                var fullText = subtitleEl.getAttribute("data-text") || subtitleEl.textContent;
-                                subtitleEl.textContent = "";
-                                subtitleEl.classList.add("is-typing");
-                                var i = 0;
-                                var interval = setInterval(function () {
-                                        i++;
-                                        subtitleEl.textContent = fullText.slice(0, i);
-                                        if (i >= fullText.length) {
-                                                clearInterval(interval);
-                                                subtitleEl.classList.remove("is-typing");
-                                        }
-                                }, MS_PER_CHAR);
+                        function isHeroInView() {
+                                var rect = hero.getBoundingClientRect();
+                                return rect.bottom > 0;
                         }
 
-                        items.forEach(function (el, i) {
-                                el.style.transitionDelay = (i * 220) + "ms";
+                        setTimeout(function () {
+                                if (isHeroInView()) {
+                                        hint.classList.add("is-visible");
+                                }
+                        }, 4000);
+
+                        window.addEventListener("scroll", function () {
+                                hint.classList.toggle("is-visible", isHeroInView() && hint.classList.contains("is-visible"));
+                        }, { passive: true });
+                })();
+        </script>
+
+        <!-- Photoshop, Illustrator, Blender, JavaScript, TypeScript, and Figma
+                skill tiles: drop in with gravity (Matter.js) once scrolled into
+                view, staggered, then can be grabbed and thrown around with the
+                mouse. Ported from the same "liquidThrowable" mechanism used for
+                the "Services We Offer" section on sharpstudiollc.com. -->
+        <script>
+                jQuery(function ($) {
+                        var sceneEl = document.querySelector("[data-skills-throwable-scene]");
+                        if (!sceneEl || typeof Matter === "undefined") return;
+
+                        var throwables = sceneEl.querySelectorAll("[data-skills-throwable-el]");
+                        if (!throwables.length) return;
+
+                        var width = sceneEl.offsetWidth;
+                        var height = sceneEl.offsetHeight;
+                        if (!width || !height) return;
+
+                        var engine = Matter.Engine.create();
+                        var runner = Matter.Runner.create();
+                        var mouse = Matter.Mouse.create(sceneEl);
+
+                        // Don't let Matter's mouse hijack page scroll over the scene.
+                        sceneEl.removeEventListener("mousewheel", mouse.mousewheel);
+                        sceneEl.addEventListener("mouseleave", mouse.mouseup);
+
+                        var mouseConstraint = Matter.MouseConstraint.create(engine, {
+                                mouse: mouse,
+                                constraint: { render: { visible: false } }
+                        });
+                        engine.gravity.y = 0.8;
+
+                        var boundStart = Matter.Bodies.rectangle(-250, height / 2, 500, height * 4, { isStatic: true });
+                        var boundEnd = Matter.Bodies.rectangle(width + 250, height / 2, 500, height * 4, { isStatic: true });
+                        var boundBottom = Matter.Bodies.rectangle(0, height + 250, width * 2, 500, { isStatic: true });
+
+                        Matter.Composite.add(engine.world, [mouseConstraint, boundStart, boundEnd, boundBottom]);
+                        Matter.Runner.start(runner, engine);
+                        runner.enabled = false;
+
+                        // The scene itself is pointer-events:none (so empty space never
+                        // blocks scroll); while something is actively grabbed, open it up
+                        // so the drag/release still tracks correctly off of a tile.
+                        Matter.Events.on(mouseConstraint, "mousedown", function () {
+                                sceneEl.style.pointerEvents = "auto";
+                        });
+                        Matter.Events.on(mouseConstraint, "mouseup", function () {
+                                sceneEl.style.pointerEvents = "";
                         });
 
-                        function revealAll() {
-                                items.forEach(function (el) {
-                                        el.classList.add("is-revealed");
+                        // Only simulate while the scene is actually on screen.
+                        new IntersectionObserver(function (entries) {
+                                runner.enabled = entries[0].isIntersecting;
+                        }).observe(sceneEl);
+
+                        var bodies = [];
+                        throwables.forEach(function (el, i) {
+                                var rot = el.querySelector(".skills-throwable-el-rot");
+                                var rect = el.getBoundingClientRect();
+                                var setX = gsap.quickSetter(el, "x", "px");
+                                var setY = gsap.quickSetter(el, "y", "px");
+                                var angle = gsap.utils.random(-0.2 * Math.PI, 0.2 * Math.PI);
+                                var startX = gsap.utils.random(rect.width / 2, Math.max(rect.width / 2, width - rect.width / 2));
+                                var startY = -rect.height - (i * (rect.height + 14));
+
+                                var body = Matter.Bodies.rectangle(startX, startY, rect.width, rect.height, {
+                                        angle: angle,
+                                        isStatic: true,
+                                        restitution: 0.3
                                 });
-                                typeSubtitle();
-                        }
 
-                        if ("IntersectionObserver" in window) {
-                                var observer = new IntersectionObserver(function (entries) {
-                                        entries.forEach(function (entry) {
-                                                if (entry.isIntersecting) {
-                                                        revealAll();
-                                                        observer.unobserve(entry.target);
-                                                }
-                                        });
-                                }, { threshold: 0.2 });
-                                observer.observe(group);
+                                bodies.push(body);
+                                Matter.Composite.add(engine.world, [body]);
 
-                                // Safety net: never leave the text stuck invisible/untyped.
-                                setTimeout(function () {
-                                        revealAll();
-                                        if (!typed && subtitleEl) {
-                                                typed = true;
-                                                subtitleEl.textContent = subtitleEl.getAttribute("data-text") || subtitleEl.textContent;
-                                        }
-                                }, 4000);
-                        } else {
-                                revealAll();
-                        }
-                })();
+                                Matter.Events.on(runner, "tick", function () {
+                                        if (!runner.enabled) return;
+                                        rot.style.transform = "translate(-50%, -50%) rotate(" + body.angle.toFixed(2) + "rad)";
+                                        setY(body.position.y.toFixed(1));
+                                        setX(body.position.x.toFixed(1));
+                                });
+                        });
+
+                        // Drop them in, staggered, only once the user has actually
+                        // scrolled to be on top of this area (most of the scene
+                        // visible) — not just as soon as it peeks into the viewport.
+                        var rained = false;
+                        var startObserver = new IntersectionObserver(function (entries) {
+                                if (!entries[0].isIntersecting || rained) return;
+                                rained = true;
+                                throwables.forEach(function (el) {
+                                        gsap.to(el, { opacity: 1, duration: 0.35 });
+                                });
+                                bodies.forEach(function (body, i) {
+                                        setTimeout(function () {
+                                                Matter.Body.setStatic(body, false);
+                                        }, i * 90);
+                                });
+                                startObserver.disconnect();
+                        }, { threshold: 0.65 });
+                        startObserver.observe(sceneEl);
+
+                        // Add a ceiling once the last tile has fully entered the scene,
+                        // so a hard throw can't fling one back out above the frame.
+                        var ceilingAdded = false;
+                        Matter.Events.on(runner, "tick", function () {
+                                if (ceilingAdded || !bodies.length) return;
+                                if (bodies[bodies.length - 1].position.y > height / 2) {
+                                        Matter.Composite.add(engine.world, [
+                                                Matter.Bodies.rectangle(width / 2, -20, width, 50, { isStatic: true })
+                                        ]);
+                                        ceilingAdded = true;
+                                }
+                        });
+
+                        // Keep the walls matched to the scene if it's resized.
+                        window.addEventListener("resize", function () {
+                                var newWidth = sceneEl.offsetWidth;
+                                var newHeight = sceneEl.offsetHeight;
+                                if (!newWidth || !newHeight || (newWidth === width && newHeight === height)) return;
+                                width = newWidth;
+                                height = newHeight;
+                                Matter.Body.setPosition(boundStart, { x: -250, y: height / 2 });
+                                Matter.Body.setPosition(boundEnd, { x: width + 250, y: height / 2 });
+                                Matter.Body.setPosition(boundBottom, { x: 0, y: height + 250 });
+                        });
+                });
         </script>
 
 
