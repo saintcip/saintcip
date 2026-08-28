@@ -12,7 +12,7 @@
     "image": "assets/img/portfolio/2.png",
     "name": "Nakamoto Capital",
     "description": "UX and product design for a multi-chain DAO investment platform — translating complex crypto mechanics into a clear, trustworthy user journey.",
-    "tag": "UI/UX Design",
+    "tag": "Web Design",
     "link": "https://www.behance.net/gallery/243978655/UiUx-Web3-Nakamoto-Capital"
   },
   {
@@ -20,15 +20,15 @@
     "image": "assets/img/portfolio/3.png",
     "name": "Text Flow",
     "description": "Self-initiated concept for an AI messaging app — UX flows and product design system taken from concept through a working MVP.",
-    "tag": "Concept / UI-UX",
+    "tag": "UI/UX Design",
     "link": "https://www.behance.net/gallery/245032587/Text-Flow-AI-App"
   },
   {
-    "id": 3,
-    "image": "assets/img/portfolio/10.png",
-    "name": "Mansa",
-    "description": "Brand identity system for Mansa — a regal wordmark and crown mark built to scale across packaging and digital touchpoints.",
-    "tag": "Brand Identity",
+    "id": 5,
+    "image": "assets/img/portfolio/5.png",
+    "name": "Muaxx",
+    "description": "Brand identity system for a lifestyle brand — playful kiss-mark lettering designed to hold up across packaging and digital touchpoints.",
+    "tag": "Branding",
     "link": ""
   },
   {
@@ -40,11 +40,11 @@
     "link": ""
   },
   {
-    "id": 5,
-    "image": "assets/img/portfolio/5.png",
-    "name": "Muaxx",
-    "description": "Brand identity system for a lifestyle brand — playful kiss-mark lettering designed to hold up across packaging and digital touchpoints.",
-    "tag": "Brand Identity",
+    "id": 3,
+    "image": "assets/img/portfolio/10.png",
+    "name": "Mansa",
+    "description": "Brand identity system for Mansa — a regal wordmark and crown mark built to scale across packaging and digital touchpoints.",
+    "tag": "Web Design",
     "link": ""
   },
   {
@@ -52,7 +52,7 @@
     "image": "assets/img/portfolio/6.png",
     "name": "Ez",
     "description": "Brand identity system built around a chrome monogram mark — exploring dimension and reflection, designed to scale across digital and print touchpoints.",
-    "tag": "Brand Identity",
+    "tag": "Branding",
     "link": ""
   },
   {
