@@ -182,7 +182,7 @@
 			align-self: stretch;
 			position: relative;
 			width: 100%;
-			height: 260px;
+			height: 420px;
 			margin-top: 20px;
 			overflow: hidden;
 			pointer-events: none;
@@ -246,7 +246,7 @@
 		}
 		@media (max-width: 767px) {
 			.skills-throwable-scene {
-				height: 320px;
+				height: 520px;
 			}
 			.skills-throwable-el {
 				width: 56px;
@@ -489,6 +489,27 @@
 			}
 		}
 
+		/* Bottom gap (subtitle -> footer) matched to the top gap (last
+		   portfolio card -> "Thank You!"), which was noticeably bigger.
+		   Top gap = #creative-projects-outer-section's own "padding-top-
+		   xlg-40" (40px, >=1025px only) + .portfolio-thanks-wrap's margin-
+		   top (90px desktop / 60px mobile, no change 768-1024px) — replaced
+		   the old flat "padding-bottom-xlg-75" (75px, >=1025px only, 0
+		   below that) with matching totals per breakpoint instead. */
+		#creative-projects-outer-section {
+			padding-bottom: 90px;
+		}
+		@media (min-width: 1025px) {
+			#creative-projects-outer-section {
+				padding-bottom: 130px;
+			}
+		}
+		@media (max-width: 767px) {
+			#creative-projects-outer-section {
+				padding-bottom: 60px;
+			}
+		}
+
 		/* "Are you sure you want to leave" confirmation popup (shown before
 		   sending someone to a project's Behance case study), and the
 		   "under construction" notice for projects without one yet. Both
@@ -680,6 +701,27 @@
 							<div class="skills-throwable-el" data-skills-throwable-el>
 								<span class="skills-throwable-el-rot"><img src="assets/img/skills/figma.svg" alt="Figma" draggable="false"><span class="skills-throwable-el-label">Figma</span></span>
 							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/aftereffects.svg" alt="Adobe After Effects" draggable="false"><span class="skills-throwable-el-label">Adobe After Effects</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/css.svg" alt="CSS3" draggable="false"><span class="skills-throwable-el-label">CSS3</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/framer.svg" alt="Framer" draggable="false"><span class="skills-throwable-el-label">Framer</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/html5.svg" alt="HTML5" draggable="false"><span class="skills-throwable-el-label">HTML5</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/indesign.svg" alt="Adobe InDesign" draggable="false"><span class="skills-throwable-el-label">Adobe InDesign</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/jira.svg" alt="Jira" draggable="false"><span class="skills-throwable-el-label">Jira</span></span>
+							</div>
+							<div class="skills-throwable-el" data-skills-throwable-el>
+								<span class="skills-throwable-el-rot"><img src="assets/img/skills/monday.svg" alt="monday.com" draggable="false"><span class="skills-throwable-el-label">monday.com</span></span>
+							</div>
 						</div>
 
 					</div> <!-- /.tt-section-inner -->
@@ -722,7 +764,7 @@
 				<!-- "Creative direction projects" grid/section was removed per
 					user request; this section now just holds the closing
 					"Thank You!" block below "Few of my case studies". -->
-				<div class="tt-section padding-top-xlg-40 padding-bottom-xlg-75" id="creative-projects-outer-section">
+				<div class="tt-section padding-top-xlg-40" id="creative-projects-outer-section">
 					<div class="tt-section-inner">
 
 						<!-- Begin "Thanks for stopping by" -->
