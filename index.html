@@ -77,6 +77,57 @@
 	<!-- Hero wallpaper video (sits behind the 3D item) -->
 	<style>
 
+		/* Mobile-only notice: this site is designed for desktop viewing.
+		   Full-bleed white bar at the very top of the page (sits before
+		   #scroll-container in the markup, so it's unaffected by the
+		   theme's smooth-scroll transform on the content below it),
+		   hidden entirely on tablet/desktop. Dismissible; remembered for
+		   the rest of the browser session via sessionStorage so it
+		   doesn't reappear on every scroll, but does come back on a
+		   fresh visit later. */
+		.mobile-desktop-notice {
+			display: none;
+		}
+		@media (max-width: 767px) {
+			.mobile-desktop-notice {
+				display: flex;
+				position: relative;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+				padding: 10px 40px;
+				background: #FFF;
+				box-sizing: border-box;
+			}
+		}
+		.mobile-desktop-notice.is-dismissed {
+			display: none !important;
+		}
+		.mobile-desktop-notice-text {
+			font-family: 'Poppins', sans-serif;
+			font-size: 12px;
+			font-weight: 300;
+			letter-spacing: 0.3px;
+			line-height: 1.3;
+			color: #000;
+			text-align: center;
+		}
+		.mobile-desktop-notice-close {
+			position: absolute;
+			right: 16px;
+			top: 50%;
+			transform: translateY(-50%);
+			margin: 0;
+			padding: 0;
+			border: 0;
+			background: none;
+			font-size: 20px;
+			font-weight: 300;
+			line-height: 1;
+			color: #000;
+			cursor: pointer;
+		}
+
 		.hero-video-embed video {
 			width: 100%;
 			height: 100%;
@@ -126,7 +177,7 @@
 		/* Mobile: push the about/main text down from the hero */
 		@media (max-width: 767px) {
 			.about-section {
-				padding-top: 60px !important;
+				padding-top: 15px !important;
 			}
 		}
 
@@ -172,6 +223,11 @@
 		.skills-intro-paragraph {
 			margin-top: 8px;
 		}
+		/* "Fun fact" aside, closes out the About section right before
+		   "Latest Projects" begins. Reuses the same bio text look. */
+		.fun-fact-paragraph {
+			margin-top: 40px;
+		}
 		/* Photoshop / Illustrator / Blender tiles that drop in with gravity and
 		   can be grabbed and thrown around (Matter.js physics — same mechanism
 		   as the "Services We Offer" section on sharpstudiollc.com). Container
@@ -182,7 +238,7 @@
 			align-self: stretch;
 			position: relative;
 			width: 100%;
-			height: 420px;
+			height: 252px;
 			margin-top: 20px;
 			overflow: hidden;
 			pointer-events: none;
@@ -246,7 +302,7 @@
 		}
 		@media (max-width: 767px) {
 			.skills-throwable-scene {
-				height: 520px;
+				height: 312px;
 			}
 			.skills-throwable-el {
 				width: 56px;
@@ -424,6 +480,91 @@
 			font-size: calc(15px + 0.2vw);
 		}
 
+		/* Title row: project name + its date, same line. Date is smaller
+		   and grey (reuses .pgi-category's opacity), sits to the right of
+		   the title. ".pgi-title" keeps min-width:0 + flex so its existing
+		   ellipsis/nowrap truncation still wins over the date for long
+		   names; the date itself never shrinks/wraps. */
+		#portfolio-grid .pgi-title-row {
+			display: flex;
+			align-items: baseline;
+			gap: 8px;
+		}
+		#portfolio-grid .pgi-title-row .pgi-title {
+			flex: 0 1 auto;
+			min-width: 0;
+		}
+		#portfolio-grid .pgi-date {
+			flex-shrink: 0;
+			font-size: calc(11px + 0.1vw);
+			color: #FFF;
+			opacity: .5;
+			white-space: nowrap;
+		}
+
+		/* Caption row: title/tag on the left, a "Case Study" outline button
+		   on the right — vertically centered against, and stretched to,
+		   the same height as the title+tag text block (align-items:
+		   stretch on the row + the button centering its own label inside
+		   whatever height that gives it). ".pgi-caption-text" gets
+		   min-width:0 so the title's existing ellipsis truncation still
+		   works with a flex sibling next to it. */
+		#portfolio-grid .pgi-caption-inner {
+			display: flex;
+			align-items: stretch;
+			justify-content: space-between;
+			gap: 16px;
+		}
+		#portfolio-grid .pgi-caption-text {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+		/* "Case Study" button: minimalist outline, small arrow on the right
+		   (CSS-only, via ::after so no extra markup) that nudges further
+		   right on hover, when the outline also brightens to full white —
+		   the whole card (button included, since it's a plain descendant
+		   of ".portfolio-grid-item") is already the click target that
+		   opens item.link, see the click-delegation script near the end
+		   of the page. */
+		#portfolio-grid .pgi-case-study-btn {
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			padding: 0 20px;
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 0;
+			font-family: 'Poppins', sans-serif;
+			font-size: calc(11px + 0.1vw);
+			font-weight: 600;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.75);
+			white-space: nowrap;
+			cursor: pointer;
+			transition: border-color 0.25s ease, color 0.25s ease;
+		}
+		#portfolio-grid .pgi-case-study-btn::after {
+			content: "\2192";
+			display: inline-block;
+			font-weight: 400;
+			transition: transform 0.25s ease;
+		}
+		#portfolio-grid .pgi-case-study-btn:hover {
+			border-color: #FFF;
+			color: #FFF;
+		}
+		#portfolio-grid .pgi-case-study-btn:hover::after {
+			transform: translateX(3px);
+		}
+		@media (max-width: 767px) {
+			#portfolio-grid .pgi-case-study-btn {
+				padding: 0 14px;
+				font-size: 10px;
+			}
+		}
+
 		/* Portfolio section title — centered above the grid. */
 		.portfolio-section-heading {
 			margin: 0 0 50px;
@@ -482,6 +623,17 @@
 			font-family: 'Noto Serif JP', serif;
 			font-size: calc(14px + 0.1vw);
 			color: rgba(255, 255, 255, 0.6);
+		}
+		/* "click here" -> Instagram, called out in full white against the
+		   muted subtitle around it so it reads as the clickable part. */
+		.portfolio-thanks-link {
+			color: #FFF;
+			text-decoration: underline;
+			text-underline-offset: 3px;
+			cursor: pointer;
+		}
+		.portfolio-thanks-link:hover {
+			opacity: .8;
 		}
 		@media (max-width: 767px) {
 			.portfolio-thanks-wrap {
@@ -552,6 +704,33 @@
 
 
 <body id="body" class="dark tt-transition tt-boxed tt-smooth-scroll tt-magic-cursor">
+
+	<!-- Mobile-only: this site is designed for desktop viewing. Hidden
+		entirely on tablet/desktop via CSS; dismiss is remembered for the
+		rest of the session (see script right after this markup). -->
+	<div id="mobile-desktop-notice" class="mobile-desktop-notice" role="note" aria-live="polite">
+		<span class="mobile-desktop-notice-text">The website was designed to be experienced on the desktop</span>
+		<button type="button" class="mobile-desktop-notice-close" aria-label="Dismiss notice" data-mobile-notice-close>&times;</button>
+	</div>
+	<script>
+		(function () {
+			var notice = document.getElementById("mobile-desktop-notice");
+			if (!notice) return;
+			var KEY = "desktopNoticeDismissed";
+			try {
+				if (sessionStorage.getItem(KEY) === "1") {
+					notice.classList.add("is-dismissed");
+					return;
+				}
+			} catch (e) {}
+			var closeBtn = notice.querySelector("[data-mobile-notice-close]");
+			if (!closeBtn) return;
+			closeBtn.addEventListener("click", function () {
+				notice.classList.add("is-dismissed");
+				try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
+			});
+		})();
+	</script>
 
 	<main id="body-inner">
 
@@ -639,9 +818,9 @@
 
 						<div class="text-xxlg font-alter text-gray-2 bio-fade-group" id="bio-fade-group">
                                                         <p class="bio-fade-item"><img class="name-signature" src="assets/img/signature.png" alt="Marcos Cipriano"><br>
-                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="Senior UI/UX Designer &amp; Creative Lead">Senior UI/UX Designer &amp; Creative Lead</span></p>
+                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="T-Shaped UI/UX Designer &amp; Product Lead">T-Shaped UI/UX Designer &amp; Product Lead</span></p>
 
-                                                        <p class="bio-fade-item">I’m a T-shaped UI/UX Designer and Creative Lead, deep in product design craft, broad enough to run the systems, strategy, and delivery around it. Based in Los Angeles, originally from Brazil, I run my own agency, Sharp, where I stay hands-on in the pixels while leading the work end to end.</p>
+                                                        <p class="bio-fade-item">I’m a Designer and Creative Lead based in Los Angeles, originally from Brazil. I specialize in deep interface execution, bridging user experience with a multidisciplinary foundation spanning product and graphic design, motion graphics, 3D modeling, branding and photography.</p>
 						</div>
 
 						<!-- Client logo carousel — standalone div, isolated from the bio/
@@ -678,7 +857,7 @@
 							</div>
 						</div>
 
-						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">14+ years of cross-disciplinary experience, the last 5 leading end-to-end product delivery, sit behind every project: brand identity, UI/UX systems, and the front-end fluency to prototype ideas and work shoulder-to-shoulder with engineering rather than hand off and hope. I bring a hands-on, systems-minded approach to turning complex problems into polished, scalable digital experiences.</p>
+						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">With 14+ years of cross-disciplinary experience, including the last 5 leading product delivery, I connect brand identity, UI systems, and front-end code to wireframe and collaborate shoulder-to-shoulder with engineering. Because of my hands-on background in full-stack technical execution and software development, my web and application designs stay grounded in real-world feasibility, allowing me to solve complex operational problems and deliver polished, scalable digital experiences.</p>
 
 						<p class="clients-marquee-label skills-section-label">Some of My Skills</p>
 
@@ -723,6 +902,8 @@
 								<span class="skills-throwable-el-rot"><img src="assets/img/skills/monday.svg" alt="monday.com" draggable="false"><span class="skills-throwable-el-label">monday.com</span></span>
 							</div>
 						</div>
+
+						<p class="text-xxlg font-alter text-gray-2 bio-fade-item fun-fact-paragraph">A fun fact about me: I’m a nerd at heart whether I'm building custom gpu setups or collecting vintage cards and comics. I  genuinely love making a spreadsheet for everything</p>
 
 					</div> <!-- /.tt-section-inner -->
 				</div>
@@ -770,7 +951,12 @@
 						<!-- Begin "Thanks for stopping by" -->
 						<div class="portfolio-thanks-wrap anim-fadeinup">
 							<h3 class="portfolio-thanks-title">Thank You!</h3>
-							<p class="portfolio-thanks-subtitle">Got a question or project idea? Drop me a line at<br>contact@saintcip.com</p>
+							<p class="portfolio-thanks-subtitle">explore more of my work <a class="portfolio-thanks-link" href="https://www.instagram.com/saintcip" target="_blank" rel="noopener">click here</a>
+								</p>
+						
+								<p class="portfolio-thanks-subtitle">For project inquiries or commission reach out at contact@saintcip.com
+								</p>
+								<p></p>
 						</div>
 						<!-- End "Thanks for stopping by" -->
 
@@ -951,6 +1137,7 @@
 			function buildItemHtml(item) {
 				var name = item.name ? String(item.name) : "";
 				var tag = item.tag ? String(item.tag) : "";
+				var date = item.date ? String(item.date) : "";
 				var altText = name || "Portfolio project";
 				var link = item.link ? String(item.link) : "";
 				var clickableAttrs = link ?
@@ -972,10 +1159,16 @@
 								'</div>' +
 								'<div class="pgi-caption">' +
 									'<div class="pgi-caption-inner">' +
-										'<div class="pgi-title">' + name + '</div>' +
-										(tag ?
-											'<div class="pgi-categories-wrap"><span class="pgi-category">' + tag + '</span></div>'
-										: '') +
+										'<div class="pgi-caption-text">' +
+											'<div class="pgi-title-row">' +
+												'<div class="pgi-title">' + name + '</div>' +
+												(date ? '<span class="pgi-date">' + date + '</span>' : '') +
+											'</div>' +
+											(tag ?
+												'<div class="pgi-categories-wrap"><span class="pgi-category">' + tag + '</span></div>'
+											: '') +
+										'</div>' +
+										'<span class="pgi-case-study-btn">Case Study</span>' +
 									'</div>' +
 								'</div>' +
 							'</div>' +

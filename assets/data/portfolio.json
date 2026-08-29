@@ -3,6 +3,7 @@
     "id": 0,
     "image": "assets/img/portfolio/0.png",
     "name": "Sharp Studio",
+    "date": "TBD",
     "description": "Designed the UX architecture and dashboard UI for my studio's own client platform — end to end, from information architecture to visual system.",
     "tag": "UI/UX Design",
     "link": "https://www.behance.net/gallery/240782103/UiUx-Dashboard-Sharp"
@@ -11,6 +12,7 @@
     "id": 1,
     "image": "assets/img/portfolio/2.png",
     "name": "Nakamoto Capital",
+    "date": "TBD",
     "description": "UX and product design for a multi-chain DAO investment platform — translating complex crypto mechanics into a clear, trustworthy user journey.",
     "tag": "Web Design",
     "link": "https://www.behance.net/gallery/243978655/UiUx-Web3-Nakamoto-Capital"
@@ -19,6 +21,7 @@
     "id": 2,
     "image": "assets/img/portfolio/3.png",
     "name": "Text Flow",
+    "date": "TBD",
     "description": "Self-initiated concept for an AI messaging app — UX flows and product design system taken from concept through a working MVP.",
     "tag": "UI/UX Design",
     "link": "https://www.behance.net/gallery/245032587/Text-Flow-AI-App"
@@ -27,6 +30,7 @@
     "id": 5,
     "image": "assets/img/portfolio/5.png",
     "name": "Muaxx",
+    "date": "TBD",
     "description": "Brand identity system for a lifestyle brand — playful kiss-mark lettering designed to hold up across packaging and digital touchpoints.",
     "tag": "Branding",
     "link": ""
@@ -35,6 +39,7 @@
     "id": 4,
     "image": "assets/img/portfolio/4.png",
     "name": "Organix Farms",
+    "date": "TBD",
     "description": "Brand identity system for a cannabis cultivation brand — an earthy wordmark and leaf emblem designed to hold up across packaging, digital, and retail.",
     "tag": "Brand Identity",
     "link": ""
@@ -43,6 +48,7 @@
     "id": 3,
     "image": "assets/img/portfolio/10.png",
     "name": "Mansa",
+    "date": "TBD",
     "description": "Brand identity system for Mansa — a regal wordmark and crown mark built to scale across packaging and digital touchpoints.",
     "tag": "Web Design",
     "link": ""
@@ -51,6 +57,7 @@
     "id": 6,
     "image": "assets/img/portfolio/6.png",
     "name": "Ez",
+    "date": "TBD",
     "description": "Brand identity system built around a chrome monogram mark — exploring dimension and reflection, designed to scale across digital and print touchpoints.",
     "tag": "Branding",
     "link": ""
@@ -59,6 +66,7 @@
     "id": 7,
     "image": "assets/img/portfolio/7.png",
     "name": "Mine-Poly",
+    "date": "TBD",
     "description": "Blocky, voxel-styled logo for a mining and building game.",
     "tag": "Interactive Design",
     "link": ""
@@ -67,6 +75,7 @@
     "id": 8,
     "image": "assets/img/portfolio/8.jpg",
     "name": "Paty Girl",
+    "date": "TBD",
     "description": "Brand identity system for a fashion label — an editorial wordmark and visual identity built to scale across lookbooks, packaging, and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
@@ -75,6 +84,7 @@
     "id": 9,
     "image": "assets/img/portfolio/9.jpg",
     "name": "Palm Peaches",
+    "date": "TBD",
     "description": "Rounded, friendly app icon built around a peach mark.",
     "tag": "Product Design",
     "link": ""
@@ -83,6 +93,7 @@
     "id": 10,
     "image": "assets/img/portfolio/1.png",
     "name": "Cartel Candy",
+    "date": "TBD",
     "description": "Brand identity system for a candy label — retro sunset lettering and brand mark designed to hold up across packaging and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
@@ -91,6 +102,7 @@
     "id": 11,
     "image": "assets/img/portfolio/11.png",
     "name": "King & The Pea",
+    "date": "TBD",
     "description": "Brand identity system built around a hand-lettered circular badge and bold, playful wordmark — designed to scale across packaging and digital touchpoints.",
     "tag": "Brand Identity",
     "link": ""
@@ -99,6 +111,7 @@
     "id": 12,
     "image": "assets/img/portfolio/12.jpg",
     "name": "Kube",
+    "date": "TBD",
     "description": "Brand identity system built around a glowing geometric mark — a floating 3D cube designed to scale across digital and print touchpoints.",
     "tag": "Brand Identity",
     "link": ""
@@ -107,6 +120,7 @@
     "id": 13,
     "image": "assets/img/portfolio/13.png",
     "name": "Fresco Bags",
+    "date": "TBD",
     "description": "Custom mascot illustration and pouch design for a limited drop.",
     "tag": "Packaging Design",
     "link": ""
@@ -115,6 +129,7 @@
     "id": 14,
     "image": "assets/img/portfolio/14.jpg",
     "name": "Easy Budz",
+    "date": "TBD",
     "description": "Cannabis flower packaging system with resealable mylar pouches.",
     "tag": "Packaging Design",
     "link": ""
@@ -123,6 +138,7 @@
     "id": 15,
     "image": "assets/img/portfolio/15.jpg",
     "name": "Crypto Weed",
+    "date": "TBD",
     "description": "Brand identity system for a cannabis-meets-crypto brand — a gold coin emblem merging leaf and token motifs, built to scale across digital and packaging touchpoints.",
     "tag": "Brand Identity",
     "link": ""
@@ -131,6 +147,7 @@
     "id": 16,
     "image": "assets/img/portfolio/16.png",
     "name": "Sticker Trade",
+    "date": "TBD",
     "description": "Playful 3D game logo for a sticker-trading mobile app.",
     "tag": "Interactive Design",
     "link": ""
@@ -139,6 +156,7 @@
     "id": 17,
     "image": "assets/img/portfolio/17.png",
     "name": "UCBT",
+    "date": "TBD",
     "description": "Isometric illustration of a contactless card payment for a fintech brand.",
     "tag": "Fintech Design",
     "link": ""
@@ -147,6 +165,7 @@
     "id": 18,
     "image": "assets/img/portfolio/18.png",
     "name": "Universe Tales",
+    "date": "TBD",
     "description": "Whimsical hand-lettered logo for a storytelling universe brand.",
     "tag": "Brand Illustration",
     "link": ""
@@ -155,6 +174,7 @@
     "id": 19,
     "image": "assets/img/portfolio/19.jpg",
     "name": "Better Budget",
+    "date": "TBD",
     "description": "Adaptive app icon built from a folded monogram mark.",
     "tag": "Product Design",
     "link": ""
@@ -163,6 +183,7 @@
     "id": 20,
     "image": "assets/img/portfolio/20.jpg",
     "name": "Modefit",
+    "date": "TBD",
     "description": "Hang tag and mark for a California fitness apparel line.",
     "tag": "Packaging Design",
     "link": ""

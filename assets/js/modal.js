@@ -56,12 +56,14 @@ document.addEventListener('keydown', (event) => {
 
 if (popupOverlay) {
     window.addEventListener('load', () => {
-        // First appearance at 5s, second appearance at 30s, then every 60s after that.
+        // First appearance at 5s, second appearance at 60s (doubled from 30s
+        // per user request — the 5s->30s gap felt too soon/annoying), then
+        // every 60s after that.
         window.setTimeout(() => openOverlay(popupOverlay), 5000);
         window.setTimeout(() => {
             openOverlay(popupOverlay);
             window.setInterval(() => openOverlay(popupOverlay), 60000);
-        }, 30000);
+        }, 60000);
     });
 }
 
