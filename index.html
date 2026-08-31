@@ -177,7 +177,7 @@
 		/* Mobile: push the about/main text down from the hero */
 		@media (max-width: 767px) {
 			.about-section {
-				padding-top: 15px !important;
+				padding-top: 5px !important; /* was 15px, cut 65% per request (15 * 0.35 = 5.25, rounded to 5) */
 			}
 		}
 
@@ -223,10 +223,40 @@
 		.skills-intro-paragraph {
 			margin-top: 8px;
 		}
-		/* "Fun fact" aside, closes out the About section right before
-		   "Latest Projects" begins. Reuses the same bio text look. */
-		.fun-fact-paragraph {
+		/* "UI/UX Design" + "Graphic & Visual Design" skill-summary blocks,
+		   replacing the old "fun fact" paragraph, closing out the About section
+		   right before "Latest Projects" begins. Title (.skills-detail-title)
+		   reuses the section-label look (.clients-marquee-label, same size as
+		   "Some of My Skills" / the brands label above — calc(12px + 0.1vw)) per
+		   request, to match the site's other titles. The paragraph underneath
+		   (.skills-detail-text) is pinned to calc(100% + 0.7vw) — the same size
+		   as the rest of the About section's body copy (.text-xxlg) — so the
+		   list itself still reads consistent with the bio/skills-intro text. */
+		.skills-detail-group {
 			margin-top: 40px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 28px;
+		}
+		.skills-detail-block {
+			max-width: 820px;
+		}
+		.skills-detail-title {
+			margin: 0 0 8px;
+			/* font-size intentionally NOT overridden here — inherits
+			   .clients-marquee-label's calc(12px + 0.1vw), same size as the
+			   site's other section-label titles ("Some of My Skills", the
+			   brands label). Only .skills-detail-text below matches the larger
+			   About-section body copy size. */
+		}
+		.skills-detail-text {
+			margin: 0;
+			text-align: center;
+			color: #CCC;
+			font-family: 'Noto Serif JP', serif;
+			font-size: calc(100% + 0.7vw);
+			line-height: 1.6;
 		}
 		/* Photoshop / Illustrator / Blender tiles that drop in with gravity and
 		   can be grabbed and thrown around (Matter.js physics — same mechanism
@@ -404,8 +434,29 @@
 		}
 
 		/* Tighten the gap before the "Selected Work" heading below. */
+		/* Top padding above the "About" section (the gap between the hero and
+		   the signature/bio intro) — was the theme's default .tt-section
+		   padding-top (80px desktop, 6% <=991px, 10% <=767px, 15% <=480px, see
+		   theme.css); cut by 65% per request (each value x0.35), same
+		   responsive shape kept via the media queries below. */
 		#about-outer-section {
+			padding-top: 28px !important;
 			padding-bottom: 20px !important;
+		}
+		@media (max-width: 991px) {
+			#about-outer-section {
+				padding-top: 2.1% !important;
+			}
+		}
+		@media (max-width: 767px) {
+			#about-outer-section {
+				padding-top: 3.5% !important;
+			}
+		}
+		@media (max-width: 480px) {
+			#about-outer-section {
+				padding-top: 5.25% !important;
+			}
 		}
 		#portfolio-outer-section {
 			padding-top: 50px !important;
@@ -604,8 +655,10 @@
 			}
 		}
 
-		/* "Thanks for stopping by" — closes out the portfolio grid and points
-		   people toward the social links in the footer. */
+		/* "Thanks for stopping by" — closes out the page (now sits AFTER the
+		   testimonials, per request; the "explore more..." quote that used to
+		   live here moved out to its own button between the cards and the
+		   testimonials, see .explore-more-btn below). */
 		.portfolio-thanks-wrap {
 			margin-top: 90px;
 			text-align: center;
@@ -624,15 +677,16 @@
 			font-size: calc(14px + 0.1vw);
 			color: rgba(255, 255, 255, 0.6);
 		}
-		/* "click here" -> Instagram, called out in full white against the
-		   muted subtitle around it so it reads as the clickable part. */
-		.portfolio-thanks-link {
+		/* Email — white + underlined + clickable (mailto), called out against
+		   the muted subtitle text around it, same treatment the Instagram
+		   "click here" text used to get before that moved to its own button. */
+		.portfolio-thanks-email {
 			color: #FFF;
 			text-decoration: underline;
 			text-underline-offset: 3px;
 			cursor: pointer;
 		}
-		.portfolio-thanks-link:hover {
+		.portfolio-thanks-email:hover {
 			opacity: .8;
 		}
 		@media (max-width: 767px) {
@@ -641,13 +695,7 @@
 			}
 		}
 
-		/* Bottom gap (subtitle -> footer) matched to the top gap (last
-		   portfolio card -> "Thank You!"), which was noticeably bigger.
-		   Top gap = #creative-projects-outer-section's own "padding-top-
-		   xlg-40" (40px, >=1025px only) + .portfolio-thanks-wrap's margin-
-		   top (90px desktop / 60px mobile, no change 768-1024px) — replaced
-		   the old flat "padding-bottom-xlg-75" (75px, >=1025px only, 0
-		   below that) with matching totals per breakpoint instead. */
+		/* Bottom gap (subtitle -> footer). */
 		#creative-projects-outer-section {
 			padding-bottom: 90px;
 		}
@@ -660,6 +708,161 @@
 			#creative-projects-outer-section {
 				padding-bottom: 60px;
 			}
+		}
+
+		/* "Explore more of my work" — was a plain "clickable quote" line inside
+		   the Thank You block; per request (2026-08-31) it's now styled as an
+		   actual button and moved to stand on its own between the portfolio
+		   grid and the testimonials. Flat outline + arrow, same visual language
+		   as the portfolio cards' "Case Study" button (border-radius:0, border
+		   brightens + arrow nudges right on hover). */
+		#explore-more-outer-section {
+			padding-top: 20px;
+			padding-bottom: 20px;
+		}
+		.explore-more-wrap {
+			display: flex;
+			justify-content: center;
+		}
+		.explore-more-btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 12px;
+			padding: 16px 32px;
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 0;
+			color: #FFF;
+			text-decoration: none;
+			font-family: 'Noto Serif JP', serif;
+			font-size: calc(14px + 0.1vw);
+			transition: border-color 0.3s ease, background-color 0.3s ease;
+		}
+		.explore-more-btn:hover,
+		.explore-more-btn:focus-visible {
+			border-color: #FFF;
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+		.explore-more-btn-arrow {
+			transition: transform 0.3s ease;
+		}
+		.explore-more-btn:hover .explore-more-btn-arrow {
+			transform: translateX(3px);
+		}
+
+		/* Testimonials — carousel (Swiper, already loaded elsewhere in the
+		   theme for the shop/portfolio sliders), between the "explore more of
+		   my work" button and the "Thank You!" block. PLACEHOLDER quotes/
+		   names/companies/avatars (assets/img/testimonials/testimonial-1..5.svg,
+		   flat monochrome initials tiles matching the site's no-rounded-corner
+		   look) — swap in real client testimonials + photos later; see
+		   testimonials_section.md project note.
+
+		   Centered/"peek" layout (2026-08-31, per request): slidesPerView is
+		   fractional + centeredSlides:true (set in the Swiper init JS near the
+		   end of the page), so neighboring slides show partial slivers on both
+		   sides instead of one full-bleed slide. .testimonials-fade-left/-right
+		   are flat gradient-to-#000 overlays (matches the page's pure black
+		   background) so those peeking slides visually fade into the edges
+		   instead of getting a hard clip. Non-active slides are also dimmed via
+		   opacity so the centered/active testimonial reads clearly as "the one
+		   in focus". Nav arrows removed per request — pagination bars plus
+		   swipe/drag/keyboard remain as the controls. */
+		#testimonials-outer-section {
+			padding-top: 60px;
+			padding-bottom: 90px;
+		}
+		@media (max-width: 767px) {
+			#testimonials-outer-section {
+				padding-top: 40px;
+				padding-bottom: 60px;
+			}
+		}
+		.testimonials-label {
+			margin-bottom: 36px;
+		}
+		.testimonials-carousel {
+			position: relative;
+			width: 100%;
+		}
+		.testimonials-carousel .swiper-slide {
+			opacity: 0.35;
+			transition: opacity 0.4s ease;
+		}
+		.testimonials-carousel .swiper-slide-active {
+			opacity: 1;
+		}
+		.testimonial-slide {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			padding: 0 20px;
+		}
+		.testimonial-quote {
+			font-family: 'Noto Serif JP', serif;
+			font-size: calc(13px + 0.15vw);
+			color: #CCC;
+			line-height: 1.6;
+			margin: 0 0 20px;
+		}
+		.testimonial-quote::before {
+			content: '\201C';
+		}
+		.testimonial-quote::after {
+			content: '\201D';
+		}
+		.testimonial-author {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			gap: 14px;
+		}
+		.testimonial-avatar {
+			width: 44px;
+			height: 44px;
+			display: block;
+			flex-shrink: 0;
+			border: 1px solid rgba(255, 255, 255, 0.15);
+		}
+		.testimonial-author-text {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			gap: 2px;
+		}
+		.testimonial-name {
+			font-size: calc(12px + 0.1vw);
+			font-weight: 600;
+			color: #FFF;
+		}
+		.testimonial-company {
+			font-size: calc(10px + 0.1vw);
+			color: rgba(255, 255, 255, 0.5);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+		/* Fade-to-black edges — flat gradients to #000 (the page's own
+		   background), pointer-events:none so clicks/drags pass through to the
+		   carousel underneath. */
+		.testimonials-fade {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 7%; /* was 14%, cut 50% per request */
+			min-width: 20px; /* was 40px */
+			max-width: 80px; /* was 160px */
+			z-index: 2;
+			pointer-events: none;
+		}
+		.testimonials-fade-left {
+			left: 0;
+			background: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0) 100%);
+		}
+		.testimonials-fade-right {
+			right: 0;
+			background: linear-gradient(to left, #000 0%, rgba(0, 0, 0, 0) 100%);
 		}
 
 		/* "Are you sure you want to leave" confirmation popup (shown before
@@ -859,7 +1062,7 @@
 
 						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">With 14+ years of cross-disciplinary experience, including the last 5 leading product delivery, I connect brand identity, UI systems, and front-end code to wireframe and collaborate shoulder-to-shoulder with engineering. Because of my hands-on background in full-stack technical execution and software development, my web and application designs stay grounded in real-world feasibility, allowing me to solve complex operational problems and deliver polished, scalable digital experiences.</p>
 
-						<p class="clients-marquee-label skills-section-label">Some of My Skills</p>
+						<p class="clients-marquee-label skills-section-label">Tools & Technologies:</p>
 
 						<div class="skills-throwable-scene" data-skills-throwable-scene>
 							<div class="skills-throwable-el" data-skills-throwable-el>
@@ -903,7 +1106,16 @@
 							</div>
 						</div>
 
-						<p class="text-xxlg font-alter text-gray-2 bio-fade-item fun-fact-paragraph">A fun fact about me: I’m a nerd at heart whether I'm building custom gpu setups or collecting vintage cards and comics. I  genuinely love making a spreadsheet for everything</p>
+						<div class="skills-detail-group">
+							<div class="skills-detail-block bio-fade-item">
+								<p class="clients-marquee-label skills-detail-title">UI/UX Design</p>
+								<p class="skills-detail-text">User Journey Mapping, Wireframing, Rapid Prototyping, Usability Testing, Information Architecture, Design Systems, Component Libraries, Responsive Design.</p>
+							</div>
+							<div class="skills-detail-block bio-fade-item">
+								<p class="clients-marquee-label skills-detail-title">Graphic &amp; Visual Design</p>
+								<p class="skills-detail-text">Art Direction, Brand Identity, Typography, Layout &amp; Grid Design, Packaging &amp; Print Production, Motion Graphics, 3D Asset Creation.</p>
+							</div>
+						</div>
 
 					</div> <!-- /.tt-section-inner -->
 				</div>
@@ -945,16 +1157,114 @@
 				<!-- "Creative direction projects" grid/section was removed per
 					user request; this section now just holds the closing
 					"Thank You!" block below "Few of my case studies". -->
+				<!-- Begin "Explore more of my work" button — sits between the
+					portfolio grid and the testimonials carousel. Was previously a
+					plain "clickable quote" line inside the Thank You block; per
+					request it now looks like an actual button and stands on its
+					own, in between the two. -->
+				<div class="tt-section" id="explore-more-outer-section">
+					<div class="tt-section-inner tt-wrap max-width-900 explore-more-wrap">
+						<a class="explore-more-btn" href="https://www.instagram.com/saintcip" target="_blank" rel="noopener">explore more of my creative work here<span class="explore-more-btn-arrow" aria-hidden="true">&#8594;</span></a>
+					</div>
+				</div>
+				<!-- End "Explore more of my work" button -->
+
+				<!-- Begin Testimonials — PLACEHOLDER quotes/names/companies/photos,
+					swap in real ones later (see assets/img/testimonials/). Carousel
+					powered by Swiper (already loaded on the page). Centered/"peek"
+					layout (adjacent slides partially visible) with a fade-to-black
+					on both edges, per request; nav arrows removed per request —
+					pagination bars + swipe/drag/keyboard remain as the controls. -->
+				<div class="tt-section" id="testimonials-outer-section">
+					<div class="tt-section-inner tt-wrap max-width-900">
+
+						<p class="clients-marquee-label testimonials-label">What Clients Say</p>
+
+						<div class="testimonials-carousel swiper">
+							<div class="testimonials-fade testimonials-fade-left" aria-hidden="true"></div>
+							<div class="testimonials-fade testimonials-fade-right" aria-hidden="true"></div>
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<div class="testimonial-slide">
+										<p class="testimonial-quote">Marcos transformed our product's user experience from confusing to intuitive — engagement metrics improved almost overnight.</p>
+										<div class="testimonial-author">
+											<img class="testimonial-avatar" src="assets/img/testimonials/testimonial-1.svg" alt="" width="44" height="44">
+											<div class="testimonial-author-text">
+												<span class="testimonial-name">Jane Cooper</span>
+												<span class="testimonial-company">Product Lead, NovaTech</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="testimonial-slide">
+										<p class="testimonial-quote">Working with Marcos felt like having a design partner who understood both aesthetics and engineering constraints.</p>
+										<div class="testimonial-author">
+											<img class="testimonial-avatar" src="assets/img/testimonials/testimonial-2.svg" alt="" width="44" height="44">
+											<div class="testimonial-author-text">
+												<span class="testimonial-name">Daniel Reyes</span>
+												<span class="testimonial-company">Founder, Brightline Studio</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="testimonial-slide">
+										<p class="testimonial-quote">The design systems he built saved our team hundreds of hours and gave our product a cohesive, polished feel.</p>
+										<div class="testimonial-author">
+											<img class="testimonial-avatar" src="assets/img/testimonials/testimonial-3.svg" alt="" width="44" height="44">
+											<div class="testimonial-author-text">
+												<span class="testimonial-name">Priya Nair</span>
+												<span class="testimonial-company">Head of Design, Fenwick Labs</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="testimonial-slide">
+										<p class="testimonial-quote">Rare to find someone who can move seamlessly between brand identity and front-end execution. Marcos does both exceptionally well.</p>
+										<div class="testimonial-author">
+											<img class="testimonial-avatar" src="assets/img/testimonials/testimonial-4.svg" alt="" width="44" height="44">
+											<div class="testimonial-author-text">
+												<span class="testimonial-name">Lucas Bennett</span>
+												<span class="testimonial-company">CMO, Arclight</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="testimonial-slide">
+										<p class="testimonial-quote">From wireframes to a fully shipped product, Marcos brought clarity and craft to every step of the process.</p>
+										<div class="testimonial-author">
+											<img class="testimonial-avatar" src="assets/img/testimonials/testimonial-5.svg" alt="" width="44" height="44">
+											<div class="testimonial-author-text">
+												<span class="testimonial-name">Sofia Martins</span>
+												<span class="testimonial-company">VP Product, Kindred Co.</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> <!-- /.swiper-wrapper -->
+						</div> <!-- /.testimonials-carousel -->
+
+					</div> <!-- /.tt-section-inner -->
+				</div>
+				<!-- End Testimonials -->
+
+				<!-- "Creative direction projects" grid/section was removed per
+					user request; this section now just holds the closing "Thank
+					You!" block, positioned AFTER the testimonials per request
+					(the "explore more..." quote that used to live in here moved
+					out to its own button section above, between the cards and
+					the testimonials). -->
 				<div class="tt-section padding-top-xlg-40" id="creative-projects-outer-section">
 					<div class="tt-section-inner">
 
 						<!-- Begin "Thanks for stopping by" -->
 						<div class="portfolio-thanks-wrap anim-fadeinup">
 							<h3 class="portfolio-thanks-title">Thank You!</h3>
-							<p class="portfolio-thanks-subtitle">explore more of my work <a class="portfolio-thanks-link" href="https://www.instagram.com/saintcip" target="_blank" rel="noopener">click here</a>
-								</p>
-						
-								<p class="portfolio-thanks-subtitle">For project inquiries or commission reach out at contact@saintcip.com
+
+								<p class="portfolio-thanks-subtitle">For project inquiries or commission reach out at <a class="portfolio-thanks-email" href="mailto:contact@saintcip.com">contact@saintcip.com</a>
 								</p>
 								<p></p>
 						</div>
@@ -963,8 +1273,6 @@
 					</div> <!-- /.tt-section-inner -->
 				</div>
 				<!-- End "Thanks for stopping by" outer section -->
-
-				<!-- End tt-section -->
 
 
 			</div>
@@ -1566,6 +1874,58 @@
                                 Matter.Body.setPosition(boundBottom, { x: 0, y: height + 250 });
                         });
                 });
+        </script>
+
+        <!-- Testimonials carousel (Swiper). Centered/"peek" layout (fractional
+                slidesPerView + centeredSlides, responsive via breakpoints) so
+                neighboring slides show partial slivers on both sides — paired
+                with the .testimonials-fade-left/-right CSS overlays. No nav
+                arrows and no pagination indicator (both removed per request)
+                — swipe/drag + keyboard arrows are the only controls. Pauses
+                on hover/focus, respects prefers-reduced-motion (no autoplay
+                if set), a11y announcements via Swiper's built-in a11y
+                module. -->
+        <script>
+                (function () {
+                        var carouselEl = document.querySelector(".testimonials-carousel");
+                        if (!carouselEl || typeof Swiper === "undefined") return;
+
+                        var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+                        new Swiper(carouselEl, {
+                                slidesPerView: 1.15,
+                                centeredSlides: true,
+                                spaceBetween: 20,
+                                loop: true,
+                                speed: 700,
+                                grabCursor: true,
+                                keyboard: { enabled: true },
+                                a11y: {
+                                        enabled: true,
+                                        prevSlideMessage: "Previous testimonial",
+                                        nextSlideMessage: "Next testimonial",
+                                },
+                                autoplay: prefersReducedMotion ? false : {
+                                        delay: 6000,
+                                        disableOnInteraction: false,
+                                        pauseOnMouseEnter: true,
+                                },
+                                breakpoints: {
+                                        640: {
+                                                slidesPerView: 1.3,
+                                                spaceBetween: 24,
+                                        },
+                                        1024: {
+                                                slidesPerView: 1.6,
+                                                spaceBetween: 32,
+                                        },
+                                        1400: {
+                                                slidesPerView: 1.9,
+                                                spaceBetween: 40,
+                                        },
+                                },
+                        });
+                })();
         </script>
 
 
