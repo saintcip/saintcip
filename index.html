@@ -795,10 +795,12 @@
 			align-items: center;
 			text-align: center;
 			padding: 0 20px;
+			max-width: 480px;
+			margin: 0 auto;
 		}
 		.testimonial-quote {
 			font-family: 'Noto Serif JP', serif;
-			font-size: calc(90% + 0.6vw);
+			font-size: clamp(15px, calc(85% + 0.4vw), 19px);
 			color: #CCC;
 			line-height: 1.6;
 			margin: 0 0 20px;
@@ -1209,12 +1211,24 @@
 								</div>
 								<div class="swiper-slide">
 									<div class="testimonial-slide">
-										<p class="testimonial-quote">We came to Marcos with just a name looking for a logo, and he completely opened our minds to what our brand could actually be. He didn't just design a logo, he guided us to truly understand our ideal customer and built the entire identity around them. From shaping that core vision to delivering custom merch illustrations and production-ready label designs, Marcos turned our rough idea into a high-impact reality.</p>
+										<p class="testimonial-quote">We approached Marcos with only a name and left with a full vision for our brand. He completely expanded our possibilities, and we’d definitely work with him again.</p>
 										<div class="testimonial-author">
 											<img class="testimonial-avatar" src="assets/img/client2.jpg" alt="" width="44" height="44">
 											<div class="testimonial-author-text">
 												<a class="testimonial-name" href="https://www.instagram.com/emilyestradaaa_" target="_blank" rel="noopener">Emily Estrada</a>
 												<span class="testimonial-company">Founder of àlamode</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="swiper-slide">
+									<div class="testimonial-slide">
+										<p class="testimonial-quote">Marcos is an exceptionally talented artist. He played a key role in designing a wide range of assets for us, from movie banners to promotional campaigns. His creativity and reliability made the entire process seamless. I highly recommend working with him!</p>
+										<div class="testimonial-author">
+											<img class="testimonial-avatar" src="assets/img/client.jpg" alt="" width="44" height="44">
+											<div class="testimonial-author-text">
+												<span class="testimonial-name">Lou Spisto</span>
+												<span class="testimonial-company">Theater &amp; Arts Executive, Tony-Nominated Producer</span>
 											</div>
 										</div>
 									</div>
@@ -1871,7 +1885,7 @@
                                 slidesPerView: 1.15,
                                 centeredSlides: true,
                                 spaceBetween: 20,
-                                loop: true,
+                                loop: false,
                                 speed: 700,
                                 grabCursor: true,
                                 keyboard: { enabled: true },
