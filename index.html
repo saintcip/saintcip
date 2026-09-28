@@ -485,14 +485,13 @@
 			display: inline;
 		}
 
-		/* On phone, force the subtitle onto a single line — shrink the font
-		   (scales with viewport width, floor/ceiling via clamp) instead of
-		   letting it wrap to a second line. */
+		/* On phone, keep the subtitle on a single line. Font size is
+		   inherited from the bio block (.text-xxlg) so it matches the
+		   description paragraph below it. */
 		@media (max-width: 767px) {
 			#typewriter-subtitle {
 				display: inline-block;
 				white-space: nowrap;
-				font-size: clamp(9px, 3vw, 15px);
 			}
 		}
 
@@ -1027,9 +1026,9 @@
 
 						<div class="text-xxlg font-alter text-gray-2 bio-fade-group" id="bio-fade-group">
                                                         <p class="bio-fade-item"><img class="name-signature" src="assets/img/signature.png" alt="Marcos Cipriano"><br>
-                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="T-Shaped UI/UX Designer &amp; Product Lead">T-Shaped UI/UX Designer &amp; Product Lead</span></p>
+                                                                <span class="typewriter-text" id="typewriter-subtitle" data-text="Graphic &amp; Visual Designer">Graphic &amp; Visual Designer</span></p>
 
-                                                        <p class="bio-fade-item">I’m a Designer and Creative Lead based in Los Angeles, originally from Brazil. I specialize in deep interface execution, bridging user experience with a multidisciplinary foundation spanning product and graphic design, motion graphics, 3D modeling, branding and photography.</p>
+                                                        <p class="bio-fade-item">I’m a Designer and Creative Lead based in Los Angeles. I specialize in interface and experience design, backed by deep hands-on expertise in graphic and product design. I focus on building cohesive brand and product experiences that are both visually refined and built to scale.</p>
 						</div>
 
 						<!-- Client logo carousel — standalone div, isolated from the bio/
@@ -1066,9 +1065,9 @@
 							</div>
 						</div>
 
-						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">With 14+ years of cross-disciplinary experience, including the last 5 leading product delivery, I connect brand identity, UI systems, and front-end code to wireframe and collaborate shoulder-to-shoulder with engineering. Because of my hands-on background in full-stack technical execution and software development, my web and application designs stay grounded in real-world feasibility, allowing me to solve complex operational problems and deliver polished, scalable digital experiences.</p>
+						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">With 14+ years of cross-disciplinary experience split between independent contracting and freelance work, including the last 5 leading product delivery, I build brand identity, UI systems, and front-end code to wireframe and collaborate shoulder-to-shoulder with engineering. Because of my hands-on background in software development, my web and application designs stay grounded in real-world feasibility, allowing me to solve complex operational problems and deliver polished, scalable digital experiences.</p>
 
-						<p class="clients-marquee-label skills-section-label">Tools & Technologies:</p>
+						<p class="clients-marquee-label skills-section-label">Tools &amp; Technologies I Work With:</p>
 
 						<div class="skills-throwable-scene" data-skills-throwable-scene>
 							<div class="skills-throwable-el" data-skills-throwable-el>
@@ -1123,12 +1122,8 @@
 
 						<div class="skills-detail-group">
 							<div class="skills-detail-block bio-fade-item">
-								<p class="clients-marquee-label skills-detail-title">UI/UX Design</p>
-								<p class="skills-detail-text">User Journey Mapping, Wireframing, Rapid Prototyping, Usability Testing, Information Architecture, Design Systems, Component Libraries, Responsive Design.</p>
-							</div>
-							<div class="skills-detail-block bio-fade-item">
-								<p class="clients-marquee-label skills-detail-title">Graphic &amp; Visual Design</p>
-								<p class="skills-detail-text">Art Direction, Brand Identity, Typography, Layout &amp; Grid Design, Packaging &amp; Print Production, Motion Graphics, 3D Asset Creation.</p>
+								<p class="clients-marquee-label skills-detail-title">Fun Fact About Me</p>
+								<p class="skills-detail-text">I’ve always loved art and graphic design. Born in Brazil, I studied Computer Science there before moving to the United States to grow my portfolio, a journey that led me to run my own development and creative agency.</p>
 							</div>
 						</div>
 
