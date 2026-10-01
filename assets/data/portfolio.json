@@ -4,7 +4,8 @@
     "image": "assets/img/portfolio/0.png",
     "name": "Sharp Studio",
     "date": "2026",
-    "description": "Designed the UX architecture and dashboard UI for my studio's own client platform — end to end, from information architecture to visual system.",
+    "role": "UI/UX design, end to end",
+    "description": "I designed the UI and UX of a client dashboard built to strengthen customer loyalty and retention.",
     "tag": "UI/UX Design",
     "link": "https://www.behance.net/gallery/240782103/UiUx-Dashboard-Sharp"
   },
@@ -13,7 +14,8 @@
     "image": "assets/img/portfolio/2.png",
     "name": "Nakamoto Capital",
     "date": "2025",
-    "description": "UX and product design for a multi-chain DAO investment platform — translating complex crypto mechanics into a clear, trustworthy user journey.",
+    "role": "UI design & NFT collection",
+    "description": "I designed the UI for a multi-chain Web3 investment platform, along with a complete NFT collection.",
     "tag": "Web Design",
     "link": "https://www.behance.net/gallery/243978655/UiUx-Web3-Nakamoto-Capital"
   },
@@ -22,7 +24,8 @@
     "image": "assets/img/portfolio/3.png",
     "name": "Text Flow",
     "date": "2025",
-    "description": "Self-initiated concept for an AI messaging app — UX flows and product design system taken from concept through a working MVP.",
+    "role": "Concept, UX flows & design system",
+    "description": "A self-initiated AI messaging app. I designed the UX flows and product design system, and took it from concept through a working MVP.",
     "tag": "UI Design",
     "link": "https://www.behance.net/gallery/245032587/Text-Flow-AI-App"
   },
@@ -31,7 +34,8 @@
     "image": "assets/img/portfolio/5.png",
     "name": "Muaxx",
     "date": "2025",
-    "description": "Brand identity system for a lifestyle brand — playful kiss-mark lettering designed to hold up across packaging and digital touchpoints.",
+    "role": "Brand identity design",
+    "description": "We designed the identity for a lifestyle brand: playful kiss-mark lettering and a system built to hold up across packaging and digital touchpoints.",
     "tag": "Branding",
     "link": ""
   },

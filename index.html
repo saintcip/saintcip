@@ -48,7 +48,8 @@
                 gtag('config', 'G-NPJ6KCCHME');
         </script>
         <!-- Your Google Analytics code goes here! -->
-	<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+	<!-- iPhone/iPad "Add to Home Screen" icon: 180x180 square made from assets/img/appicon.png (corners filled; iOS rounds them itself) -->
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/img/appicon-180.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
 
@@ -225,7 +226,7 @@
 		}
 		/* "UI/UX Design" + "Graphic & Visual Design" skill-summary blocks,
 		   replacing the old "fun fact" paragraph, closing out the About section
-		   right before "Latest Projects" begins. Title (.skills-detail-title)
+		   right before "Case Studies" begins. Title (.skills-detail-title)
 		   reuses the section-label look (.clients-marquee-label, same size as
 		   "Some of My Skills" / the brands label above — calc(12px + 0.1vw)) per
 		   request, to match the site's other titles. The paragraph underneath
@@ -249,6 +250,133 @@
 			   site's other section-label titles ("Some of My Skills", the
 			   brands label). Only .skills-detail-text below matches the larger
 			   About-section body copy size. */
+		}
+		/* "Some Logos I've Designed" — 3 auto-scrolling carousel rows above
+		   "Tools & Technologies I Work With" (same feel as the brands marquee). Each track
+		   holds its row's logos 8x (so half the track is always wider than
+		   the screen); animating -50% loops seamlessly with no gap. The
+		   middle row scrolls the opposite way. Hover pauses that row. */
+		/* align-self: stretch (here AND on the parent .skills-detail-group)
+		   is the same fix the brands marquee uses — without it the flex
+		   parents shrink-wrap to the track's full un-clipped width, so the
+		   carousel was ~8800px wide and its edge gradients were off-screen. */
+		.skills-detail-group {
+			align-self: stretch;
+			width: 100%;
+			max-width: 100%;
+		}
+		.designed-logos-block {
+			align-self: stretch;
+			margin: 30px 0 30px;
+			width: 100%;
+			max-width: 100%;
+			min-width: 0;
+		}
+		.designed-logos-carousel,
+		.designed-logos-row {
+			min-width: 0;
+			max-width: 100%;
+		}
+		.designed-logos-carousel {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+			margin-top: 18px;
+		}
+		/* Black gradient on the left/right ends, spanning all 3 rows. */
+		.designed-logos-carousel::before,
+		.designed-logos-carousel::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 220px;
+			max-width: 22%;
+			z-index: 3;
+			pointer-events: none;
+		}
+		.designed-logos-carousel::before {
+			left: 0;
+			background: linear-gradient(to right, #000 0%, #000 15%, rgba(0, 0, 0, 0) 100%);
+		}
+		.designed-logos-carousel::after {
+			right: 0;
+			background: linear-gradient(to left, #000 0%, #000 15%, rgba(0, 0, 0, 0) 100%);
+		}
+		/* Fade to black at the left/right ends. Uses a mask on the row itself
+		   (instead of black overlay gradients) so the logos truly fade out
+		   into whatever is behind them. */
+		.designed-logos-row {
+			position: relative;
+			overflow: hidden;
+			width: 100%;
+		}
+		.designed-logos-track {
+			display: flex;
+			align-items: center;
+			width: max-content;
+			animation: designed-logos-scroll 55s linear infinite;
+			will-change: transform;
+			backface-visibility: hidden;
+		}
+		.designed-logos-row--reverse .designed-logos-track {
+			animation-direction: reverse;
+		}
+		.designed-logos-row:hover .designed-logos-track {
+			animation-play-state: paused;
+		}
+		/* Spacing via margin (not flex gap) so the -50% loop point lands exactly. */
+		/* Size + look matched to the brands marquee (.clients-marquee-track):
+		   200px logos, 60px spacing, gray/dimmed until hover. */
+		.designed-logos-item {
+			flex: none;
+			width: 110px;
+			height: 110px;
+			margin-right: 48px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.designed-logos-item img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
+			filter: grayscale(100%) brightness(0.8);
+			opacity: 0.7;
+			transition: filter 0.3s ease, opacity 0.3s ease;
+			user-select: none;
+			pointer-events: none;
+		}
+		.designed-logos-item:hover img {
+			filter: grayscale(0%) brightness(1.3);
+			opacity: 1;
+		}
+		@keyframes designed-logos-scroll {
+			from { transform: translate3d(0, 0, 0); }
+			to { transform: translate3d(-50%, 0, 0); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.designed-logos-track {
+				animation: none;
+			}
+		}
+		@media (max-width: 767px) {
+			.designed-logos-carousel::before,
+			.designed-logos-carousel::after {
+				width: 70px;
+			}
+			.designed-logos-carousel {
+				gap: 10px;
+			}
+			.designed-logos-track {
+				animation-duration: 50s;
+			}
+			.designed-logos-item {
+				width: 72px;
+				height: 72px;
+				margin-right: 26px;
+			}
 		}
 		.skills-detail-text {
 			margin: 0;
@@ -612,6 +740,28 @@
 			#portfolio-grid .pgi-case-study-btn {
 				padding: 0 14px;
 				font-size: 10px;
+			}
+		}
+
+		/* Role + short description under the caption row. Same small grey
+		   type as the tag (.pgi-category: calc(13px + 0.1vw), white at 50%)
+		   so it reads as part of the existing caption; the "Role:" line is
+		   a touch brighter. Sits BELOW .pgi-caption-inner (not inside it)
+		   so the "Case Study" button keeps its title+tag height. */
+		#portfolio-grid .pgi-desc {
+			margin: 14px 0 0;
+			font-size: calc(13px + 0.1vw);
+			line-height: 1.6;
+			color: rgba(255, 255, 255, 0.5);
+		}
+		#portfolio-grid .pgi-desc-role {
+			display: block;
+			margin-bottom: 2px;
+			color: rgba(255, 255, 255, 0.8);
+		}
+		@media (max-width: 767px) {
+			#portfolio-grid .pgi-desc {
+				margin-top: 12px;
 			}
 		}
 
@@ -1028,44 +1178,190 @@
                                                         <p class="bio-fade-item"><img class="name-signature" src="assets/img/signature.png" alt="Marcos Cipriano"><br>
                                                                 <span class="typewriter-text" id="typewriter-subtitle" data-text="Graphic &amp; Visual Designer">Graphic &amp; Visual Designer</span></p>
 
-                                                        <p class="bio-fade-item">I’m a Designer and Creative Lead based in Los Angeles. I specialize in interface and experience design, backed by deep hands-on expertise in graphic and product design. I focus on building cohesive brand and product experiences that are both visually refined and built to scale.</p>
+                                                        <p class="bio-fade-item">I’m a Graphic &amp; Visual Designer based in Los Angeles, specializing in brand identity, digital experiences, and visual systems. My work spans branding, campaigns, UI, motion, and creative direction, with a technical background that helps me take ideas from concept to production.</p>
 						</div>
 
-						<!-- Client logo carousel — standalone div, isolated from the bio/
-							skills text blocks. NOTE: ".about-section" is a flex column
-							(align-items: center) in theme.css, so this needs
-							"align-self: stretch" or it shrink-wraps to the animated
-							track's full un-clipped width and blows out the layout. -->
-						<div class="clients-marquee-section">
-							<p class="clients-marquee-label">Brands I’ve Had the Opportunity to Work With:</p>
-							<div class="clients-marquee">
-								<div class="clients-marquee-track">
-									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" aria-label="Visit Polishop"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="Polishop logo"></a>
-									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" aria-label="Visit Bradesco"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="Bradesco logo"></a>
-									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" aria-label="Visit Suzano"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="Suzano logo"></a>
-									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" aria-label="Visit Petrobras"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="Petrobras logo"></a>
-									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" aria-label="About FTX"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="FTX logo"></a>
-									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" aria-label="Visit Polishop"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="Polishop logo"></a>
-									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" aria-label="Visit Bradesco"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="Bradesco logo"></a>
-									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" aria-label="Visit Suzano"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="Suzano logo"></a>
-									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" aria-label="Visit Petrobras"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="Petrobras logo"></a>
-									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" aria-label="About FTX"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="FTX logo"></a>
-									<!-- Duplicate set — enables the seamless infinite loop (track scrolls exactly -50%) -->
-									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://www.polishop.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-1.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://www.bradesco.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-2.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://www.suzano.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-3.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://petrobras.com.br/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-4.png" width="200" height="200" alt="" aria-hidden="true"></a>
-									<a href="https://en.wikipedia.org/wiki/FTX" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="assets/img/clients/client-5.png" width="200" height="200" alt="" aria-hidden="true"></a>
+						<!-- "Some Logos I've Designed" — 3 auto-scrolling carousel rows (7 / 7 / 6, middle row reversed) of the
+							logos in assets/img/logos/. Sits right after the bio intro, where the old "Brands I've Had the Opportunity to Work With" marquee used to be (removed 2026-10-01). -->
+						<div class="designed-logos-block bio-fade-item">
+							<p class="clients-marquee-label">Some Logos I’ve Designed:</p>
+							<div class="designed-logos-carousel">
+								<div class="designed-logos-row">
+									<div class="designed-logos-track">
+										<div class="designed-logos-item"><img src="assets/img/logos/1.png" alt="Jett logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/alamode.png" alt="À la Mode logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/bb.png" alt="BB logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/cartel.png" alt="Cartel Candy logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/chubby.png" alt="Chubby logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/cj.png" alt="CJ logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/g.png" alt="G logo" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/1.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/alamode.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/bb.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cartel.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/chubby.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/cj.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/g.png" alt="" draggable="false"></div>
+									</div>
+								</div>
+								<div class="designed-logos-row designed-logos-row--reverse">
+									<div class="designed-logos-track">
+										<div class="designed-logos-item"><img src="assets/img/logos/jet.png" alt="Jet logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/magickmuse.png" alt="Magick Muse logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/mansa.png" alt="Mansa logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/muaxx.png" alt="Muaxx logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/nakamoto%20ap.png" alt="Nakamoto Capital logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/organix.png" alt="Organix Farms logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/q.png" alt="Q logo" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/jet.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/magickmuse.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/mansa.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/muaxx.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/nakamoto%20ap.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/organix.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/q.png" alt="" draggable="false"></div>
+									</div>
+								</div>
+								<div class="designed-logos-row">
+									<div class="designed-logos-track">
+										<div class="designed-logos-item"><img src="assets/img/logos/seatsorter.png" alt="Seatsorter logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/sharp.png" alt="Sharp logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/studiopilot.png" alt="Studiopilot logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/t3.png" alt="T3 logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/textflow.png" alt="Textflow logo" draggable="false"></div>
+										<div class="designed-logos-item"><img src="assets/img/logos/vox.png" alt="Vox AI logo" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/seatsorter.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/sharp.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/studiopilot.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/t3.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/textflow.png" alt="" draggable="false"></div>
+										<div class="designed-logos-item" aria-hidden="true"><img src="assets/img/logos/vox.png" alt="" draggable="false"></div>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">With 14+ years of cross-disciplinary experience split between independent contracting and freelance work, including the last 5 leading product delivery, I build brand identity, UI systems, and front-end code to wireframe and collaborate shoulder-to-shoulder with engineering. Because of my hands-on background in software development, my web and application designs stay grounded in real-world feasibility, allowing me to solve complex operational problems and deliver polished, scalable digital experiences.</p>
+						<p class="text-xxlg font-alter text-gray-2 bio-fade-item skills-intro-paragraph">With 14+ years of cross-disciplinary experience across design, technology, and creative direction, I bring a hands-on approach to every project. My technical background in software development allows me to work closely with engineering and take ideas from concept and visual direction through to production.</p>
 
 						<p class="clients-marquee-label skills-section-label">Tools &amp; Technologies I Work With:</p>
 
@@ -1123,7 +1419,7 @@
 						<div class="skills-detail-group">
 							<div class="skills-detail-block bio-fade-item">
 								<p class="clients-marquee-label skills-detail-title">Fun Fact About Me</p>
-								<p class="skills-detail-text">I’ve always loved art and graphic design. Born in Brazil, I studied Computer Science there before moving to the United States to grow my portfolio, a journey that led me to run my own development and creative agency.</p>
+								<p class="skills-detail-text">Today, I lead my own creative and development studio, working across brand, digital, and product projects for clients in different industries. I’m now looking to bring that experience into a collaborative design team where I can continue growing, contribute to larger creative challenges, and build work alongside other talented designers and creatives.</p>
 							</div>
 						</div>
 
@@ -1139,7 +1435,7 @@
 
 						<!-- Begin portfolio section title -->
 						<div class="portfolio-section-heading anim-fadeinup">
-							<h2 class="portfolio-section-title">Latest Projects</h2>
+							<h2 class="portfolio-section-title">Case Studies</h2>
 						</div>
 						<!-- End portfolio section title -->
 
@@ -1432,6 +1728,14 @@
 				var date = item.date ? String(item.date) : "";
 				var altText = name || "Portfolio project";
 				var link = item.link ? String(item.link) : "";
+				// Role + short "what we designed" blurb, shown under the
+				// title/tag + button row. Both come from portfolio.json
+				// ("role" and "description"); either can be left out.
+				var esc = function (str) {
+					return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+				};
+				var role = item.role ? esc(item.role) : "";
+				var desc = item.description ? esc(item.description) : "";
 				var clickableAttrs = link ?
 					' data-link="' + link.replace(/"/g, "&quot;") + '" role="button" tabindex="0" aria-label="View the ' + (name || "project") + ' case study (opens Behance)"'
 					: ' data-under-construction="true" role="button" tabindex="0" aria-label="' + (name || "This project") + ' case study is under construction"';
@@ -1462,6 +1766,12 @@
 										'</div>' +
 										'<span class="pgi-case-study-btn">Case Study</span>' +
 									'</div>' +
+									((role || desc) ?
+										'<p class="pgi-desc">' +
+											(role ? '<span class="pgi-desc-role">Role: ' + role + '</span>' : '') +
+											(desc ? '<span class="pgi-desc-text">' + desc + '</span>' : '') +
+										'</p>'
+									: '') +
 								'</div>' +
 							'</div>' +
 						'</div>' +
