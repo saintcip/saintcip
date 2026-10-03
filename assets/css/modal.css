@@ -153,3 +153,31 @@
         min-height: 0;
     }
 }
+
+/* "Are you sure you want to leave" confirmation popup (shown before
+   sending someone to a project's Behance case study), and the "under
+   construction" notice for projects without one yet. Both reuse the same
+   .popup-box / .popup-message / .popup-button styling as the popups above;
+   this is just the overlay backdrop rule extended to these IDs.
+   Behaviour lives in assets/js/portfolio.js. */
+#leaving-popup,
+#construction-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.75);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+#leaving-popup.is-visible,
+#construction-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
