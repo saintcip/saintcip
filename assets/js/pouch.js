@@ -216,6 +216,38 @@
 			idx.push(f0, b0, b1, f0, b1, f1);
 		}
 
+		// Sealed edge. The front and back sheets sit a hair apart (the thickness
+		// of the sealed film), so without this you could see straight through the
+		// gap between them when the pouch is turned edge-on — it showed up as a
+		// thin black line down the side. This closes the gap with a narrow strip
+		// running up the left side, across the top and down the right side. The
+		// strip takes the colour of the front label's edge at that spot (both of
+		// its sides read the same point of the image — reading the front on one
+		// side and the back on the other would smear the whole label across it).
+		function addEdge(count, vertexAt, nx, ny, flip) {
+			var start = pos.length / 3;
+			var k, side;
+			for (k = 0; k <= count; k++) {
+				for (side = 0; side < 2; side++) {
+					var at = vertexAt(k);
+					var from = (side === 0 ? front : back) + at;
+					pos.push(pos[from * 3], pos[from * 3 + 1], pos[from * 3 + 2]);
+					nor.push(nx, ny, 0);
+					uv.push(uv[(front + at) * 2], uv[(front + at) * 2 + 1]);
+					panel.push(-1, -1);
+				}
+			}
+			for (k = 0; k < count; k++) {
+				var ef0 = start + k * 2, eb0 = ef0 + 1, ef1 = ef0 + 2, eb1 = ef0 + 3;
+				if (flip) idx.push(ef0, eb1, eb0, ef0, ef1, eb1);
+				else idx.push(ef0, eb0, eb1, ef0, eb1, ef1);
+			}
+		}
+		var perRow = NU + 1;
+		addEdge(NV, function (j) { return j * perRow; }, -1, 0, true);          // left side
+		addEdge(NV, function (j) { return j * perRow + NU; }, 1, 0, false);     // right side
+		addEdge(NU, function (i) { return NV * perRow + i; }, 0, 1, true);      // top
+
 		// Smooth normals for the two faces (average of the surrounding triangles).
 		var faceIndexCount = NU * NV * 6 * 2;
 		for (var n = 0; n < faceIndexCount; n += 3) {
