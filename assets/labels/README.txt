@@ -24,6 +24,20 @@ TO ADD OR REMOVE A DESIGN
      "name" is the caption shown under the pouch. The order in the file is
      the order of the arrows. The last line has no comma at the end.
 
+DROPPER BOTTLE LABELS
+  A label can be shown on a dropper bottle (amber glass, black cap)
+  instead of the pouch. Add "type": "dropper" to its line in labels.json:
+       { "name": "My Tincture", "type": "dropper", "image": "assets/labels/my-tincture.png" },
+  The image for a dropper is different from a pouch label:
+  - Size:    2048 x 910 px (PNG or JPG)
+  - Layout:  ONE strip that wraps around the bottle. The MIDDLE of the
+             image is the front of the bottle; the left and right ends
+             meet at the back (with a small gap, like a real label).
+  - The middle third or so is what you see when the bottle faces
+    forward - put the main design there.
+  label-02-dropper.png is placeholder template art.
+  (label-02.png, the old pouch template, is no longer used.)
+
 BOTTOM OF THE POUCH (optional)
   A label can have its own image for the base of the pouch - a pattern or
   texture, like label-01-bottom.png. Put the image in this folder and add

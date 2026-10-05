@@ -13,6 +13,11 @@
 // image in that folder and add/edit its line in labels.json — nothing in
 // this file needs to change. See assets/labels/README.txt.
 //
+// OTHER PRODUCTS: a label with "type": "dropper" in labels.json is shown on a
+// dropper bottle (amber glass, black cap) instead of the pouch. Its image is
+// ONE strip, 2048 x 910 px, that wraps around the bottle: the middle is the
+// front, the two ends meet at the back.
+//
 // BOTTOM OF THE POUCH: a label can also name a "bottom" image in labels.json
 // (a pattern or texture). It is laid flat across the base of the pouch.
 // Labels without one get a plain base in the colour of the label's bottom edge.
@@ -76,19 +81,25 @@
 		"attribute vec3 aPosition;",
 		"attribute vec3 aNormal;",
 		"attribute vec2 aUv;",      // where to read the label image
-		"attribute vec2 aPanel;",   // position on the pouch face (0-1 across, 0-1 bottom to top); x = -1: edge strip; x <= -2: the base
+		"attribute vec2 aPanel;",   // position on the pouch face (0-1 across, 0-1 bottom to top); x = -1: edge strip; x <= -2: the base;
+		                            // x = -10: a plain-coloured part of the dropper bottle (y: 0 plastic / rubber, 1 glass, 2 ribbed cap)
+		"attribute vec4 aColor;",   // r, g, b: the colour of a plain-coloured part (or a tint over the label image); a: how shiny it is
 		"uniform mat4 uProjView;",
 		"uniform mat4 uModel;",
 		"varying vec3 vNormal;",
 		"varying vec3 vWorld;",
 		"varying vec2 vUv;",
 		"varying vec2 vPanel;",
+		"varying vec4 vColor;",
+		"varying vec3 vUp;",        // which way is "up" for the model, as currently turned
 		"void main() {",
 		"	vec4 world = uModel * vec4(aPosition, 1.0);",
 		"	vWorld = world.xyz;",
 		"	vNormal = mat3(uModel) * aNormal;",
 		"	vUv = aUv;",
 		"	vPanel = aPanel;",
+		"	vColor = aColor;",
+		"	vUp = mat3(uModel) * vec3(0.0, 1.0, 0.0);",
 		"	gl_Position = uProjView * world;",
 		"}"
 	].join("\n");
@@ -105,10 +116,22 @@
 		"uniform float uHasBottom;",       // 1.0 when this label has a bottom image
 		"uniform vec3 uCamera;",
 		"uniform float uTopSeal;",
+		"uniform float uFade;",            // 1 = fully visible; dips to 0 while one product is swapped for another
 		"varying vec3 vNormal;",
 		"varying vec3 vWorld;",
 		"varying vec2 vUv;",
 		"varying vec2 vPanel;",
+		"varying vec4 vColor;",
+		"varying vec3 vUp;",
+		"",
+		// A tall, soft studio light seen as a reflection: brightest where the
+		// reflected view points at the light (towards), fading off gently — much
+		// more across than up and down, which gives the long soft streak you
+		// see down the side of a bottle.
+		"float softbox(vec3 R, vec3 towards, float narrow, float tall) {",
+		"	vec3 d = R - towards;",
+		"	return exp(-(d.x * d.x * narrow + d.y * d.y * tall)) * smoothstep(-0.1, 0.3, R.z);",
+		"}",
 		"",
 		"vec3 lightIt(vec3 base, vec3 N, vec3 V, vec3 L, float strength, float gloss) {",
 		"	float diffuse = max(dot(N, L), 0.0);",
@@ -122,6 +145,15 @@
 		"	vec3 N = normalize(vNormal);",
 		"	vec3 V = normalize(uCamera - vWorld);",
 		"	float sealStart = 1.0 - uTopSeal;",
+		// Plain-coloured parts of the dropper bottle: glass, cap, rubber bulb.
+		"	float isFlat = step(vPanel.x, -9.0);",
+		"	float isGlass = isFlat * step(0.5, vPanel.y) * step(vPanel.y, 1.5);",
+		"	float isRibbed = isFlat * step(1.5, vPanel.y);",
+		"	if (isRibbed > 0.5) {",
+		// Grip ribs running up the side of the cap (vUv.x goes once round the cap).
+		"		vec3 around = cross(normalize(vUp), N);",
+		"		if (length(around) > 0.01) N = normalize(N + normalize(around) * 0.42 * sin(vUv.x * 6.2831853 * 64.0));",
+		"	}",
 		"	if (vPanel.x >= 0.0) {",
 		// Crimped heat seal along the top: fine horizontal ridges.
 		"		float inSeal = smoothstep(sealStart - 0.004, sealStart + 0.004, vPanel.y);",
@@ -135,22 +167,51 @@
 		// "bottom" image if it has one, laid flat across it; vPanel then holds
 		// where we are on the base, side to side and front to back. Any
 		// see-through parts of that image show the label's edge colour.
-		"	float isBase = step(vPanel.x, -1.5);",
+		"	float isBase = step(vPanel.x, -1.5) * (1.0 - isFlat);",
 		"	vec2 bottomUv = vec2(0.5 + (-2.5 - vPanel.x) * uBottomScale.x, 0.5 + vPanel.y * uBottomScale.y);",
 		"	vec4 bottomTexel = texture2D(uBottom, bottomUv);",
 		"	vec3 labelTexel = texture2D(uLabel, vUv).rgb;",
 		"	vec3 base = pow(mix(labelTexel, bottomTexel.rgb, isBase * uHasBottom * bottomTexel.a), vec3(2.2));",
-		"	vec3 color = base * 0.34;",                                                     // ambient
-		"	color += lightIt(base, N, V, normalize(vec3(0.45, 0.65, 1.0)), 0.78, 1.0);",    // key light, front right
-		"	color += lightIt(base, N, V, normalize(vec3(-0.9, 0.15, 0.55)), 0.28, 0.5);",   // fill, left
-		"	color += lightIt(base, N, V, normalize(vec3(0.0, 0.6, -1.0)), 0.45, 0.6);",     // back light
+		"	base = mix(base * vColor.rgb, pow(vColor.rgb, vec3(2.2)), isFlat);",
+		"	float gloss = vColor.a;",
+		"	vec3 color = base * 0.34;",                                                             // ambient
+		"	color += lightIt(base, N, V, normalize(vec3(0.45, 0.65, 1.0)), 0.78, 1.0 * gloss);",    // key light, front right
+		"	color += lightIt(base, N, V, normalize(vec3(-0.9, 0.15, 0.55)), 0.28, 0.5 * gloss);",   // fill, left
+		"	color += lightIt(base, N, V, normalize(vec3(0.0, 0.6, -1.0)), 0.45, 0.6 * gloss);",     // back light
 		// The lights above never reach the underside, so the base gets its own
 		// soft light from below — otherwise its colour / pattern would look dull.
 		"	color += lightIt(base, N, V, normalize(vec3(0.25, -1.0, 0.45)), 0.50 * isBase, 0.35);",
 		// Soft edge glow so the silhouette stays readable on the black page.
 		"	float rim = pow(1.0 - max(dot(N, V), 0.0), 3.0);",
 		"	color += vec3(rim) * 0.05;",
-		"	gl_FragColor = vec4(pow(color, vec3(1.0 / 2.2)), 1.0);",
+		// The dropper bottle's glass, cap and rubber bulb get their own, softer
+		// lighting: two big studio lights (a main one front-right, a faint one
+		// on the left) instead of the pouch's small bright highlights.
+		"	if (isFlat > 0.5) {",
+		"		float facing = max(dot(N, V), 0.0);",
+		"		vec3 R = reflect(-V, N);",
+		"		float mainLight = softbox(R, normalize(vec3(0.72, 0.22, 0.66)), 7.0, 0.8);",
+		"		float sideLight = softbox(R, normalize(vec3(-0.86, 0.12, 0.50)), 26.0, 0.8);",
+		"		if (isGlass > 0.5) {",
+		"			float h = vUv.y * 100.0;",                          // millimetres up from the bottom of the bottle
+		"			vec3 deep = pow(vColor.rgb, vec3(2.2)) * 0.26;",    // the glass where no light gets through
+		"			vec3 warm = pow(vColor.rgb, vec3(2.2)) * 3.0;",     // the same amber with light glowing through it
+		// Light comes in from the right and glows out through the far (left) side of the glass.
+		"			float through = pow(max(dot(N, normalize(vec3(-0.80, 0.0, 0.60))), 0.0), 1.6);",
+		"			float thin = 0.25 + 0.75 * facing;",
+		"			vec3 g = deep + warm * (0.05 + 0.20 * through) * thin;",
+		// (The glass is one even colour from top to bottom: no liquid line and no
+		// lighter band at the base — both were removed on request.)
+		"			g *= mix(0.28, 1.0, smoothstep(0.0, 0.55, facing));",                         // darker towards the edges, where you look through more glass
+		"			g *= 1.0 - 0.5 * smoothstep(69.5, 73.5, h);",                                 // shadow under the cap
+		"			color = g + vec3(1.0, 0.94, 0.86) * (mainLight * 0.14 + sideLight * 0.05);",
+		"		} else {",
+		// Black plastic cap / rubber bulb: soft, wrapped shading and a gentle sheen.
+		"			float wrap = 0.5 + 0.5 * dot(N, normalize(vec3(0.45, 0.65, 1.0)));",
+		"			color = base * (0.35 + 1.25 * wrap * wrap) + vec3(1.0) * gloss * (mainLight * 0.085 + sideLight * 0.03);",
+		"		}",
+		"	}",
+		"	gl_FragColor = vec4(pow(color, vec3(1.0 / 2.2)) * uFade, uFade);",
 		"}"
 	].join("\n");
 
@@ -295,6 +356,7 @@
 			normals: new Float32Array(nor),
 			uvs: new Float32Array(uv),
 			panels: new Float32Array(panel),
+			colors: new Float32Array(pos.length / 3 * 4).fill(1),   // no tint, normal film shine
 			indices: new Uint16Array(idx),
 			baseWidth: baseHalfWidth * 2,   // size of the base, for fitting a bottom image onto it
 			baseDepth: baseHalfDepth * 2
@@ -302,9 +364,127 @@
 	}
 
 	// ------------------------------------------------------------------
+	// The dropper bottle model — used for labels with "type": "dropper".
+	// A 30 ml amber glass bottle with a black ribbed cap and rubber bulb,
+	// and a paper label wrapped around its body. Every part is a "lathe"
+	// shape: an outline (radius, height) spun around the bottle's axis.
+	// Measurements are in millimetres, scaled to fit the same space as the
+	// pouch. Returns the same kind of arrays as buildPouch.
+	// ------------------------------------------------------------------
+	var DROPPER = {
+		height: 1.47,                    // overall height on screen, in the same units as the pouch (which is 1.5)
+		glass: [0.42, 0.175, 0.032],     // amber (the shader works out the dark and the glowing shades from this). Lower = darker glass.
+		cap: [0.115, 0.115, 0.12],       // black plastic
+		bulb: [0.135, 0.135, 0.14],      // black rubber
+		labelFrom: 12, labelTo: 56,      // where the label sits on the bottle, mm from the bottom
+		labelWrap: 0.94                  // how far round the bottle the label goes (1 = all the way)
+	};
+
+	function buildDropper(D) {
+		var AROUND = 96;                 // how many steps round the bottle
+		var TOTAL = 112;                 // the real thing is about 112 mm tall with its dropper
+		var mm = D.height / TOTAL;
+		var pos = [], nor = [], uv = [], panel = [], col = [], idx = [];
+
+		// Spin an outline — a list of [radius, height] points in mm, bottom to
+		// top — around the axis. kind: 0 plastic / rubber, 1 glass, 2 ribbed.
+		function lathe(outline, color, gloss, kind, options) {
+			options = options || {};
+			var from = options.from === undefined ? -Math.PI : options.from;
+			var to = options.to === undefined ? Math.PI : options.to;
+			var start = pos.length / 3, rows = outline.length, i, j;
+			for (j = 0; j < rows; j++) {
+				// The direction the outline is heading at this point gives the way the surface faces.
+				var before = outline[Math.max(0, j - 1)], after = outline[Math.min(rows - 1, j + 1)];
+				var dr = after[0] - before[0], dy = after[1] - before[1], length = Math.sqrt(dr * dr + dy * dy) || 1;
+				var outward = dy / length, upward = -dr / length;
+				for (i = 0; i <= AROUND; i++) {
+					var part = i / AROUND, angle = from + (to - from) * part;   // angle 0 = facing the viewer
+					var sin = Math.sin(angle), cos = Math.cos(angle);
+					pos.push(outline[j][0] * mm * sin, (outline[j][1] - TOTAL / 2) * mm, outline[j][0] * mm * cos);
+					nor.push(outward * sin, upward, outward * cos);
+					if (options.label) {
+						// The paper label: reads the label image, left to right as it wraps round.
+						uv.push(part, (outline[j][1] - D.labelFrom) / (D.labelTo - D.labelFrom));
+						panel.push(-1, -1);
+					} else {
+						uv.push(part, outline[j][1] / 100);   // once round, and the height in mm / 100 (the shader uses both)
+						panel.push(-10, kind);
+					}
+					col.push(color[0], color[1], color[2], gloss);
+				}
+			}
+			for (j = 0; j < rows - 1; j++) {
+				for (i = 0; i < AROUND; i++) {
+					var a = start + j * (AROUND + 1) + i, b = a + 1, c = a + AROUND + 1, d = c + 1;
+					idx.push(a, b, d, a, d, c);
+				}
+			}
+		}
+
+		// Points along a curve; at(0..1) gives each one.
+		function curve(steps, at) {
+			var points = [];
+			for (var k = 0; k <= steps; k++) points.push(at(k / steps));
+			return points;
+		}
+
+		// A smooth line through a few hand-placed points (Catmull-Rom).
+		function smooth(points, steps) {
+			var out = [];
+			for (var k = 0; k < points.length - 1; k++) {
+				var p0 = points[Math.max(0, k - 1)], p1 = points[k], p2 = points[k + 1], p3 = points[Math.min(points.length - 1, k + 2)];
+				for (var n = 0; n < steps; n++) {
+					var t = n / steps, t2 = t * t, t3 = t2 * t;
+					out.push([
+						0.5 * (2 * p1[0] + (p2[0] - p0[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (3 * p1[0] - p0[0] - 3 * p2[0] + p3[0]) * t3),
+						0.5 * (2 * p1[1] + (p2[1] - p0[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (3 * p1[1] - p0[1] - 3 * p2[1] + p3[1]) * t3)
+					]);
+				}
+			}
+			out.push(points[points.length - 1]);
+			return out;
+		}
+
+		// --- Glass bottle (a 30 ml "Boston round"): slightly domed-in bottom,
+		// rounded heel, straight body, rounded shoulder, then the ring of glass
+		// under the cap.
+		var bottle = [[0, 1.4], [6, 1.3], [11, 0.6], [13, 0]]
+			.concat(curve(10, function (t) { var a = -Math.PI / 2 + t * Math.PI / 2; return [13 + 3.5 * Math.cos(a), 3.5 + 3.5 * Math.sin(a)]; }).slice(1))
+			.concat([[16.5, 6], [16.5, 30], [16.5, 57], [16.5, 60]])
+			.concat(curve(16, function (t) { var a = t * Math.PI / 2; return [10.1 + 6.4 * Math.cos(a), 60 + 10.4 * Math.sin(a)]; }).slice(1));
+		lathe(bottle, D.glass, 1, 1);
+		lathe(smooth([[10.1, 70.4], [10.75, 70.9], [11.0, 71.7], [10.75, 72.5], [9.9, 72.9], [9.6, 73.6]], 5), D.glass, 1, 1);
+
+		// --- Black cap: underside, ribbed skirt, smooth rounded top edge, flat top.
+		lathe([[9.6, 73.3], [11.7, 73.3]], D.cap, 1, 0);
+		lathe([[11.7, 73.3], [11.7, 85.4]], D.cap, 1, 2);
+		lathe([[11.7, 85.4]].concat(curve(8, function (t) { var a = t * Math.PI / 2; return [8.9 + 2.8 * Math.cos(a), 85.8 + 2.9 * Math.sin(a)]; })).concat([[7.4, 88.7]]), D.cap, 1, 0);
+
+		// --- Rubber bulb: a small flange where it sits in the cap, then the teat.
+		lathe([[7.4, 88.7], [7.7, 88.9], [7.7, 89.7], [7.3, 90.0]], D.bulb, 0.45, 0);
+		lathe(smooth([[7.3, 90.0], [6.5, 90.6], [6.35, 92.5], [6.6, 96], [6.85, 100], [6.85, 104.5], [6.4, 107.8], [5.1, 110.3], [2.9, 111.6], [0, 112]], 6), D.bulb, 0.45, 0);
+
+		// --- Paper label, a hair proud of the glass. Slightly toned down and
+		// matt, so it reads as paper next to the glass.
+		lathe([[16.72, D.labelFrom], [16.72, D.labelTo]], [0.93, 0.93, 0.93], 0.12, 0,
+			{ label: true, from: -Math.PI * D.labelWrap, to: Math.PI * D.labelWrap });
+
+		return {
+			positions: new Float32Array(pos),
+			normals: new Float32Array(nor),
+			uvs: new Float32Array(uv),
+			panels: new Float32Array(panel),
+			colors: new Float32Array(col),
+			indices: new Uint16Array(idx)
+		};
+	}
+
+	// ------------------------------------------------------------------
 	// GL resources (re-created if the browser ever drops the WebGL context)
 	// ------------------------------------------------------------------
-	var program = null, uniforms = {}, indexCount = 0, maxAnisotropy = 0, anisoExt = null;
+	var program = null, uniforms = {}, maxAnisotropy = 0, anisoExt = null;
+	var models = {}, boundModel = null;   // "pouch" and "dropper", ready to draw
 	var baseWidth = 1, baseDepth = 0.3, maxTextureSize = 2048;
 
 	function compile(type, source) {
@@ -327,29 +507,34 @@
 		}
 		gl.useProgram(program);
 
-		var mesh = buildPouch(POUCH);
-		indexCount = mesh.indices.length;
-		baseWidth = mesh.baseWidth;
-		baseDepth = mesh.baseDepth;
-
-		function attribute(name, data, size) {
-			var location = gl.getAttribLocation(program, name);
-			var buffer = gl.createBuffer();
-			gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-			gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-			if (location < 0) return;
-			gl.enableVertexAttribArray(location);
-			gl.vertexAttribPointer(location, size, gl.FLOAT, false, 0, 0);
+		// Send a model's arrays to the graphics card once; useModel() below
+		// switches between them when drawing.
+		function upload(mesh) {
+			function buffer(target, data) {
+				var b = gl.createBuffer();
+				gl.bindBuffer(target, b);
+				gl.bufferData(target, data, gl.STATIC_DRAW);
+				return b;
+			}
+			return {
+				attributes: [
+					["aPosition", buffer(gl.ARRAY_BUFFER, mesh.positions), 3],
+					["aNormal", buffer(gl.ARRAY_BUFFER, mesh.normals), 3],
+					["aUv", buffer(gl.ARRAY_BUFFER, mesh.uvs), 2],
+					["aPanel", buffer(gl.ARRAY_BUFFER, mesh.panels), 2],
+					["aColor", buffer(gl.ARRAY_BUFFER, mesh.colors), 4]
+				].map(function (a) { return { location: gl.getAttribLocation(program, a[0]), buffer: a[1], size: a[2] }; }),
+				indices: buffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indices),
+				count: mesh.indices.length
+			};
 		}
-		attribute("aPosition", mesh.positions, 3);
-		attribute("aNormal", mesh.normals, 3);
-		attribute("aUv", mesh.uvs, 2);
-		attribute("aPanel", mesh.panels, 2);
+		var pouchMesh = buildPouch(POUCH);
+		baseWidth = pouchMesh.baseWidth;
+		baseDepth = pouchMesh.baseDepth;
+		models = { pouch: upload(pouchMesh), dropper: upload(buildDropper(DROPPER)) };
+		boundModel = null;
 
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
-
-		["uProjView", "uModel", "uLabel", "uBottom", "uBottomScale", "uHasBottom", "uCamera", "uTopSeal"].forEach(function (name) {
+		["uProjView", "uModel", "uLabel", "uBottom", "uBottomScale", "uHasBottom", "uCamera", "uTopSeal", "uFade"].forEach(function (name) {
 			uniforms[name] = gl.getUniformLocation(program, name);
 		});
 		gl.uniform1i(uniforms.uLabel, 0);
@@ -365,6 +550,19 @@
 		anisoExt = gl.getExtension("EXT_texture_filter_anisotropic") ||
 			gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic");
 		maxAnisotropy = anisoExt ? gl.getParameter(anisoExt.MAX_TEXTURE_MAX_ANISOTROPY_EXT) : 0;
+	}
+
+	// Point the shader at one model's arrays (pouch or dropper bottle).
+	function useModel(model) {
+		if (boundModel === model) return;
+		model.attributes.forEach(function (a) {
+			if (a.location < 0) return;
+			gl.bindBuffer(gl.ARRAY_BUFFER, a.buffer);
+			gl.enableVertexAttribArray(a.location);
+			gl.vertexAttribPointer(a.location, a.size, gl.FLOAT, false, 0, 0);
+		});
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.indices);
+		boundModel = model;
 	}
 
 	// Turn a loaded <img> into a WebGL texture.
@@ -437,7 +635,8 @@
 	var lastInteraction = -Infinity;
 	var dragging = false, lastX = 0, lastY = 0, activePointer = null;
 
-	var change = null;      // the "switch label" spin: { from, to, tiltFrom, start, swapped, lastCos }
+	var change = null;      // the "switch label" spin: { from, to, tiltFrom, start, swapped, lastCos, newProduct }
+	var fade = 1;           // 1 = fully visible; dips to 0 mid-spin when the product itself changes (pouch <-> bottle)
 
 	var cameraDistance = 4;
 	var FOV = 28 * Math.PI / 180;
@@ -475,7 +674,7 @@
 		gl.viewport(0, 0, canvas.width, canvas.height);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		var projection = perspective(FOV, canvas.width / canvas.height, 0.1, 50);
+		var projection = perspective(FOV, canvas.width / canvas.height, 1, 20);
 		// The camera just sits back on the z axis looking at the pouch, so
 		// projection * view is the projection with one extra translation.
 		var projView = projection.slice();
@@ -502,7 +701,10 @@
 		}
 		gl.activeTexture(gl.TEXTURE0);
 		gl.bindTexture(gl.TEXTURE_2D, label.texture);
-		gl.drawElements(gl.TRIANGLES, indexCount, gl.UNSIGNED_SHORT, 0);
+		gl.uniform1f(uniforms.uFade, fade);
+		var model = models[label.type] || models.pouch;
+		useModel(model);
+		gl.drawElements(gl.TRIANGLES, model.count, gl.UNSIGNED_SHORT, 0);
 	}
 
 	// ------------------------------------------------------------------
@@ -520,9 +722,19 @@
 			var e = easeInOut(t);
 			spin = change.from + (change.to - change.from) * e;
 			tilt = change.tiltFrom * (1 - e);
-			// Swap the artwork at the moment the pouch is edge-on, so the change is never seen.
 			var c = Math.cos(displayedSpin());
-			if (!change.swapped && ((c <= 0) !== (change.lastCos <= 0) || t >= 1)) {
+			var swapNow;
+			if (change.newProduct) {
+				// Pouch <-> bottle: the shapes are too different to swap unnoticed, so
+				// the old one fades out as it spins up and the new one fades in.
+				var k = Math.min(1, Math.abs(t - 0.5) / 0.3);
+				fade = k * k * (3 - 2 * k);
+				swapNow = t >= 0.5;
+			} else {
+				// Same product, new artwork: swap at the moment the pouch is edge-on, so the change is never seen.
+				swapNow = (c <= 0) !== (change.lastCos <= 0);
+			}
+			if (!change.swapped && (swapNow || t >= 1)) {
 				current = wanted;
 				change.swapped = true;
 				updateCaption();
@@ -531,6 +743,7 @@
 			if (t >= 1) {
 				spin = spin % (Math.PI * 2);
 				change = null;
+				fade = 1;
 				lastInteraction = now;
 			}
 		} else if (!dragging && Math.abs(spinVelocity) > 0.0002) {
@@ -626,7 +839,7 @@
 			lastInteraction = now;
 			spinVelocity = 0;
 			if (reducedMotion) {
-				current = wanted; spin = 0; tilt = 0; updateCaption();
+				current = wanted; spin = 0; tilt = 0; fade = 1; change = null; updateCaption();
 				return;
 			}
 			// Spin one full turn in the direction of the arrow and land facing the front.
@@ -635,7 +848,11 @@
 			var turn = Math.PI * 2;
 			var to = (direction > 0 ? Math.floor(from / turn) + 1 : Math.ceil(from / turn) - 1) * turn;
 			if (Math.abs(to - from) < Math.PI) to += direction * turn; // always a proper spin, never a nudge
-			change = { from: from, to: to, tiltFrom: tilt, start: now, swapped: false, lastCos: Math.cos(from) };
+			change = {
+				from: from, to: to, tiltFrom: tilt, start: now, swapped: false, lastCos: Math.cos(from),
+				newProduct: labels[target].type !== labels[current].type
+			};
+			fade = 1;
 			spin = from;
 		});
 	}
@@ -748,9 +965,11 @@
 		.then(function (response) { return response.json(); })
 		.then(function (data) {
 			labels = (Array.isArray(data) ? data : []).map(function (entry) {
-				// Each entry is { "name": "...", "image": "...", "bottom": "..." (optional) }
-				// — or just the image path as text.
-				return typeof entry === "string" ? { name: "", image: entry, bottom: "" } : { name: entry.name || "", image: entry.image, bottom: entry.bottom || "" };
+				// Each entry is { "name": "...", "image": "...", "type": "dropper" (optional),
+				// "bottom": "..." (optional) } — or just the image path as text.
+				if (typeof entry === "string") return { name: "", image: entry, bottom: "", type: "pouch" };
+				var type = entry.type === "dropper" ? "dropper" : "pouch";
+				return { name: entry.name || "", image: entry.image, type: type, bottom: type === "pouch" ? (entry.bottom || "") : "" };
 			}).filter(function (label) { return !!label.image; });
 
 			if (!labels.length) { viewer.hidden = true; return; }
