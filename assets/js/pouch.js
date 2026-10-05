@@ -12,6 +12,10 @@
 // pouch, the RIGHT half is the back. To add or replace a design, drop the
 // image in that folder and add/edit its line in labels.json — nothing in
 // this file needs to change. See assets/labels/README.txt.
+//
+// BOTTOM OF THE POUCH: a label can also name a "bottom" image in labels.json
+// (a pattern or texture). It is laid flat across the base of the pouch.
+// Labels without one get a plain base in the colour of the label's bottom edge.
 // ============================================================================
 
 (function () {
@@ -72,7 +76,7 @@
 		"attribute vec3 aPosition;",
 		"attribute vec3 aNormal;",
 		"attribute vec2 aUv;",      // where to read the label image
-		"attribute vec2 aPanel;",   // position on the pouch face (0-1 across, 0-1 bottom to top); x < 0 = the base
+		"attribute vec2 aPanel;",   // position on the pouch face (0-1 across, 0-1 bottom to top); x = -1: edge strip; x <= -2: the base
 		"uniform mat4 uProjView;",
 		"uniform mat4 uModel;",
 		"varying vec3 vNormal;",
@@ -96,6 +100,9 @@
 		"precision mediump float;",
 		"#endif",
 		"uniform sampler2D uLabel;",
+		"uniform sampler2D uBottom;",      // optional image for the base of the pouch
+		"uniform vec2 uBottomScale;",      // how the base maps onto that image
+		"uniform float uHasBottom;",       // 1.0 when this label has a bottom image
 		"uniform vec3 uCamera;",
 		"uniform float uTopSeal;",
 		"varying vec3 vNormal;",
@@ -124,11 +131,22 @@
 		"		N.y -= crease * 0.35;",
 		"		N = normalize(N);",
 		"	}",
-		"	vec3 base = pow(texture2D(uLabel, vUv).rgb, vec3(2.2));",
+		// The base of the pouch (marked by vPanel.x <= -2) shows the label's
+		// "bottom" image if it has one, laid flat across it; vPanel then holds
+		// where we are on the base, side to side and front to back. Any
+		// see-through parts of that image show the label's edge colour.
+		"	float isBase = step(vPanel.x, -1.5);",
+		"	vec2 bottomUv = vec2(0.5 + (-2.5 - vPanel.x) * uBottomScale.x, 0.5 + vPanel.y * uBottomScale.y);",
+		"	vec4 bottomTexel = texture2D(uBottom, bottomUv);",
+		"	vec3 labelTexel = texture2D(uLabel, vUv).rgb;",
+		"	vec3 base = pow(mix(labelTexel, bottomTexel.rgb, isBase * uHasBottom * bottomTexel.a), vec3(2.2));",
 		"	vec3 color = base * 0.34;",                                                     // ambient
 		"	color += lightIt(base, N, V, normalize(vec3(0.45, 0.65, 1.0)), 0.78, 1.0);",    // key light, front right
 		"	color += lightIt(base, N, V, normalize(vec3(-0.9, 0.15, 0.55)), 0.28, 0.5);",   // fill, left
 		"	color += lightIt(base, N, V, normalize(vec3(0.0, 0.6, -1.0)), 0.45, 0.6);",     // back light
+		// The lights above never reach the underside, so the base gets its own
+		// soft light from below — otherwise its colour / pattern would look dull.
+		"	color += lightIt(base, N, V, normalize(vec3(0.25, -1.0, 0.45)), 0.50 * isBase, 0.35);",
 		// Soft edge glow so the silhouette stays readable on the black page.
 		"	float rim = pow(1.0 - max(dot(N, V), 0.0), 3.0);",
 		"	color += vec3(rim) * 0.05;",
@@ -199,16 +217,24 @@
 		var front = addFace(1);
 		var back = addFace(-1);
 
-		// Flat base, joining the bottom edges of the front and back. It takes the
-		// colour of the label's bottom edge so it blends in.
+		// Flat base, joining the bottom edges of the front and back. By default it
+		// takes the colour of the label's bottom edge so it blends in; if the label
+		// has a "bottom" image, that is shown here instead. For that, each base
+		// point remembers where it is on the base: side to side (x) and front to
+		// back (z). (Stored as x = -2.5 - x so the shader can tell base points
+		// apart from everything else: they are the only ones at -2 or below.)
 		var baseStart = pos.length / 3;
+		var baseHalfWidth = 0, baseHalfDepth = 0;
 		for (var i = 0; i <= NU; i++) {
 			for (var s = 0; s < 2; s++) {
 				var src = (s === 0 ? front : back) + i;
-				pos.push(pos[src * 3], pos[src * 3 + 1], pos[src * 3 + 2]);
+				var bx = pos[src * 3], bz = pos[src * 3 + 2];
+				pos.push(bx, pos[src * 3 + 1], bz);
 				nor.push(0, -1, 0);
 				uv.push(uv[front * 2 + i * 2], 0.004);
-				panel.push(-1, -1);
+				panel.push(-2.5 - bx, bz);
+				baseHalfWidth = Math.max(baseHalfWidth, Math.abs(bx));
+				baseHalfDepth = Math.max(baseHalfDepth, Math.abs(bz));
 			}
 		}
 		for (i = 0; i < NU; i++) {
@@ -269,7 +295,9 @@
 			normals: new Float32Array(nor),
 			uvs: new Float32Array(uv),
 			panels: new Float32Array(panel),
-			indices: new Uint16Array(idx)
+			indices: new Uint16Array(idx),
+			baseWidth: baseHalfWidth * 2,   // size of the base, for fitting a bottom image onto it
+			baseDepth: baseHalfDepth * 2
 		};
 	}
 
@@ -277,6 +305,7 @@
 	// GL resources (re-created if the browser ever drops the WebGL context)
 	// ------------------------------------------------------------------
 	var program = null, uniforms = {}, indexCount = 0, maxAnisotropy = 0, anisoExt = null;
+	var baseWidth = 1, baseDepth = 0.3, maxTextureSize = 2048;
 
 	function compile(type, source) {
 		var shader = gl.createShader(type);
@@ -300,6 +329,8 @@
 
 		var mesh = buildPouch(POUCH);
 		indexCount = mesh.indices.length;
+		baseWidth = mesh.baseWidth;
+		baseDepth = mesh.baseDepth;
 
 		function attribute(name, data, size) {
 			var location = gl.getAttribLocation(program, name);
@@ -318,10 +349,12 @@
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
 
-		["uProjView", "uModel", "uLabel", "uCamera", "uTopSeal"].forEach(function (name) {
+		["uProjView", "uModel", "uLabel", "uBottom", "uBottomScale", "uHasBottom", "uCamera", "uTopSeal"].forEach(function (name) {
 			uniforms[name] = gl.getUniformLocation(program, name);
 		});
 		gl.uniform1i(uniforms.uLabel, 0);
+		gl.uniform1i(uniforms.uBottom, 1);
+		maxTextureSize = Math.min(2048, gl.getParameter(gl.MAX_TEXTURE_SIZE) || 2048);
 		gl.uniform1f(uniforms.uTopSeal, POUCH.topSeal);
 
 		gl.enable(gl.DEPTH_TEST);
@@ -337,6 +370,7 @@
 	// Turn a loaded <img> into a WebGL texture.
 	function makeTexture(image) {
 		var source = image;
+		var width = image.naturalWidth || image.width, height = image.naturalHeight || image.height;
 		if (!isWebGL2) {
 			// Older WebGL can only do smooth scaling on power-of-two images.
 			var pot = document.createElement("canvas");
@@ -344,6 +378,15 @@
 			pot.height = 2048;
 			pot.getContext("2d").drawImage(image, 0, 0, pot.width, pot.height);
 			source = pot;
+		} else if (Math.max(width, height) > maxTextureSize) {
+			// Very large image (bigger than a graphics card needs or, on phones,
+			// can take): shrink it to 2048 px on its longest side, same proportions.
+			var k = maxTextureSize / Math.max(width, height);
+			var small = document.createElement("canvas");
+			small.width = Math.max(1, Math.round(width * k));
+			small.height = Math.max(1, Math.round(height * k));
+			small.getContext("2d").drawImage(image, 0, 0, small.width, small.height);
+			source = small;
 		}
 		var texture = gl.createTexture();
 		gl.activeTexture(gl.TEXTURE0);
@@ -444,8 +487,21 @@
 		gl.uniformMatrix4fv(uniforms.uProjView, false, new Float32Array(projView));
 		gl.uniformMatrix4fv(uniforms.uModel, false, new Float32Array(modelMatrix(displayedSpin(), tilt)));
 		gl.uniform3f(uniforms.uCamera, 0, 0, cameraDistance);
+		var label = labels[current];
+		gl.activeTexture(gl.TEXTURE1);
+		gl.bindTexture(gl.TEXTURE_2D, label.bottomTexture || label.texture);
+		if (label.bottomTexture) {
+			// Lay the image flat on the base, centred, keeping its proportions and
+			// just big enough to cover the whole base (like CSS "background-size: cover").
+			var shown = Math.max(baseWidth, label.bottomAspect * baseDepth); // width of the image, in pouch units
+			gl.uniform2f(uniforms.uBottomScale, 1 / shown, label.bottomAspect / shown);
+			gl.uniform1f(uniforms.uHasBottom, 1);
+		} else {
+			gl.uniform2f(uniforms.uBottomScale, 1, 1);
+			gl.uniform1f(uniforms.uHasBottom, 0);
+		}
 		gl.activeTexture(gl.TEXTURE0);
-		gl.bindTexture(gl.TEXTURE_2D, labels[current].texture);
+		gl.bindTexture(gl.TEXTURE_2D, label.texture);
 		gl.drawElements(gl.TRIANGLES, indexCount, gl.UNSIGNED_SHORT, 0);
 	}
 
@@ -524,7 +580,26 @@
 		img.onload = function () {
 			label.img = img;
 			try { label.texture = makeTexture(img); } catch (e) { label.failed = true; }
-			finish(!label.failed);
+			if (label.failed || !label.bottom) return finish(!label.failed);
+			// This label has an image for the bottom of the pouch: wait for it too,
+			// so the pouch never shows up with a half-finished base. If it can't
+			// be loaded the label still works, just with the plain base.
+			var bottomImg = new Image();
+			bottomImg.onload = function () {
+				try {
+					label.bottomTexture = makeTexture(bottomImg);
+					label.bottomImg = bottomImg;
+					label.bottomAspect = (bottomImg.naturalWidth || 1) / (bottomImg.naturalHeight || 1);
+				} catch (e) {
+					label.bottomTexture = null;
+				}
+				finish(true);
+			};
+			bottomImg.onerror = function () {
+				console.error("Pouch viewer: could not load " + label.bottom);
+				finish(true);
+			};
+			bottomImg.src = label.bottom;
 		};
 		img.onerror = function () {
 			label.failed = true;
@@ -633,7 +708,10 @@
 	canvas.addEventListener("webglcontextrestored", function () {
 		try {
 			setupGL();
-			labels.forEach(function (label) { label.texture = label.img ? makeTexture(label.img) : null; });
+			labels.forEach(function (label) {
+				label.texture = label.img ? makeTexture(label.img) : null;
+				label.bottomTexture = label.bottomImg ? makeTexture(label.bottomImg) : null;
+			});
 			contextLost = false;
 			updateRunning();
 		} catch (e) {
@@ -670,8 +748,9 @@
 		.then(function (response) { return response.json(); })
 		.then(function (data) {
 			labels = (Array.isArray(data) ? data : []).map(function (entry) {
-				// Each entry is { "name": "...", "image": "..." } — or just the image path as text.
-				return typeof entry === "string" ? { name: "", image: entry } : { name: entry.name || "", image: entry.image };
+				// Each entry is { "name": "...", "image": "...", "bottom": "..." (optional) }
+				// — or just the image path as text.
+				return typeof entry === "string" ? { name: "", image: entry, bottom: "" } : { name: entry.name || "", image: entry.image, bottom: entry.bottom || "" };
 			}).filter(function (label) { return !!label.image; });
 
 			if (!labels.length) { viewer.hidden = true; return; }
