@@ -24,4 +24,18 @@ TO ADD OR REMOVE A DESIGN
      "name" is the caption shown under the pouch. The order in the file is
      the order of the arrows. The last line has no comma at the end.
 
+BOTTOM OF THE POUCH (optional)
+  A label can have its own image for the base of the pouch - a pattern or
+  texture, like label-01-bottom.png. Put the image in this folder and add
+  "bottom" to that label's line in labels.json:
+       { "name": "My Coffee Pouch", "image": "assets/labels/my-coffee.png", "bottom": "assets/labels/my-coffee-bottom.png" },
+  - The image is laid flat on the base, centred, at its own proportions,
+    with its full width running across the pouch from side to side.
+  - The base is a long, narrow oval, so only a band through the middle of
+    the image shows. A repeating pattern works best.
+  - Size: about 2048 px wide is plenty (PNG or JPG). Bigger files only
+    load slower; they don't look sharper.
+  - Labels with no "bottom" get a plain base in the colour of the bottom
+    edge of the label.
+
 Nothing else needs to change. If only one label is listed, the arrows hide.
