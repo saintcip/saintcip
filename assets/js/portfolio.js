@@ -1,17 +1,22 @@
 // ============================================================================
 // Portfolio grid
 //
-// Init portfolio grid: fetches assets/data/portfolio.json, shows only the
-// first 4 projects on desktop / 3 on mobile. No pagination, no category
-// filter.
+// Init portfolio grid: fetches assets/data/portfolio.json and shows only the
+// first 3 projects — the ones that have a finished case study. No
+// pagination, no category filter.
 // ============================================================================
 
 jQuery(function ($) {
 
 	if (!$("#portfolio-grid").length) return;
 
-	// Fixed count, no "load more" — 4 projects on desktop, 3 on mobile.
-	var INITIAL_COUNT = window.innerWidth >= 768 ? 4 : 3;
+	// Fixed count, no "load more": the first 3 entries of portfolio.json, on
+	// every screen size (three in a row on wide screens — "ttgr-layout-3" on
+	// the grid in index.html). It used to be 4 on desktop; the 4th, Muaxx,
+	// was taken out because its case study isn't ready yet. Muaxx is still
+	// in portfolio.json: to bring it back, set this to 4 (and the grid class
+	// back to "ttgr-layout-2" for two per row).
+	var INITIAL_COUNT = 3;
 
 	var portfolioData = [];
 	var isotopeReady = false;

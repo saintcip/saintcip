@@ -391,7 +391,12 @@
 }
 @media (max-width: 767px) {
 	.skills-throwable-scene {
-		height: 315px; /* was 390px — same 50% cut of the empty space on phones (~190px -> ~87px) */
+		/* 390px originally, then 315px, now 275px: each step cuts the empty
+		   space above the settled icons roughly in half (on a typical phone
+		   it is now about 55px, from about 110px). The icons land a little
+		   differently every time, so this is as short as the box can go
+		   before one occasionally ends up cut off at the top. */
+		height: 275px;
 	}
 	.skills-throwable-el {
 		width: 56px;
@@ -400,6 +405,18 @@
 	.skills-throwable-el-label {
 		font-size: 9px;
 		padding: 3px;
+	}
+}
+/* Narrower phones fit fewer icons per row, so the pile is taller and
+   needs a slightly taller box to keep every icon inside it. */
+@media (max-width: 374px) {
+	.skills-throwable-scene {
+		height: 285px;
+	}
+}
+@media (max-width: 339px) {
+	.skills-throwable-scene {
+		height: 305px;
 	}
 }
 .clients-marquee {
@@ -725,6 +742,38 @@
 	}
 }
 
+/* Wide screens show the three case studies in one row ("ttgr-layout-3"
+   on the grid, three across from 1200px up), which makes each card
+   narrower. With the "Case Study" button sitting beside the title there
+   wasn't room for names like "Nakamoto Capital" — they were cut off with
+   "...". So on those screens the title (and year) gets the full width of
+   the card, and the button moves down next to the category line, a bit
+   more compact. Below 1200px the cards are wider and keep the layout
+   above. */
+@media (min-width: 1200px) {
+	#portfolio-grid .pgi-caption-inner {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		column-gap: 16px;
+		row-gap: 4px;
+	}
+	#portfolio-grid .pgi-caption-text {
+		display: contents; /* its two lines (title row, category) are placed in the grid directly */
+	}
+	#portfolio-grid .pgi-title-row {
+		grid-column: 1 / -1;
+	}
+	#portfolio-grid .pgi-categories-wrap {
+		grid-column: 1;
+		min-width: 0;
+	}
+	#portfolio-grid .pgi-case-study-btn {
+		grid-column: 2;
+		padding: 9px 16px;
+	}
+}
+
 /* Portfolio section title — centered above the grid. */
 .portfolio-section-heading {
 	margin: 0 0 50px;
@@ -1008,142 +1057,198 @@
 }
 
 /* ==========================================================================
-   3D pouch label viewer — under "Fun Fact About Me".
-   A stand-up pouch drawn in 3D (assets/js/pouch.js) that can be dragged
-   around, with a left / right arrow either side to switch label designs.
-   The label images live in assets/labels/ (see README.txt in there).
-   Arrows use the same flat, square outline look as the "Case Study" and
-   "explore more" buttons.
+   Polaroid carousel — every portfolio piece as an instant photo, in the
+   About section between the "14+ years..." paragraph and "Fun Fact About
+   Me". Off-white cards with a wide bottom edge and a handwritten name,
+   each tilted a little differently; three across on desktop, and on phones
+   one in the middle with half of the next one on each side, fading to
+   black. They slide on by themselves. Hovering one straightens and lifts it and turns the
+   others black and white.
+   The sliding is done by Swiper (see "Polaroid carousel" in
+   assets/js/site.js). ".about-section" is a flex column that centres its
+   children, hence align-self:stretch so the carousel can use the full
+   width.
    ========================================================================== */
-.pouch-viewer {
-	display: grid;
-	/* Middle column = the pouch's box. Was 360px; made a little smaller
-	   (about 17%) per request. Change this number to resize the pouch. */
-	grid-template-columns: 48px minmax(0, 300px) 48px;
-	align-items: center;
-	justify-content: center;
-	column-gap: 28px;
+/* Title above the carousel — the same section-label look as "Some Logos
+   I've Designed:" and "Tools & Technologies I Work With:"
+   (.clients-marquee-label). */
+.polaroid-title {
+	margin-top: 10px;
+	margin-bottom: 0;
+}
+.polaroid-row {
+	align-self: stretch;
 	width: 100%;
-	margin-top: 12px;
-}
-.pouch-viewer[hidden] {
-	display: none;
-}
-/* Order in the About section (swapped per request): "14+ years..."
-   paragraph -> pouch viewer -> "Fun Fact About Me" -> "Tools &
-   Technologies I Work With" icons. These two rules just give the moved
-   blocks the same breathing room the sections around them have. */
-.about-section > .pouch-viewer {
-	margin-top: 10px; /* same as the tools label had in this spot; the paragraph above brings its own bottom margin */
-}
-.skills-detail-group + .skills-section-label {
-	margin-top: 50px;
-}
-/* Title above the pouch — same section-label look as "Fun Fact About Me"
-   / "Some of My Skills" (.clients-marquee-label). It sits inside the
-   viewer so it spans the full width above the arrows + pouch, and hides
-   with the viewer if 3D isn't available. */
-.pouch-title {
-	grid-column: 1 / -1;
-	margin-bottom: 14px;
-}
-/* The 3D canvas. Height follows the width (3:4), so it scales down cleanly. */
-.pouch-stage {
-	position: relative;
-	width: 100%;
-	aspect-ratio: 3 / 4;
-}
-.pouch-canvas {
-	display: block;
-	width: 100%;
-	height: 100%;
+	margin: 0; /* the space under the title is the carousel's own top padding below */
+	/* Room above and below for the tilt, the hover lift and the shadow —
+	   the carousel hides anything that sticks out of its box. */
+	padding: 22px 0 30px;
 	cursor: grab;
-	outline: none;
-	/* Phones: a sideways drag turns the pouch, an up/down swipe still
-	   scrolls the page. */
-	touch-action: pan-y;
-	-webkit-user-select: none;
-	user-select: none;
-	opacity: 0;
-	transition: opacity 0.6s ease;
 }
-.pouch-viewer.is-ready .pouch-canvas {
-	opacity: 1;
-}
-.pouch-viewer.is-dragging .pouch-canvas {
+.polaroid-row:active {
 	cursor: grabbing;
 }
-.pouch-canvas:focus-visible {
-	outline: 1px solid rgba(255, 255, 255, 0.5);
-	outline-offset: 4px;
-}
-/* Left / right arrows */
-.pouch-nav {
+/* One slide = one polaroid, centred, with a little space either side. The
+   widths here (a third / a half) only matter for the instant before the
+   carousel starts up; after that Swiper sets them itself. */
+.polaroid-row .swiper-slide {
 	display: flex;
-	align-items: center;
 	justify-content: center;
-	width: 48px;
-	height: 48px;
+	box-sizing: border-box;
+	width: 33.3333%;
+	height: auto;
+	padding: 0 13px;
+}
+.polaroid {
+	flex: none;
+	width: 100%;
+	max-width: 240px; /* three across on desktop (was 196px with four) */
 	margin: 0;
-	padding: 0;
-	border: 1px solid rgba(255, 255, 255, 0.35);
-	border-radius: 0;
-	background: transparent;
-	color: #FFF;
-	font-size: 18px;
-	line-height: 1;
-	cursor: pointer;
-	transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+	container-type: inline-size; /* lets the caption size its writing from the card's width */
+	transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	will-change: transform;
 }
-.pouch-nav:hover,
-.pouch-nav:focus-visible {
-	border-color: #FFF;
-	background: rgba(255, 255, 255, 0.06);
-	outline: none;
+/* The card itself. Its padding is a share of its own width, so the white
+   border keeps the same proportions at any size. */
+.polaroid-card {
+	padding: 5.5% 5.5% 3%; /* the wide bottom edge is the caption below */
+	background: linear-gradient(180deg, #F4F4F2 0%, #E9E9E6 100%);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 18px 34px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
-.pouch-nav-prev:hover {
-	transform: translateX(-3px);
+.polaroid img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 702 / 650;
+	object-fit: cover;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+	-webkit-user-select: none;
+	user-select: none;
+	transition: filter 0.4s ease;
 }
-.pouch-nav-next:hover {
-	transform: translateX(3px);
-}
-/* Only one label in labels.json: nothing to switch between. */
-.pouch-viewer.has-single-label .pouch-nav {
-	visibility: hidden;
-}
-/* Caption under the pouch: design name, "1 / 3", and the drag hint. Same
-   small uppercase label look as the section labels. */
-.pouch-caption {
-	grid-column: 1 / -1;
+/* Handwritten project name on the wide bottom edge. The box is as wide as
+   the photo and a fixed share of that tall, so the card keeps its polaroid
+   proportions; the name sits centred in it, on one line, tilted a touch
+   like real handwriting. Font: Caveat (loaded in the <head> of index.html). */
+.polaroid-caption {
 	display: flex;
-	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
-	gap: 4px 14px;
-	margin: 6px 0 0;
-	font-size: calc(10px + 0.1vw);
-	letter-spacing: 1.5px;
-	text-transform: uppercase;
-	color: rgba(255, 255, 255, 0.5);
-}
-.pouch-caption-name {
-	color: #FFF;
+	aspect-ratio: 100 / 22.5;
+	margin: 0;
+	padding: 0 2px;
+	overflow: hidden;
+	white-space: nowrap;
+	font-family: 'Caveat', 'Bradley Hand', 'Segoe Print', cursive;
+	/* "--fit" is normally 1. For a name too long for its card, site.js sets
+	   it a little lower so the writing shrinks just enough to fit. */
+	font-size: calc(20px * var(--fit, 1));       /* for older browsers */
+	font-size: calc(10.3cqw * var(--fit, 1));    /* 10.3cqw = 10.3% of the polaroid's width, so the writing scales with the card */
 	font-weight: 600;
+	font-style: normal;
+	line-height: 1;
+	letter-spacing: 0.2px;
+	text-align: center;
+	color: #26231F;
+	transform: rotate(-1.5deg);
+	/* The template styles every <figcaption> as a dark, italic box pinned to
+	   the corner of its figure; switch all of that off here. */
+	position: static;
+	max-width: none;
+	background: none;
+	opacity: 1;
+	z-index: auto;
 }
-.pouch-caption-name:empty,
-.pouch-caption-count:empty {
-	display: none;
+.polaroid-row .swiper-slide:nth-child(even) .polaroid-caption {
+	transform: rotate(1deg);
 }
+/* The year after the name: a little smaller and in lighter ink. */
+.polaroid-year {
+	margin-left: 0.25em;
+	font-size: 0.86em;
+	color: rgba(38, 35, 31, 0.62);
+}
+/* A different tilt (and a small nudge up or down) from one to the next. */
+.polaroid-row .swiper-slide:nth-child(5n + 1) .polaroid { transform: rotate(-3.2deg) translateY(4px); }
+.polaroid-row .swiper-slide:nth-child(5n + 2) .polaroid { transform: rotate(1.3deg) translateY(-3px); }
+.polaroid-row .swiper-slide:nth-child(5n + 3) .polaroid { transform: rotate(-1.4deg) translateY(5px); }
+.polaroid-row .swiper-slide:nth-child(5n + 4) .polaroid { transform: rotate(2.6deg) translateY(-2px); }
+.polaroid-row .swiper-slide:nth-child(5n + 5) .polaroid { transform: rotate(-2.2deg) translateY(1px); }
+@media (hover: hover) {
+	.polaroid-row .swiper-slide .polaroid:hover {
+		transform: rotate(0deg) translateY(-8px) scale(1.05);
+		position: relative;
+		z-index: 2;
+	}
+	/* While one polaroid is hovered, the photos on the others turn black and white. */
+	.polaroid-row:has(.polaroid:hover) .polaroid:not(:hover) img {
+		filter: grayscale(1);
+	}
+}
+/* Phones: one polaroid in the middle, half of the next one on each side,
+   and the two sides fading to black (the page background). The fades are
+   drawn over the carousel and let touches straight through. */
 @media (max-width: 767px) {
-	.pouch-viewer {
-		/* Was "1fr" (as wide as the screen allowed, ~260px on a phone);
-		   capped so the pouch is a little smaller on phones too. */
-		grid-template-columns: 40px minmax(0, 220px) 40px;
-		column-gap: 10px;
+	.polaroid-row {
+		padding: 18px 0 22px;
 	}
-	.pouch-nav {
-		width: 40px;
-		height: 40px;
-		font-size: 16px;
+	.polaroid-row::before,
+	.polaroid-row::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 22%;          /* = the part of the neighbouring polaroid that shows on that side */
+		z-index: 3;
+		pointer-events: none;
 	}
+	.polaroid-row::before {
+		left: 0;
+		background: linear-gradient(to right, #000 0%, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0) 100%);
+	}
+	.polaroid-row::after {
+		right: 0;
+		background: linear-gradient(to left, #000 0%, rgba(0, 0, 0, 0.75) 35%, rgba(0, 0, 0, 0) 100%);
+	}
+	.polaroid-row .swiper-slide {
+		width: 55.5556%;     /* 1 / 1.8, to match slidesPerView in site.js */
+		padding: 0 5px;      /* gap between polaroids = twice this (was 10px each side) */
+	}
+	.polaroid {
+		max-width: 210px;    /* was 170px */
+	}
+	.polaroid-caption {
+		font-size: calc(17px * var(--fit, 1));       /* older browsers only; newer ones use the 10.3cqw above */
+		font-size: calc(10.3cqw * var(--fit, 1));
+	}
+}
+
+/* ==========================================================================
+   "Tools & Technologies I Work With" (the falling icons) now has its own
+   section after the case studies, right above the "explore more of my
+   creative work" button. Only the spacing around it is set here; the
+   icons themselves are styled further up (".skills-throwable-...").
+   ========================================================================== */
+/* Gap between the last case study and the "Tools & Technologies" title:
+   cut by 65% per request. Most of that gap is not on this section at all —
+   it is the space the case-study grid leaves under its last row of cards
+   (6% of the screen width; 5% on phones), plus 70px of section padding. So
+   to end up with 35% of the old total, this section drops its own top
+   padding (was 40px) and is pulled up into that empty space with a
+   negative margin that scales with the screen the same way the grid's
+   space does. (Old gap: 6vw + 70px. New gap: 35% of that.) */
+#tools-outer-section {
+	padding-top: 0;
+	margin-top: calc(-5.5px - 3.9vw);
+	padding-bottom: 30px;
+}
+@media (max-width: 768px) {
+	#tools-outer-section {
+		margin-top: calc(-5.5px - 3.25vw);
+	}
+}
+/* Keep the same 30px between the label and the icons that they had in
+   the About section (there the two margins added up; here they overlap). */
+.tools-section .skills-throwable-scene {
+	margin-top: 30px;
 }
